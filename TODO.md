@@ -3,13 +3,13 @@
 Liste des prochains travaux, par ordre de priorité. Cocher au fur et à mesure.
 
 ## 1. Tester la publication depuis le CMS
-Premier essai réussi (sortie « La Mont-Blanc » + parcours, 23/10/2026). Reste à vérifier :
+Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo de téléphone, album, PDF) :
 - [x] Créer une sortie : nom du fichier (date de la sortie), heure enregistrée avec le fuseau de Paris, liste des parcours
-- [ ] Créer une actualité avec une photo prise au téléphone : conversion WebP, photo rangée à côté de l'article
-- [ ] Créer un album photo
+- [x] Créer une actualité avec une photo prise au téléphone : conversion WebP, photo rangée à côté de l'article
+- [x] Créer un album photo (avec lien Google Photos)
 - [x] Ajouter une rando ou une course (champ « Type » et « Organisateur »)
-- [ ] Déposer un PDF dans « Documents »
-- [ ] Vérifier que le site se met à jour environ 2 minutes après l'enregistrement
+- [x] Déposer un PDF dans « Documents »
+- [x] Vérifier que le site se met à jour environ 2 minutes après l'enregistrement
 
 ## 2. Remplacer le contenu d'exemple
 - [ ] Présentation du club et slogan
@@ -17,7 +17,7 @@ Premier essai réussi (sortie « La Mont-Blanc » + parcours, 23/10/2026). Reste
 - [ ] Bureau : noms publiés uniquement avec l'accord des personnes
 - [ ] Mentions légales : adresse du siège, numéro RNA, directeur·rice de la publication
 - [ ] Vraies traces GPX, coupées au départ et à l'arrivée
-- [ ] Supprimer les sorties, l'article et l'album d'exemple
+- [ ] Supprimer les sorties, l'article et l'album d'exemple, ainsi que les contenus de test (album « test-album-photos », document « Test PDF »)
 - [ ] Lien d'adhésion HelloAsso (facultatif)
 
 ## 3. Connexion des bénévoles au CMS

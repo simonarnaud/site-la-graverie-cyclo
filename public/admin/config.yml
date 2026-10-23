@@ -16,9 +16,16 @@ display_url: https://simonarnaud.github.io/site-la-graverie-cyclo/
 media_folder: /public/uploads
 public_folder: /uploads
 
+# Noms de fichiers et d'adresses sans accents ni espaces (« Période 2026.pdf » → « periode-2026.pdf »)
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: '-'
+
 # Les photos sont réduites et converties en WebP dans le navigateur, avant l'envoi.
 media_libraries:
   all:
+    slugify_filename: true
     transformations:
       raster_image:
         format: webp
