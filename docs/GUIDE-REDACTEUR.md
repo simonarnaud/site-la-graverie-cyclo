@@ -9,7 +9,7 @@ Ce guide s'adresse aux bénévoles qui publient sur le site. Aucune connaissance
 1. Créez un compte gratuit sur [github.com](https://github.com/signup) avec votre email.
 2. Envoyez votre nom d'utilisateur GitHub au responsable du site : il vous donnera l'accès.
 3. Acceptez l'invitation reçue par email.
-4. Ouvrez la page d'administration : **https://simonarnaud.github.io/site-la-graverie-cyclo/admin/**
+4. Ouvrez la page d'administration : lien **« Espace rédaction »** tout en bas de n'importe quelle page du site, ou directement **https://simonarnaud.github.io/site-la-graverie-cyclo/admin/** (à garder en favori).
 5. Cliquez sur **« Se connecter avec GitHub »**. Une fenêtre GitHub s'ouvre : connectez-vous si besoin, puis cliquez sur **Authorize** (autoriser). Cette autorisation n'est demandée que la première fois.
 
 Ensuite, votre navigateur se souvient de vous. Si au bout de quelques heures le site vous demande de vous reconnecter, cliquez simplement de nouveau sur « Se connecter avec GitHub ».

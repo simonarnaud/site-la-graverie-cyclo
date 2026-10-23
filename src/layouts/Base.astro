@@ -95,6 +95,8 @@ const courant = Astro.url.pathname;
           <li><a href={lien('sorties.ics')}>S'abonner au calendrier</a></li>
           <li><a href={lien('mentions-legales/')}>Mentions légales</a></li>
           <li><a href={lien('confidentialite/')}>Confidentialité</a></li>
+          <!-- Accès au CMS pour les rédacteurs (connexion GitHub requise pour publier) -->
+          <li><a href={lien('admin/')} rel="nofollow">Espace rédaction</a></li>
         </ul>
       </div>
     </footer>
