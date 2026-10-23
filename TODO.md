@@ -17,7 +17,7 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [ ] Bureau : noms publiés uniquement avec l'accord des personnes
 - [ ] Mentions légales : adresse du siège, numéro RNA, directeur·rice de la publication
 - [ ] Vraies traces GPX, coupées au départ et à l'arrivée
-- [ ] Supprimer les sorties, l'article et l'album d'exemple, ainsi que les contenus de test (album « test-album-photos », document « Test PDF »)
+- [ ] Supprimer les contenus d'exemple et de test : sorties, actualités (4), albums (« Sortie d'automne », « Rando de rentrée », « test-album-photos »), document « Test PDF »
 - [ ] Lien d'adhésion HelloAsso (facultatif)
 
 ## 3. Connexion des bénévoles au CMS
