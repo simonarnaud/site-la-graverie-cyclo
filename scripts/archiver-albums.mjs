@@ -1,22 +1,35 @@
-// Archive les albums des années précédentes : supprime leurs photos du site pour gagner de la place,
+// Archive les albums de plus de 12 mois : supprime leurs photos du site pour gagner de la place,
 // mais garde l'album (titre, date) et son lien vers l'album complet (Google Photos…).
-// Lancé chaque 1er janvier par .github/workflows/archiver-albums.yml, ou à la main :
-//   node scripts/archiver-albums.mjs              → archive les albums antérieurs à l'année en cours
-//   node scripts/archiver-albums.mjs --annee 2027 → comme si on était en 2027
-//   node scripts/archiver-albums.mjs --essai      → affiche ce qui serait fait, sans rien modifier
+// Le 1er de chaque mois, les albums du 13e mois en arrière (et plus anciens) sont archivés :
+// le site montre donc toujours au moins une année complète de photos.
+// Lancé par .github/workflows/archiver-albums.yml, ou à la main :
+//   node scripts/archiver-albums.mjs                   → archivage normal (mois courant)
+//   node scripts/archiver-albums.mjs --mois 2027-11    → comme si on était en novembre 2027
+//   node scripts/archiver-albums.mjs --essai           → affiche ce qui serait fait, sans rien modifier
 import { readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse, stringify } from 'yaml';
 
-const args = process.argv.slice(2);
-const essai = args.includes('--essai');
-const anneeArg = args[args.indexOf('--annee') + 1];
-const anneeCourante = args.includes('--annee') ? Number(anneeArg) : Number(anneeDe(new Date()));
+const MOIS_CONSERVES = 12; // mois précédents gardés avec leurs photos, en plus du mois courant
 const DOSSIER = 'src/content/albums';
 
-// Année dans le fuseau du club (un album du 31 décembre au soir reste dans son année)
-function anneeDe(date) {
-  return new Date(date).toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris', year: 'numeric' });
+const args = process.argv.slice(2);
+const essai = args.includes('--essai');
+const moisCourant = args.includes('--mois') ? args[args.indexOf('--mois') + 1] : moisDe(new Date());
+if (!/^\d{4}-\d{2}$/.test(moisCourant)) throw new Error(`Mois invalide : ${moisCourant} (format attendu AAAA-MM)`);
+
+// Les albums antérieurs à ce mois sont archivés (ex. en novembre 2027 : octobre 2026 et avant)
+const premierMoisConserve = decaler(moisCourant, -MOIS_CONSERVES);
+
+// Mois « AAAA-MM » dans le fuseau du club (un album du 31 au soir reste dans son mois)
+function moisDe(date) {
+  return new Date(date).toLocaleDateString('en-CA', { timeZone: 'Europe/Paris' }).slice(0, 7);
+}
+
+function decaler(mois, n) {
+  const [a, m] = mois.split('-').map(Number);
+  const d = new Date(Date.UTC(a, m - 1 + n, 1));
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
 }
 
 let archives = 0;
@@ -34,12 +47,12 @@ for (const nom of readdirSync(DOSSIER)) {
     continue;
   }
   const donnees = parse(frontmatter);
-  if (donnees.archive === true || Number(anneeDe(donnees.date)) >= anneeCourante) continue;
+  if (donnees.archive === true || moisDe(donnees.date) >= premierMoisConserve) continue;
 
   // Toutes les photos de l'album sont rangées dans son dossier, à côté de index.md
   const photos = readdirSync(dossierAlbum).filter((f) => f !== 'index.md');
   const taille = photos.reduce((total, f) => total + statSync(join(dossierAlbum, f)).size, 0);
-  console.log(`${essai ? '[essai] ' : ''}Archivage de « ${donnees.titre} » (${anneeDe(donnees.date)}) : ${photos.length} photo(s), ${Math.round(taille / 1024)} Ko`);
+  console.log(`${essai ? '[essai] ' : ''}Archivage de « ${donnees.titre} » (${moisDe(donnees.date)}) : ${photos.length} photo(s), ${Math.round(taille / 1024)} Ko`);
 
   if (!essai) {
     for (const f of photos) rmSync(join(dossierAlbum, f), { recursive: true });
@@ -53,6 +66,6 @@ for (const nom of readdirSync(DOSSIER)) {
 
 console.log(
   archives === 0
-    ? `Aucun album à archiver (albums antérieurs à ${anneeCourante}).`
+    ? `Aucun album à archiver (albums antérieurs à ${premierMoisConserve}).`
     : `${archives} album(s) ${essai ? 'à archiver' : 'archivé(s)'}, ${Math.round(octetsLiberes / 1024)} Ko ${essai ? 'à libérer' : 'libérés'} sur le site.`,
 );

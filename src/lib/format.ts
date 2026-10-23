@@ -18,6 +18,13 @@ export function jourParis(d: Date): string {
   return d.toLocaleDateString('en-CA', { timeZone: TZ });
 }
 
+// « 2026-11 » → « Novembre 2026 »
+export function nomMois(mois: string): string {
+  const [annee, m] = mois.split('-').map(Number);
+  const nom = new Date(Date.UTC(annee, m - 1, 15)).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  return nom.charAt(0).toUpperCase() + nom.slice(1);
+}
+
 // Préfixe un chemin interne avec `base` (le site vit dans un sous-dossier tant que le domaine n'est pas branché).
 export function lien(chemin: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');

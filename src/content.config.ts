@@ -75,7 +75,7 @@ const albums = defineCollection({
     z.object({
       titre: z.string(),
       date: z.coerce.date(),
-      // Vide une fois l'album archivé (scripts/archiver-albums.mjs, chaque 1er janvier)
+      // Vide une fois l'album archivé (scripts/archiver-albums.mjs, albums de plus de 12 mois)
       photos: z.preprocess(vide, z.array(z.object({ src: image(), alt: facultatif(z.string()) })).max(12).default([])),
       lienAlbumComplet: z.url(),
       archive: z.preprocess(vide, z.boolean().default(false)),

@@ -126,19 +126,23 @@ Dans le repo : Settings → General → Transfer ownership. Ensuite, mettez à j
 
 ## Archivage automatique des albums
 
-Chaque **1er janvier à 3 h (UTC)**, le workflow `.github/workflows/archiver-albums.yml` lance `scripts/archiver-albums.mjs` :
+Le **1er de chaque mois à 3 h (UTC)**, le workflow `.github/workflows/archiver-albums.yml` lance `scripts/archiver-albums.mjs` :
 
-- les albums **des années précédentes** perdent leurs photos (fichiers supprimés, `photos: []`, `archive: true`) ;
-- ils restent listés sur la page Photos, dans « Albums des années précédentes », avec leur **lien vers l'album complet** ;
+- les albums **de plus de 12 mois** (le 13e mois en arrière et avant) perdent leurs photos (fichiers supprimés, `photos: []`, `archive: true`). Exemple : le 1er novembre 2027, les albums d'octobre 2026 et plus anciens sont archivés ; ceux de novembre 2026 à novembre 2027 restent visibles. **Le site montre donc toujours au moins une année complète de photos** ;
+- ils restent listés sur la page Photos, dans « Albums plus anciens », avec leur **lien vers l'album complet** ;
 - le robot enregistre le changement puis relance la mise en ligne.
 
 Commandes utiles :
 
 ```bash
-node scripts/archiver-albums.mjs --essai                # ce qui serait archivé aujourd'hui, sans rien modifier
-node scripts/archiver-albums.mjs --essai --annee 2028   # simulation pour une autre année
+node scripts/archiver-albums.mjs --essai                  # ce qui serait archivé aujourd'hui, sans rien modifier
+node scripts/archiver-albums.mjs --essai --mois 2027-11   # simulation pour un autre mois
 ```
 
-Le workflow peut aussi être lancé à la main : onglet **Actions → Archivage des albums → Run workflow**.
+Le workflow peut aussi être lancé à la main : onglet **Actions → Archivage des albums → Run workflow**. La durée de conservation se règle avec `MOIS_CONSERVES` en tête du script.
 
 ⚠️ L'archivage allège le **site publié** et les fichiers du repo, mais les photos restent dans **l'historique Git** (voir « Poids du site et limites »). C'est sans conséquence avant de nombreuses années.
+
+## Page Photos
+
+`src/pages/albums/index.astro` : albums regroupés par mois, filtre « Mois » (adresse partageable `?mois=AAAA-MM`), visionneuse plein écran (clic sur une vignette, flèches du clavier, Échap). Sans JavaScript, tout s'affiche à la suite et les vignettes restent visibles.

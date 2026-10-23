@@ -7,7 +7,7 @@ import CarteSortie from '../../components/CarteSortie.astro';
 import IconeDiscipline from '../../components/IconeDiscipline.astro';
 import { sortiesTriees } from '../../lib/contenus';
 import { CATEGORIES, DISCIPLINES, type Categorie, type Discipline } from '../../lib/categories';
-import { jourParis, lien } from '../../lib/format';
+import { jourParis, lien, nomMois } from '../../lib/format';
 
 // Mois consultables autour du mois courant (prolongé si des événements sont prévus plus loin)
 const MOIS_AVANT = 12;
@@ -48,12 +48,6 @@ function semaines(mois: string, evts: typeof evenements) {
   }
   while (cases.length % 7) cases.push(null);
   return Array.from({ length: cases.length / 7 }, (_, i) => cases.slice(i * 7, i * 7 + 7));
-}
-
-function nomMois(mois: string) {
-  const [annee, m] = mois.split('-').map(Number);
-  const nom = new Date(Date.UTC(annee, m - 1, 15)).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric', timeZone: 'UTC' });
-  return nom.charAt(0).toUpperCase() + nom.slice(1);
 }
 
 const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) => evenements.some((s) => s.data.categorie === c));

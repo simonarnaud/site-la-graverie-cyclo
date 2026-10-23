@@ -1,51 +1,95 @@
 ---
-import { Image } from 'astro:assets';
+// Photos : albums classés par mois, filtre par mois, visionneuse plein écran.
+// Les albums de plus de 12 mois sont archivés (scripts/archiver-albums.mjs) : il ne reste que leur lien.
+import { getImage, Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import { dateCourte } from '../../lib/format';
+import { dateCourte, jourParis, nomMois } from '../../lib/format';
 
 const albums = (await getCollection('albums')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-// Albums avec leur sélection de photos ; les albums archivés (années précédentes) n'ont plus que leur lien
-const recents = albums.filter((a) => a.data.photos.length > 0);
-const archives = albums.filter((a) => a.data.photos.length === 0);
-const anneeDe = (d: Date) => d.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris', year: 'numeric' });
-const archivesParAnnee = [...new Set(archives.map((a) => anneeDe(a.data.date)))].map((annee) => ({
-  annee,
-  albums: archives.filter((a) => anneeDe(a.data.date) === annee),
-}));
+const moisDe = (d: Date) => jourParis(d).slice(0, 7);
+
+// Albums avec photos, regroupés par mois ; version agrandie de chaque photo pour la visionneuse
+const recents = await Promise.all(
+  albums
+    .filter((a) => a.data.photos.length > 0)
+    .map(async (a) => ({
+      ...a,
+      mois: moisDe(a.data.date),
+      photos: await Promise.all(
+        a.data.photos.map(async (p) => ({ ...p, grande: (await getImage({ src: p.src, width: 1600 })).src })),
+      ),
+    })),
+);
+const moisRecents = [...new Set(recents.map((a) => a.mois))];
+const archives = albums.filter((a) => a.data.photos.length === 0).map((a) => ({ ...a, mois: moisDe(a.data.date) }));
+const anneesArchives = [...new Set(archives.map((a) => a.mois.slice(0, 4)))];
+
+// Liste du filtre : tous les mois ayant au moins un album, regroupés par année
+const tousLesMois = [...new Set([...recents, ...archives].map((a) => a.mois))].sort().reverse();
+const anneesFiltre = [...new Set(tousLesMois.map((m) => m.slice(0, 4)))];
+const nbAlbums = (mois: string) => [...recents, ...archives].filter((a) => a.mois === mois).length;
 ---
 
 <Base titre="Photos" description="Une sélection de photos des sorties du club">
   <h1>Photos</h1>
-  <p>Une sélection par sortie. Les albums complets sont hébergés en dehors du site.</p>
+  <p>Une sélection par sortie. Les albums complets sont sur Google Photos : cliquez sur « Album complet ».</p>
 
   {albums.length === 0 && <p class="vide">Pas encore d'album.</p>}
 
-  {recents.map((album) => (
-    <section class="section">
-      <div class="section-titre">
-        <h2>{album.data.titre}</h2>
-        <a href={album.data.lienAlbumComplet} rel="noopener">Voir l'album complet →</a>
-      </div>
-      <p class="meta">{dateCourte(album.data.date)}</p>
-      <div class="photos">
-        {album.data.photos.map((photo) => (
-          <Image src={photo.src} alt={photo.alt ?? ''} width={480} height={360} fit="cover" />
+  {tousLesMois.length > 1 && (
+    <div class="filtre" hidden>
+      <label for="filtre-mois">Mois</label>
+      <select id="filtre-mois">
+        <option value="">Tous les mois</option>
+        {anneesFiltre.map((annee) => (
+          <optgroup label={annee}>
+            {tousLesMois.filter((m) => m.startsWith(annee)).map((m) => (
+              <option value={m}>{nomMois(m)} · {nbAlbums(m)} album{nbAlbums(m) > 1 ? 's' : ''}</option>
+            ))}
+          </optgroup>
         ))}
-      </div>
+      </select>
+    </div>
+  )}
+
+  {moisRecents.map((mois) => (
+    <section class="section mois" data-mois={mois}>
+      <h2>{nomMois(mois)}</h2>
+      {recents.filter((a) => a.mois === mois).map((album) => (
+        <article class="carte album">
+          <div class="corps">
+            <div class="entete-album">
+              <div>
+                <h3>{album.data.titre}</h3>
+                <p class="meta">{dateCourte(album.data.date)} · {album.photos.length} photo{album.photos.length > 1 ? 's' : ''}</p>
+              </div>
+              <a class="bouton secondaire" href={album.data.lienAlbumComplet} target="_blank" rel="noopener">Album complet ↗</a>
+            </div>
+            <div class="vignettes">
+              {album.photos.map((photo) => (
+                <button type="button" class="vignette" data-grande={photo.grande} data-legende={photo.alt ?? album.data.titre}>
+                  <Image src={photo.src} alt={photo.alt ?? ''} width={320} height={240} fit="cover" />
+                </button>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
     </section>
   ))}
 
-  {archivesParAnnee.length > 0 && (
-    <section class="section">
-      <h2>Albums des années précédentes</h2>
-      {archivesParAnnee.map(({ annee, albums }) => (
-        <div class="annee">
+  {archives.length > 0 && (
+    <section class="section archives">
+      <h2>Albums plus anciens</h2>
+      <p class="meta">Les photos de ces albums ne sont plus sur le site, mais restent consultables sur Google Photos.</p>
+      {anneesArchives.map((annee) => (
+        <div class="annee" data-annee={annee}>
           <h3>{annee}</h3>
           <ul class="liste-albums">
-            {albums.map((album) => (
-              <li>
-                <a href={album.data.lienAlbumComplet} rel="noopener">{album.data.titre} ↗</a>
+            {archives.filter((a) => a.mois.startsWith(annee)).map((album) => (
+              <li data-mois={album.mois}>
+                <a href={album.data.lienAlbumComplet} target="_blank" rel="noopener">{album.data.titre} ↗</a>
                 <span class="meta">{dateCourte(album.data.date)}</span>
               </li>
             ))}
@@ -54,17 +98,121 @@ const archivesParAnnee = [...new Set(archives.map((a) => anneeDe(a.data.date)))]
       ))}
     </section>
   )}
+
+  <p class="vide aucun" hidden>Aucun album ce mois-ci.</p>
+
+  <dialog class="visionneuse" aria-label="Photo agrandie">
+    <img alt="" />
+    <p class="legende"></p>
+    <button type="button" class="precedente" aria-label="Photo précédente">‹</button>
+    <button type="button" class="suivante" aria-label="Photo suivante">›</button>
+    <button type="button" class="fermer" aria-label="Fermer">×</button>
+  </dialog>
 </Base>
 
+<script>
+  // --- Filtre par mois (sans JavaScript, tout reste affiché) ---
+  const filtre = document.querySelector<HTMLElement>('.filtre');
+  const select = filtre?.querySelector('select');
+  function filtrer(mois: string) {
+    document.querySelectorAll<HTMLElement>('.mois').forEach((s) => (s.hidden = mois !== '' && s.dataset.mois !== mois));
+    document.querySelectorAll<HTMLElement>('.liste-albums li').forEach((li) => (li.hidden = mois !== '' && li.dataset.mois !== mois));
+    document.querySelectorAll<HTMLElement>('.annee').forEach((a) => (a.hidden = !a.querySelector('li:not([hidden])')));
+    const archives = document.querySelector<HTMLElement>('.archives');
+    if (archives) archives.hidden = !archives.querySelector('.annee:not([hidden])');
+    document.querySelector<HTMLElement>('.aucun')!.hidden = !!document.querySelector('.mois:not([hidden]), .liste-albums li:not([hidden])');
+    const url = new URL(location.href);
+    if (mois) url.searchParams.set('mois', mois);
+    else url.searchParams.delete('mois');
+    history.replaceState(null, '', url);
+  }
+  if (filtre && select) {
+    filtre.hidden = false;
+    select.addEventListener('change', () => filtrer(select.value));
+    const demande = new URL(location.href).searchParams.get('mois');
+    if (demande && select.querySelector(`option[value="${demande}"]`)) {
+      select.value = demande;
+      filtrer(demande);
+    }
+  }
+
+  // --- Visionneuse : clic sur une vignette, flèches du clavier, Échap pour fermer ---
+  const visionneuse = document.querySelector<HTMLDialogElement>('.visionneuse')!;
+  const image = visionneuse.querySelector('img')!;
+  const legende = visionneuse.querySelector('.legende')!;
+  let serie: HTMLButtonElement[] = [];
+  let position = 0;
+
+  function afficher(i: number) {
+    position = (i + serie.length) % serie.length;
+    image.src = serie[position].dataset.grande!;
+    image.alt = serie[position].dataset.legende ?? '';
+    legende.textContent = `${serie[position].dataset.legende ?? ''} (${position + 1}/${serie.length})`;
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.vignette').forEach((vignette) => {
+    vignette.addEventListener('click', () => {
+      // On navigue dans les photos du même album
+      serie = [...vignette.closest('.album')!.querySelectorAll<HTMLButtonElement>('.vignette')];
+      afficher(serie.indexOf(vignette));
+      visionneuse.showModal();
+    });
+  });
+  visionneuse.querySelector('.precedente')!.addEventListener('click', () => afficher(position - 1));
+  visionneuse.querySelector('.suivante')!.addEventListener('click', () => afficher(position + 1));
+  visionneuse.querySelector('.fermer')!.addEventListener('click', () => visionneuse.close());
+  visionneuse.addEventListener('click', (e) => {
+    if (e.target === visionneuse) visionneuse.close(); // clic à côté de la photo
+  });
+  visionneuse.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') afficher(position - 1);
+    if (e.key === 'ArrowRight') afficher(position + 1);
+  });
+</script>
+
 <style>
-  .photos { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin-top: 12px; }
-  .photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; }
-  .annee h3 { margin: 24px 0 8px; font-size: 1.1rem; color: var(--texte-doux); }
-  .liste-albums { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .filtre { display: flex; align-items: center; gap: 10px; margin: 24px 0 0; }
+  .filtre label { font-size: .85rem; font-weight: 600; color: var(--texte-doux); }
+  .filtre select {
+    font: inherit; font-weight: 600; color: var(--texte); cursor: pointer; max-width: 100%;
+    padding: 8px 14px; background: var(--surface); border: 1px solid var(--bordure); border-radius: 999px;
+  }
+
+  .mois { display: grid; gap: 16px; }
+  .mois[hidden] { display: none; }
+  .mois h2 { margin-bottom: 0; }
+  .album:hover { transform: none; }
+  .entete-album { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 10px 20px; margin-bottom: 14px; }
+  .entete-album h3 { margin: 0; }
+
+  .vignettes { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  .vignette { padding: 0; border: 0; background: none; cursor: zoom-in; border-radius: 8px; overflow: hidden; }
+  .vignette img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .2s ease; }
+  .vignette:hover img, .vignette:focus-visible img { transform: scale(1.04); }
+
+  .archives .annee h3 { margin: 24px 0 8px; font-size: 1.1rem; color: var(--texte-doux); }
+  .liste-albums { list-style: none; margin: 0; padding: 0; }
   .liste-albums li {
     display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px;
     padding: 10px 0; border-bottom: 1px solid var(--bordure);
   }
+  .liste-albums li[hidden] { display: none; }
   .liste-albums a { font-weight: 600; text-decoration: none; }
   .liste-albums a:hover { text-decoration: underline; }
+  .aucun { margin-top: 32px; }
+
+  .visionneuse {
+    width: min(100vw - 16px, 1200px); max-height: calc(100dvh - 16px); padding: 0;
+    border: 0; border-radius: var(--rayon); background: #111; color: #eee;
+  }
+  .visionneuse::backdrop { background: rgb(0 0 0 / 85%); }
+  .visionneuse img { display: block; width: 100%; max-height: calc(100dvh - 80px); object-fit: contain; }
+  .visionneuse .legende { margin: 0; padding: 10px 56px; text-align: center; font-size: .9rem; }
+  .visionneuse button {
+    position: absolute; width: 44px; height: 44px; border: 0; border-radius: 50%; cursor: pointer;
+    background: rgb(0 0 0 / 55%); color: #fff; font-size: 1.6rem; line-height: 1;
+  }
+  .visionneuse .precedente { left: 8px; top: calc(50% - 40px); }
+  .visionneuse .suivante { right: 8px; top: calc(50% - 40px); }
+  .visionneuse .fermer { right: 8px; top: 8px; }
 </style>

@@ -57,7 +57,7 @@ Le document apparaît dans la page **Documents** du site, à consulter ou à té
 2. Sur le site : menu **Photos** → **Nouveau**.
 3. Choisissez **12 photos maximum**, les plus belles, et collez le lien de l'album complet.
 
-Chaque 1er janvier, les photos des albums de l'année écoulée sont retirées du site pour gagner de la place. Les albums restent listés dans « Albums des années précédentes », avec leur lien vers l'album complet : **ne supprimez donc jamais l'album Google Photos**.
+Au bout de 12 mois, les photos d'un album sont retirées automatiquement du site pour gagner de la place. L'album reste listé dans « Albums plus anciens », avec leur lien vers l'album complet : **ne supprimez donc jamais l'album Google Photos**.
 
 Les photos sont réduites automatiquement : inutile de les redimensionner avant.
 

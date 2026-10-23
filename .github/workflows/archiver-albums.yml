@@ -1,10 +1,10 @@
 name: Archivage des albums
 
-# Chaque 1er janvier : les albums des années précédentes perdent leurs photos (gain de place
+# Le 1er de chaque mois : les albums de plus de 12 mois perdent leurs photos (gain de place
 # sur le site) mais gardent leur lien vers l'album complet. Voir scripts/archiver-albums.mjs.
 on:
   schedule:
-    - cron: '0 3 1 1 *' # 1er janvier, 3 h UTC
+    - cron: '0 3 1 * *' # le 1er de chaque mois, 3 h UTC
   workflow_dispatch: # bouton « Run workflow » dans l'onglet Actions
 
 permissions:
@@ -21,7 +21,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - name: Archiver les albums des années précédentes
+      - name: Archiver les albums de plus de 12 mois
         run: node scripts/archiver-albums.mjs
       - name: Enregistrer et remettre le site en ligne
         env:
@@ -34,7 +34,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A src/content/albums
-          git commit -m "Archivage automatique des albums des années précédentes"
+          git commit -m "Archivage automatique des albums de plus de 12 mois"
           git push
           # Un commit fait par le robot ne déclenche pas les autres workflows : on relance la mise en ligne
           gh workflow run deploy.yml --ref main
