@@ -5,9 +5,9 @@ backend:
   name: github
   repo: simonarnaud/site-la-graverie-cyclo
   branch: main
-  # Connexion « avec GitHub » : décommenter quand le relais sveltia-cms-auth sera déployé.
-  # En attendant, connexion par jeton (« Sign In with Token »).
-  # base_url: https://sveltia-cms-auth.<compte>.workers.dev
+  # Bouton « Se connecter avec GitHub » : passe par le relais sveltia-cms-auth (Cloudflare Workers,
+  # repo simonarnaud/sveltia-cms-auth). La connexion par jeton reste possible en secours.
+  base_url: https://sveltia-cms-auth.sim-arnaud.workers.dev
 
 site_url: https://simonarnaud.github.io/site-la-graverie-cyclo/
 display_url: https://simonarnaud.github.io/site-la-graverie-cyclo/

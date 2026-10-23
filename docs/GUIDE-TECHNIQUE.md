@@ -42,14 +42,33 @@ Le CMS fonctionne aussi en local : ouvrez http://localhost:4321/site-la-graverie
 - **Chemin de base** : tant que le site est servi depuis `simonarnaud.github.io/site-la-graverie-cyclo`, tous les liens internes passent par `lien()` (`src/lib/format.ts`). Le jour où le domaine est branché, modifiez `site`, supprimez `base` dans `astro.config.mjs`, et mettez à jour `site_url` et `display_url` dans `public/admin/config.yml`.
 - **Fuseau horaire** : le build tourne en UTC. Les dates sont toujours affichées avec le fuseau `Europe/Paris` (`src/lib/format.ts`), et le CMS enregistre l'heure avec son décalage (`input_timezone: Europe/Paris`).
 - **Rebuild quotidien** : le cron du workflow fait basculer les sorties passées. GitHub le désactive après 60 jours sans commit sur un repo public : il suffit alors de le réactiver dans l'onglet Actions.
-- **Nom des fichiers de sorties** : le modèle de `slug` du CMS utilise la date de la sortie. À vérifier à la première création depuis le CMS ; à défaut, le nom n'a pas d'importance fonctionnelle.
+- **Nom des fichiers de sorties** : le modèle de `slug` du CMS utilise la date de la sortie (vérifié en octobre 2026).
+- **Champs vides** : le CMS enregistre un champ facultatif vide en `''` ou `null` ; dans `src/content.config.ts`, déclarez les champs facultatifs avec `facultatif(...)`.
 
 ## Connexion au CMS
 
-Aujourd'hui, Sveltia CMS ne sait pas se connecter à GitHub sans serveur intermédiaire (PKCE non disponible côté GitHub). Deux options :
+Sveltia CMS ne sait pas se connecter à GitHub sans serveur intermédiaire (PKCE non disponible côté GitHub). Le bouton **« Se connecter avec GitHub »** passe donc par un petit relais :
 
-1. **Jeton personnel (PAT)**, possible tout de suite : sur GitHub, Settings → Developer settings → Fine-grained token, avec l'accès au repo et la permission *Contents: read and write*. Dans le CMS, choisissez « Sign In with Token ».
-2. **Bouton « Se connecter avec GitHub »** : créez une OAuth App (sous l'organisation du club, le moment venu), déployez [sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth) sur Cloudflare Workers (gratuit), puis renseignez `base_url` dans `public/admin/config.yml`.
+```
+CMS (/admin) ──▶ relais sveltia-cms-auth (Cloudflare Workers) ──▶ OAuth App GitHub ──▶ jeton renvoyé au CMS
+```
+
+| Élément | Où | Réglages |
+|---|---|---|
+| Relais | Cloudflare → Workers & Pages → `sveltia-cms-auth`, adresse `https://sveltia-cms-auth.sim-arnaud.workers.dev` | Code : repo privé `simonarnaud/sveltia-cms-auth` (copie de [sveltia/sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth)) |
+| Variables du relais | Settings → **Runtime variables and secrets** (pas celles de la section Build) | `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` (type Secret), `ALLOWED_DOMAINS` = domaine du site |
+| OAuth App | github.com → Settings → Developer settings → OAuth Apps → « CMS La Graverie Cyclos » | Redirect URI = adresse du relais + `/callback` |
+| CMS | `public/admin/config.yml` | `base_url` = adresse du relais |
+
+Ne pas activer « Protect with Cloudflare Access » sur le relais : les bénévoles ne pourraient plus se connecter.
+
+**En secours**, la connexion par jeton reste possible : sur GitHub, Settings → Developer settings → Fine-grained token, avec l'accès au repo et la permission *Contents: read and write*, puis « Se connecter avec un jeton d'accès » dans le CMS.
+
+**Donner l'accès à un bénévole** : il crée un compte GitHub, puis vous l'ajoutez au repo (Settings → Collaborators ; plus tard, l'équipe « Rédaction » de l'organisation).
+
+**Lors du passage à l'organisation ou au domaine du club** :
+- Domaine : ajoutez-le dans `ALLOWED_DOMAINS` (plusieurs domaines séparés par des virgules).
+- Organisation : recréez l'OAuth App sous l'organisation et le relais sur le compte Cloudflare du club, puis mettez à jour `base_url`.
 
 ## Statistiques de visite (GoatCounter)
 

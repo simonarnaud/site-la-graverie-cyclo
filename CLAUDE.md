@@ -45,7 +45,7 @@ Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECT
 - GPX lus au build avec `@tmcw/togeojson` + `@xmldom/xmldom` ; carte = Leaflet seul (polyline), pas de `leaflet-gpx`.
 - Dates : build en UTC → affichage toujours en `Europe/Paris` ; CMS `input_timezone: Europe/Paris`.
 - Sveltia écrit les champs facultatifs vides en `''` ou `null` : dans `content.config.ts`, les envelopper avec `facultatif(...)`.
-- Sveltia : PKCE non implémenté côté GitHub → PAT en attendant le relais `sveltia-cms-auth`. Transformations d'images sous `media_libraries.all.transformations`.
+- Connexion CMS : bouton GitHub via le relais `sveltia-cms-auth` (Cloudflare Worker `https://sveltia-cms-auth.sim-arnaud.workers.dev`, repo privé `simonarnaud/sveltia-cms-auth`, `ALLOWED_DOMAINS=simonarnaud.github.io`). PAT en secours. Transformations d'images sous `media_libraries.all.transformations`.
 - Contenus d'exemple (marqués « exemple ») à remplacer ; traces GPX générées autour de La Graverie (Calvados).
 
 ## Commandes
