@@ -27,5 +27,21 @@ const { Content } = await render(page);
         {club.lienAdhesion && <p><a class="bouton" href={club.lienAdhesion}>Adhérer au club</a></p>}
       </>
     )}
+
+    {page.id === 'confidentialite' && (
+      // Paragraphe généré selon que les statistiques GoatCounter sont activées (club.json) ou non
+      <>
+        <h2>Mesure d'audience</h2>
+        {club.goatcounter ? (
+          <p>
+            Pour savoir quelles pages sont consultées, le site utilise <a href="https://www.goatcounter.com">GoatCounter</a>,
+            un outil de statistiques <strong>sans cookie</strong> : il compte les visites de façon agrégée, sans conserver
+            d'adresse IP ni aucune donnée permettant de vous identifier.
+          </p>
+        ) : (
+          <p>Le site n'utilise aucun outil de mesure d'audience.</p>
+        )}
+      </>
+    )}
   </article>
 </Base>

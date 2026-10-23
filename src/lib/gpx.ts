@@ -1,4 +1,5 @@
-// Lecture des traces GPX au build : distance, dénivelé positif et tracé simplifié pour la carte.
+// Lecture des traces GPX au build : distance, dénivelé positif, tracé simplifié pour la carte
+// et profil d'altitude.
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DOMParser } from '@xmldom/xmldom';
@@ -9,9 +10,12 @@ export interface TraceGpx {
   deniveleM: number;
   // [lat, lon] simplifiés, prêts pour Leaflet
   points: [number, number][];
+  // [km, altitude en m] simplifiés pour le profil ; vide si le GPX n'a pas d'altitudes
+  profil: [number, number][];
 }
 
 const POINTS_MAX = 1500;
+const POINTS_PROFIL_MAX = 300;
 // Seuil d'hystérésis : ignore le bruit d'altitude des GPS
 const SEUIL_DENIVELE_M = 3;
 
@@ -29,9 +33,11 @@ export function lireGpx(cheminPublic: string): TraceGpx {
   let distance = 0;
   let denivele = 0;
   let altRef = coords[0]?.[2];
+  const profilComplet: [number, number][] = altRef !== undefined ? [[0, altRef]] : [];
   for (let i = 1; i < coords.length; i++) {
     distance += haversine(coords[i - 1], coords[i]);
     const alt = coords[i][2];
+    if (alt !== undefined) profilComplet.push([distance / 1000, alt]);
     if (alt !== undefined && altRef !== undefined) {
       if (alt - altRef >= SEUIL_DENIVELE_M) {
         denivele += alt - altRef;
@@ -47,7 +53,12 @@ export function lireGpx(cheminPublic: string): TraceGpx {
     .filter((_, i) => i % pas === 0 || i === coords.length - 1)
     .map(([lon, lat]) => [round(lat), round(lon)] as [number, number]);
 
-  return { distanceKm: Math.round(distance / 100) / 10, deniveleM: Math.round(denivele), points };
+  const pasProfil = Math.max(1, Math.ceil(profilComplet.length / POINTS_PROFIL_MAX));
+  const profil = profilComplet
+    .filter((_, i) => i % pasProfil === 0 || i === profilComplet.length - 1)
+    .map(([km, alt]) => [Math.round(km * 100) / 100, Math.round(alt)] as [number, number]);
+
+  return { distanceKm: Math.round(distance / 100) / 10, deniveleM: Math.round(denivele), points, profil };
 }
 
 function haversine([lon1, lat1]: number[], [lon2, lat2]: number[]): number {

@@ -47,7 +47,9 @@ Aucun contenu n'a encore été créé depuis l'interface `/admin/`. À vérifier
 - [x] Page 404 aux couleurs du club
 - [x] Plan du site (sitemap), robots.txt et image d'aperçu pour les partages (WhatsApp, Facebook)
 - [x] Menu repliable sur mobile
-- [ ] Plus tard : profil d'altitude des parcours, statistiques sans cookie (GoatCounter)
+- [x] Profil d'altitude des parcours
+- [x] Statistiques sans cookie (GoatCounter) : intégration prête, désactivée
+- [ ] Créer le compte GoatCounter du club et saisir son code dans le CMS (voir `docs/GUIDE-TECHNIQUE.md`)
 
 ## Rappel : mises à jour Dependabot
 Une fois par mois, Dependabot propose des mises à jour sous forme de PR. **Ne fusionner que si la vérification de la PR est verte** : le build tourne désormais sur chaque PR.

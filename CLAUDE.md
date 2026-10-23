@@ -21,7 +21,7 @@ Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECT
 - Participation aux événements : champ `lienStrava` (événement créé au préalable dans le club Strava, validé strava.com / strava.app.link) → bouton « Je participe sur Strava ». `lienInscription` facultatif = inscription chez un organisateur extérieur (rando, course). Vote maison (Firebase/Supabase) = v2 éventuelle, pas avant.
 - Flux calendrier `/sorties.ics` généré au build.
 - Adhésions : lien/widget HelloAsso (optionnel au début).
-- Stats éventuelles : GoatCounter (sans cookie) ou rien.
+- Stats : GoatCounter (sans cookie), activé seulement si `goatcounter` est renseigné dans `src/data/club.json` ; la page confidentialité s'adapte automatiquement.
 
 ## Organisation
 - Démarrage sur le **GitHub perso** du mainteneur, transfert prévu vers une **organisation GitHub du club** (Settings → Transfer ; les redirections sont conservées).

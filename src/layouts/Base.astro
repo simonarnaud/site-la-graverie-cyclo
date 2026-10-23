@@ -54,6 +54,10 @@ const courant = Astro.url.pathname;
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="generator" content={Astro.generator} />
+    {club.goatcounter && (
+      // Statistiques de visite sans cookie (GoatCounter), activées en renseignant le code dans club.json
+      <script is:inline async data-goatcounter={`https://${club.goatcounter}.goatcounter.com/count`} src="https://gc.zgo.at/count.js"></script>
+    )}
     <title>{titreComplet}</title>
   </head>
   <body>

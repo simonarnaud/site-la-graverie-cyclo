@@ -4,7 +4,7 @@ titre: Politique de confidentialité
 
 ## Données collectées
 
-Ce site **ne collecte aucune donnée personnelle** : pas de compte, pas de formulaire, pas de cookie, pas d'outil de mesure d'audience.
+Ce site **ne collecte aucune donnée personnelle** : pas de compte, pas de formulaire, pas de cookie (voir aussi « Mesure d'audience » plus bas).
 
 ## Services tiers
 

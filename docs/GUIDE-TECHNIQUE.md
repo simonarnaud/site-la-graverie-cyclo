@@ -51,6 +51,20 @@ Aujourd'hui, Sveltia CMS ne sait pas se connecter à GitHub sans serveur interm�
 1. **Jeton personnel (PAT)**, possible tout de suite : sur GitHub, Settings → Developer settings → Fine-grained token, avec l'accès au repo et la permission *Contents: read and write*. Dans le CMS, choisissez « Sign In with Token ».
 2. **Bouton « Se connecter avec GitHub »** : créez une OAuth App (sous l'organisation du club, le moment venu), déployez [sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth) sur Cloudflare Workers (gratuit), puis renseignez `base_url` dans `public/admin/config.yml`.
 
+## Statistiques de visite (GoatCounter)
+
+Les statistiques sont désactivées tant que le champ `goatcounter` de `src/data/club.json` est vide. Pour les activer :
+
+1. Créez un compte gratuit sur [goatcounter.com](https://www.goatcounter.com) avec l'adresse email du club. Le service est gratuit pour un usage non commercial.
+2. Choisissez un code, par exemple `lagraveriecyclos`, ce qui donne le tableau de bord `lagraveriecyclos.goatcounter.com`.
+3. Dans le CMS : **Le club → Coordonnées et bureau → Code GoatCounter**, saisissez ce code, puis enregistrez.
+
+Le script est alors ajouté à toutes les pages, et la politique de confidentialité affiche automatiquement le paragraphe « Mesure d'audience ». GoatCounter ne pose pas de cookie et ne conserve pas d'adresse IP : aucun bandeau de consentement n'est nécessaire. Dans les réglages GoatCounter, le tableau de bord peut être rendu public pour que tout le bureau le consulte sans compte.
+
+## Profil d'altitude
+
+Calculé au build depuis le GPX (`profil` dans `src/lib/gpx.ts`, 300 points au maximum) et dessiné en SVG par `src/components/ProfilAltitude.astro`, sans JavaScript. Il n'apparaît pas si le GPX ne contient pas d'altitudes.
+
 ## Mettre à jour Sveltia CMS
 
 La version est figée dans `public/admin/index.html` (Dependabot ne peut pas la suivre, car le script vient d'un CDN). Deux fois par an environ :

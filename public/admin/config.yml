@@ -207,6 +207,12 @@ collections:
           - { name: email, label: Email de contact, widget: string }
           - { name: ville, label: Ville, widget: string }
           - { name: lienAdhesion, label: Lien d'adhésion HelloAsso, widget: string, required: false }
+          - name: goatcounter
+            label: Code GoatCounter (statistiques de visite)
+            hint: "Le mot avant .goatcounter.com dans l'adresse du compte GoatCounter du club. Laisser vide pour désactiver les statistiques."
+            widget: string
+            required: false
+            pattern: ['^[a-z0-9-]*$', 'Uniquement des minuscules, chiffres et tirets']
           - name: reseaux
             label: Réseaux sociaux
             widget: list

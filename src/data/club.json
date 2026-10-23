@@ -4,6 +4,7 @@
   "email": "contact@exemple.fr",
   "ville": "La Graverie (Calvados)",
   "lienAdhesion": "",
+  "goatcounter": "",
   "reseaux": [
     { "nom": "Strava", "url": "https://www.strava.com/" }
   ],
