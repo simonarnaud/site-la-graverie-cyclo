@@ -1,33 +1,51 @@
 ---
-// Calendrier : une grille par mois + la liste des événements, filtrables par type et par discipline.
+// Calendrier : un mois à la fois (grille + liste), avec navigation entre les mois
+// et filtres par type et par discipline. Sans JavaScript, tous les mois s'affichent à la suite.
 import Base from '../../layouts/Base.astro';
 import CarteSortie from '../../components/CarteSortie.astro';
 import { sortiesTriees } from '../../lib/contenus';
 import { CATEGORIES, DISCIPLINES, type Categorie, type Discipline } from '../../lib/categories';
 import { jourParis, lien } from '../../lib/format';
 
-const { aVenir, passees } = await sortiesTriees();
-const aujourdhui = jourParis(new Date());
+// Nombre de mois passés consultables
+const MOIS_PASSES_MAX = 12;
 
-// Regroupe les événements à venir par mois (« 2026-11 »), en commençant toujours par le mois courant
-const parMois = new Map<string, typeof aVenir>([[aujourdhui.slice(0, 7), []]]);
-for (const s of aVenir) {
-  const mois = jourParis(s.data.date).slice(0, 7);
-  parMois.set(mois, [...(parMois.get(mois) ?? []), s]);
+const { toutes } = await sortiesTriees();
+const evenements = [...toutes].sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
+const aujourdhui = jourParis(new Date());
+const moisCourant = aujourdhui.slice(0, 7);
+
+// « 2026-11 » → décalé de n mois
+function decaler(mois: string, n: number) {
+  const [a, m] = mois.split('-').map(Number);
+  const d = new Date(Date.UTC(a, m - 1 + n, 1));
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
 }
+
+// Mois affichés : du premier événement (au plus 12 mois en arrière) au dernier (au moins le mois courant)
+const moisEvenements = evenements.map((s) => jourParis(s.data.date).slice(0, 7));
+const plusAncien = decaler(moisCourant, -MOIS_PASSES_MAX);
+let debut = moisEvenements[0] && moisEvenements[0] < moisCourant ? moisEvenements[0] : moisCourant;
+if (debut < plusAncien) debut = plusAncien;
+const fin = moisEvenements.at(-1) && moisEvenements.at(-1)! > moisCourant ? moisEvenements.at(-1)! : moisCourant;
+const listeMois: string[] = [];
+for (let m = debut; m <= fin; m = decaler(m, 1)) listeMois.push(m);
+
+const parMois = new Map(listeMois.map((m) => [m, evenements.filter((s) => jourParis(s.data.date).startsWith(m))]));
 
 const JOURS = ['lun', 'mar', 'mer', 'jeu', 'ven', 'sam', 'dim'];
 
-function grille(mois: string, evenements: typeof aVenir) {
+function semaines(mois: string, evts: typeof evenements) {
   const [annee, m] = mois.split('-').map(Number);
   const decalage = (new Date(Date.UTC(annee, m - 1, 1)).getUTCDay() + 6) % 7; // lundi = 0
   const nbJours = new Date(Date.UTC(annee, m, 0)).getUTCDate();
-  const cases: ({ jour: number; date: string; evenements: typeof aVenir } | null)[] = Array(decalage).fill(null);
+  const cases: ({ jour: number; date: string; evenements: typeof evenements } | null)[] = Array(decalage).fill(null);
   for (let j = 1; j <= nbJours; j++) {
     const date = `${mois}-${String(j).padStart(2, '0')}`;
-    cases.push({ jour: j, date, evenements: evenements.filter((s) => jourParis(s.data.date) === date) });
+    cases.push({ jour: j, date, evenements: evts.filter((s) => jourParis(s.data.date) === date) });
   }
-  return cases;
+  while (cases.length % 7) cases.push(null);
+  return Array.from({ length: cases.length / 7 }, (_, i) => cases.slice(i * 7, i * 7 + 7));
 }
 
 function nomMois(mois: string) {
@@ -36,15 +54,14 @@ function nomMois(mois: string) {
   return nom.charAt(0).toUpperCase() + nom.slice(1);
 }
 
-const tous = [...aVenir, ...passees];
-const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) => tous.some((s) => s.data.categorie === c));
-const disciplinesPresentes = (Object.keys(DISCIPLINES) as Discipline[]).filter((d) => tous.some((s) => s.data.discipline === d));
+const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) => evenements.some((s) => s.data.categorie === c));
+const disciplinesPresentes = (Object.keys(DISCIPLINES) as Discipline[]).filter((d) => evenements.some((s) => s.data.discipline === d));
 ---
 
-<Base titre="Calendrier" description="Sorties club, entraînements, randos et courses">
+<Base titre="Calendrier" description="Sorties club, randos et courses">
   <h1>Calendrier</h1>
   <p>
-    Sorties club, entraînements, randos et courses.
+    Sorties club, randos et courses.
     Ajoutez tout le calendrier à l'agenda de votre téléphone : <a href={lien('sorties.ics')}>s'abonner</a>.
   </p>
 
@@ -67,64 +84,101 @@ const disciplinesPresentes = (Object.keys(DISCIPLINES) as Discipline[]).filter((
     )}
   </div>
 
-  {[...parMois].map(([mois, evenements]) => (
-    <section class="mois section">
-      <h2>{nomMois(mois)}</h2>
-      <div class="mois-contenu">
-        <table class="mini-mois" aria-hidden="true">
-          <thead><tr>{JOURS.map((j) => <th>{j}</th>)}</tr></thead>
-          <tbody>
-            {Array.from({ length: Math.ceil(grille(mois, evenements).length / 7) }, (_, semaine) => (
-              <tr>
-                {Array.from({ length: 7 }, (_, i) => {
-                  const c = grille(mois, evenements)[semaine * 7 + i];
-                  if (!c) return <td />;
-                  return (
-                    <td class:list={[{ aujourdhui: c.date === aujourdhui, passe: c.date < aujourdhui }]}>
-                      <span class="numero">{c.jour}</span>
-                      {c.evenements.map((s) => (
-                        <a class="pastille" href={`#${s.id}`} data-categorie={s.data.categorie} data-type={s.data.categorie} data-discipline={s.data.discipline} title={s.data.titre}></a>
-                      ))}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+  <nav class="navigation-mois" aria-label="Choisir le mois" hidden>
+    <button type="button" class="fleche" data-pas="-1" aria-label="Mois précédent">‹</button>
+    <select aria-label="Mois affiché">
+      {listeMois.map((m) => {
+        const n = parMois.get(m)!.length;
+        return <option value={m} selected={m === moisCourant}>{nomMois(m)}{n > 0 ? ` · ${n} événement${n > 1 ? 's' : ''}` : ''}</option>;
+      })}
+    </select>
+    <button type="button" class="fleche" data-pas="1" aria-label="Mois suivant">›</button>
+    <button type="button" class="ce-mois" data-mois={moisCourant}>Ce mois-ci</button>
+  </nav>
 
-        <div class="liste">
-          {evenements.length > 0 ? (
-            evenements.map((s) => (
-              <div class="evenement" id={s.id} data-type={s.data.categorie} data-discipline={s.data.discipline}>
-                <CarteSortie sortie={s} />
-              </div>
-            ))
-          ) : (
-            <p class="vide">Rien de prévu ce mois-ci pour le moment.</p>
-          )}
-          <p class="vide aucun" hidden>Aucun événement correspondant ce mois-ci.</p>
-        </div>
-      </div>
-    </section>
-  ))}
+  {listeMois.map((mois) => {
+    const evts = parMois.get(mois)!;
+    return (
+      <section class="mois section" data-mois={mois}>
+        <h2>{nomMois(mois)}</h2>
+        <div class="mois-contenu">
+          <table class="mini-mois" aria-hidden="true">
+            <thead><tr>{JOURS.map((j) => <th>{j}</th>)}</tr></thead>
+            <tbody>
+              {semaines(mois, evts).map((semaine) => (
+                <tr>
+                  {semaine.map((c) =>
+                    c ? (
+                      <td class:list={[{ aujourdhui: c.date === aujourdhui, passe: c.date < aujourdhui }]}>
+                        <span class="numero">{c.jour}</span>
+                        {c.evenements.map((s) => (
+                          <a class="pastille" href={`#${s.id}`} data-categorie={s.data.categorie} data-type={s.data.categorie} data-discipline={s.data.discipline} title={s.data.titre}></a>
+                        ))}
+                      </td>
+                    ) : (
+                      <td />
+                    ),
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-  {passees.length > 0 && (
-    <section class="section">
-      <details>
-        <summary><h2>Événements passés</h2></summary>
-        <div class="grille-cartes">
-          {passees.slice(0, 24).map((s) => (
-            <div class="evenement" data-type={s.data.categorie} data-discipline={s.data.discipline}><CarteSortie sortie={s} /></div>
-          ))}
+          <div class="liste">
+            {evts.length > 0 ? (
+              evts.map((s) => (
+                <div class:list={['evenement', { passe: jourParis(s.data.date) < aujourdhui }]} id={s.id} data-type={s.data.categorie} data-discipline={s.data.discipline}>
+                  <CarteSortie sortie={s} />
+                </div>
+              ))
+            ) : (
+              <p class="vide">Rien de prévu ce mois-ci pour le moment.</p>
+            )}
+            <p class="vide aucun" hidden>Aucun événement correspondant ce mois-ci.</p>
+          </div>
         </div>
-      </details>
-    </section>
-  )}
+      </section>
+    );
+  })}
 </Base>
 
 <script>
-  // Filtres par type et par discipline (cumulables). Sans JavaScript, tout reste affiché.
+  const nav = document.querySelector<HTMLElement>('.navigation-mois');
+  const select = nav?.querySelector('select');
+  const sections = [...document.querySelectorAll<HTMLElement>('.mois')];
+
+  // --- Navigation : un seul mois affiché ---
+  function afficher(mois: string) {
+    if (!select || !sections.some((s) => s.dataset.mois === mois)) return;
+    select.value = mois;
+    sections.forEach((s) => (s.hidden = s.dataset.mois !== mois));
+    const i = sections.findIndex((s) => s.dataset.mois === mois);
+    nav!.querySelector<HTMLButtonElement>('[data-pas="-1"]')!.disabled = i === 0;
+    nav!.querySelector<HTMLButtonElement>('[data-pas="1"]')!.disabled = i === sections.length - 1;
+    const url = new URL(location.href);
+    url.searchParams.set('mois', mois);
+    history.replaceState(null, '', url);
+  }
+
+  if (nav && select) {
+    nav.hidden = false;
+    document.documentElement.classList.add('calendrier-js');
+    select.addEventListener('change', () => afficher(select.value));
+    nav.addEventListener('click', (e) => {
+      const bouton = (e.target as HTMLElement).closest<HTMLButtonElement>('button');
+      if (!bouton) return;
+      if (bouton.dataset.mois) return afficher(bouton.dataset.mois);
+      const i = sections.findIndex((s) => s.dataset.mois === select.value) + Number(bouton.dataset.pas);
+      if (sections[i]) afficher(sections[i].dataset.mois!);
+    });
+
+    // Mois de départ : ?mois=…, sinon celui de l'événement visé par le lien (#id), sinon le mois courant
+    const demande = new URL(location.href).searchParams.get('mois');
+    const cible = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+    afficher(demande ?? cible?.closest<HTMLElement>('.mois')?.dataset.mois ?? select.value);
+  }
+
+  // --- Filtres par type et par discipline (cumulables) ---
   const filtres = document.querySelector<HTMLElement>('.filtres');
   if (filtres) {
     filtres.hidden = false;
@@ -142,7 +196,7 @@ const disciplinesPresentes = (Object.keys(DISCIPLINES) as Discipline[]).filter((
 
       document.querySelectorAll<HTMLElement>('.evenement').forEach((el) => (el.hidden = !correspond(el)));
       document.querySelectorAll<HTMLElement>('.pastille').forEach((el) => el.classList.toggle('attenuee', !correspond(el)));
-      document.querySelectorAll<HTMLElement>('.mois').forEach((mois) => {
+      sections.forEach((mois) => {
         const tous = mois.querySelectorAll('.evenement');
         const visibles = mois.querySelectorAll('.evenement:not([hidden])');
         mois.querySelector<HTMLElement>('.aucun')!.hidden = tous.length === 0 || visibles.length > 0;
@@ -165,6 +219,26 @@ const disciplinesPresentes = (Object.keys(DISCIPLINES) as Discipline[]).filter((
   .filtres button[aria-pressed='true'] { background: var(--texte); border-color: var(--texte); color: var(--fond); }
   .filtres button[data-categorie][aria-pressed='true'] { background: var(--c); border-color: var(--c); color: var(--surface); }
 
+  .navigation-mois { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 32px 0 0; }
+  .navigation-mois select, .navigation-mois button {
+    font: inherit; font-weight: 600; color: var(--texte);
+    background: var(--surface); border: 1px solid var(--bordure); border-radius: 999px;
+  }
+  .navigation-mois select { padding: 8px 14px; font-size: 1.1rem; min-width: 0; max-width: 100%; cursor: pointer; }
+  .navigation-mois .fleche { width: 42px; height: 42px; font-size: 1.4rem; line-height: 1; cursor: pointer; }
+  .navigation-mois .fleche:disabled { opacity: .35; cursor: default; }
+  .navigation-mois .ce-mois { padding: 8px 14px; font-size: .9rem; color: var(--accent); cursor: pointer; }
+  @media (max-width: 640px) {
+    .navigation-mois select { flex: 1 1 0; font-size: 1rem; }
+    .navigation-mois .fleche { flex-shrink: 0; }
+    .navigation-mois .ce-mois { order: 1; }
+  }
+  /* Avec la navigation, le nom du mois est déjà dans la liste déroulante */
+  :global(.calendrier-js) .mois { margin-top: 20px; }
+  :global(.calendrier-js) .mois h2 {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+
   .mois-contenu { display: grid; gap: 24px; grid-template-columns: minmax(260px, 340px) 1fr; align-items: start; }
   @media (max-width: 760px) { .mois-contenu { grid-template-columns: 1fr; } }
 
@@ -182,12 +256,5 @@ const disciplinesPresentes = (Object.keys(DISCIPLINES) as Discipline[]).filter((
 
   .liste { display: grid; gap: 14px; }
   .liste .vide { margin: 8px 0; }
-
-  details summary { cursor: pointer; list-style: none; }
-  details summary::-webkit-details-marker { display: none; }
-  details summary h2 { display: inline-block; }
-  details summary h2::before { content: '▸ '; color: var(--texte-doux); }
-  details[open] summary h2::before { content: '▾ '; }
-  .grille-cartes { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); margin-top: 16px; }
-  .grille-cartes :global(.carte) { opacity: .85; }
+  .evenement.passe { opacity: .7; }
 </style>

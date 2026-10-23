@@ -2,7 +2,7 @@
 import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { CATEGORIES, DISCIPLINES } from '../../lib/categories';
-import { dateLongue, heure, lien } from '../../lib/format';
+import { dateLongue, heure, jourParis, lien } from '../../lib/format';
 
 export async function getStaticPaths() {
   const sorties = await getCollection('sorties');
@@ -18,7 +18,7 @@ const aVenir = date.getTime() > Date.now();
 ---
 
 <Base titre={titre} description={`${libelle} du ${dateLongue(date)} : ${titre}`}>
-  <p class="meta"><a href={lien('calendrier/')}>← Calendrier</a></p>
+  <p class="meta"><a href={lien(`calendrier/?mois=${jourParis(date).slice(0, 7)}`)}>← Calendrier</a></p>
   <p><span class="categorie" data-categorie={categorie}>{libelle}</span></p>
   <h1>{titre}</h1>
   {annulee && <p class="annulee">Cet événement est annulé.</p>}
@@ -36,7 +36,7 @@ const aVenir = date.getTime() > Date.now();
   </dl>
 
   {lienInscription && aVenir && !annulee && (
-    <p><a class="bouton" href={lienInscription} rel="noopener">{categorie === 'sortie' || categorie === 'entrainement' ? 'Je participe' : "S'inscrire"}</a></p>
+    <p><a class="bouton" href={lienInscription} rel="noopener">{categorie === 'sortie' ? 'Je participe' : "S'inscrire"}</a></p>
   )}
 
   <div class="prose"><Content /></div>

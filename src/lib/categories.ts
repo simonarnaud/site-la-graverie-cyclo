@@ -2,7 +2,6 @@
 // Les couleurs sont définies dans src/styles/global.css (--cat-<id>).
 export const CATEGORIES = {
   sortie: { label: 'Sortie club', pluriel: 'Sorties club' },
-  entrainement: { label: 'Entraînement', pluriel: 'Entraînements' },
   rando: { label: 'Rando', pluriel: 'Randos' },
   course: { label: 'Course', pluriel: 'Courses' },
   autre: { label: 'Autre', pluriel: 'Autres' },
