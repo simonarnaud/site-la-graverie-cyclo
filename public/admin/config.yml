@@ -30,7 +30,7 @@ collections:
   - name: sorties
     label: Calendrier
     label_singular: Événement
-    description: Sorties club, entraînements, brevets, courses… Ils passent automatiquement dans « Événements passés » le lendemain.
+    description: Sorties club, entraînements, randos, courses… Ils passent automatiquement dans « Événements passés » le lendemain.
     folder: src/content/sorties
     create: true
     identifier_field: titre
@@ -47,7 +47,7 @@ collections:
         options:
           - { label: Sortie club, value: sortie }
           - { label: Entraînement, value: entrainement }
-          - { label: Brevet, value: brevet }
+          - { label: Rando, value: rando }
           - { label: Course, value: course }
           - { label: Autre, value: autre }
       - { name: date, label: Date et heure de départ, widget: datetime, input_timezone: Europe/Paris }
@@ -55,7 +55,7 @@ collections:
       - { name: lieuRdv, label: Lieu / rendez-vous, widget: string }
       - name: organisateur
         label: Organisateur
-        hint: À remplir si ce n'est pas le club (club voisin, FFC…).
+        hint: À remplir si ce n'est pas le club (club voisin, FSGT…).
         widget: string
         required: false
       - name: niveau
@@ -152,7 +152,7 @@ collections:
   - name: documents
     label: Documents
     label_singular: Document
-    description: Fichiers PDF à télécharger (calendrier FFC, règlements, comptes rendus). 10 Mo maximum par fichier.
+    description: Fichiers PDF à télécharger (programme FSGT, règlements, comptes rendus). 10 Mo maximum par fichier.
     folder: src/content/documents
     create: true
     identifier_field: titre

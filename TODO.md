@@ -7,7 +7,7 @@ Aucun contenu n'a encore été créé depuis l'interface `/admin/`. À vérifier
 - [ ] Créer une sortie : nom du fichier (date de la sortie), heure enregistrée avec le fuseau de Paris, liste des parcours
 - [ ] Créer une actualité avec une photo prise au téléphone : conversion WebP, photo rangée à côté de l'article
 - [ ] Créer un album photo
-- [ ] Ajouter un brevet ou une course (champ « Type » et « Organisateur »)
+- [ ] Ajouter une rando ou une course (champ « Type » et « Organisateur »)
 - [ ] Déposer un PDF dans « Documents »
 - [ ] Vérifier que le site se met à jour environ 2 minutes après l'enregistrement
 

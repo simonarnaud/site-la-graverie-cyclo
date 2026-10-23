@@ -4,8 +4,8 @@ categorie: course
 date: 2026-11-22T13:30:00+01:00
 dureeHeures: 4
 lieuRdv: Souleuvre-en-Bocage
-organisateur: FFC (exemple)
-lienInscription: https://www.ffc.fr/
+organisateur: FSGT 14 (exemple)
+lienInscription: https://www.fsgt.org/
 ---
 
-Licence FFC obligatoire. Venez encourager les coureurs du club ! *(Contenu d'exemple.)*
+Licence FSGT ou autre fédération obligatoire. Venez encourager les coureurs du club ! *(Contenu d'exemple.)*

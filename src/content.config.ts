@@ -21,7 +21,7 @@ const parcours = defineCollection({
     }),
 });
 
-// Événements du calendrier : sorties club, entraînements, brevets, courses…
+// Événements du calendrier : sorties club, entraînements, randos, courses…
 const sorties = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/sorties' }),
   schema: z.object({
@@ -72,14 +72,14 @@ const pages = defineCollection({
   }),
 });
 
-// Documents PDF à télécharger (calendrier FFC, règlements, comptes rendus…)
+// Documents PDF à télécharger (programme FSGT, règlements, comptes rendus…)
 const documents = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/documents' }),
   schema: z.object({
     titre: z.string(),
     date: z.coerce.date(),
     type: z.enum(['calendrier', 'règlement', 'compte rendu', 'autre']).default('autre'),
-    // Chemin du fichier dans public/, ex. /documents/calendrier-ffc-2027.pdf
+    // Chemin du fichier dans public/, ex. /documents/programme-fsgt-14-2022.pdf
     fichier: z.string().startsWith('/documents/'),
     description: z.string().optional(),
   }),

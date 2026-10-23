@@ -17,18 +17,18 @@ Ensuite, votre navigateur se souvient de vous.
 ## Ajouter un événement au calendrier
 
 1. Menu **Calendrier** → **Nouveau**.
-2. Choisissez le **type** : sortie club, entraînement, brevet, course ou autre. Chaque type a sa couleur sur le site.
+2. Choisissez le **type** : sortie club, entraînement, rando, course ou autre. Chaque type a sa couleur sur le site.
 3. Remplissez le titre, la date et l'heure de départ, le lieu et, si besoin, le niveau.
-4. Pour un brevet ou une course organisés par un autre club, indiquez l'**organisateur**.
+4. Pour une rando ou une course organisée par un autre club, indiquez l'**organisateur**.
 5. Choisissez le parcours dans la liste, s'il existe déjà.
-6. Collez le lien d'inscription (événement Strava, sondage Framadate, HelloAsso, site de la FFC…), si vous en avez un.
+6. Collez le lien d'inscription (événement Strava, sondage Framadate, HelloAsso, site de la FSGT…), si vous en avez un.
 7. Cliquez sur **Enregistrer**.
 
 L'événement passe automatiquement dans « Événements passés » le lendemain. Pour annuler un événement, ouvrez-le et cochez **Sortie annulée** plutôt que de le supprimer : les membres abonnés au calendrier seront prévenus.
 
 ## Publier un document PDF
 
-Par exemple, le calendrier des activités envoyé par la FFC.
+Par exemple, le programme de la saison envoyé par la FSGT.
 
 1. Menu **Documents** → **Nouveau**.
 2. Ajoutez un titre, la date et le type, puis choisissez le fichier PDF (10 Mo maximum).

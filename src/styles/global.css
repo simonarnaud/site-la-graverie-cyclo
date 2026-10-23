@@ -19,7 +19,7 @@
   /* Couleurs des types d'événements (src/lib/categories.ts) : sourdes, pour rester lisibles côte à côte */
   --cat-sortie: #2c6e9b;
   --cat-entrainement: #4f7d34;
-  --cat-brevet: #a87700;
+  --cat-rando: #a87700;
   --cat-course: #b5121b;
   --cat-autre: #6b625b;
   --rayon: 12px;
@@ -44,7 +44,7 @@
     --ombre: 0 1px 2px rgb(0 0 0 / 30%);
     --cat-sortie: #7fb3d9;
     --cat-entrainement: #9cc77e;
-    --cat-brevet: #e6b84a;
+    --cat-rando: #e6b84a;
     --cat-course: #ff7a6e;
     --cat-autre: #b3a99f;
   }
@@ -96,10 +96,10 @@ main.conteneur { padding-top: 32px; padding-bottom: 64px; }
 }
 .annulee { color: var(--alerte); font-weight: 600; }
 
-/* Pastille de type d'événement : <span class="categorie" data-categorie="brevet"> */
+/* Pastille de type d'événement : <span class="categorie" data-categorie="rando"> */
 [data-categorie='sortie'] { --c: var(--cat-sortie); }
 [data-categorie='entrainement'] { --c: var(--cat-entrainement); }
-[data-categorie='brevet'] { --c: var(--cat-brevet); }
+[data-categorie='rando'] { --c: var(--cat-rando); }
 [data-categorie='course'] { --c: var(--cat-course); }
 [data-categorie='autre'] { --c: var(--cat-autre); }
 .carte[data-categorie] { border-left: 4px solid var(--c); }

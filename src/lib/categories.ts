@@ -3,7 +3,7 @@
 export const CATEGORIES = {
   sortie: { label: 'Sortie club', pluriel: 'Sorties club' },
   entrainement: { label: 'Entraînement', pluriel: 'Entraînements' },
-  brevet: { label: 'Brevet', pluriel: 'Brevets' },
+  rando: { label: 'Rando', pluriel: 'Randos' },
   course: { label: 'Course', pluriel: 'Courses' },
   autre: { label: 'Autre', pluriel: 'Autres' },
 } as const;
