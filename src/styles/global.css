@@ -50,7 +50,12 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Pied de page toujours en bas de l'écran, même quand la page est courte */
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
   background: var(--fond);
   color: var(--texte);
@@ -65,7 +70,7 @@ h1, h2, h3 { line-height: 1.2; }
 h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 .5em; }
 
 .conteneur { max-width: var(--largeur); margin: 0 auto; padding: 0 16px; }
-main.conteneur { padding-top: 32px; padding-bottom: 64px; }
+main.conteneur { flex: 1 0 auto; width: 100%; padding-top: 32px; padding-bottom: 64px; }
 
 .grille { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
 
