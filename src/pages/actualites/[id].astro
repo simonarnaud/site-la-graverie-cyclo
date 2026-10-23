@@ -15,7 +15,7 @@ const { titre, date, auteur, resume, couverture, couvertureAlt } = actu.data;
 const { Content } = await render(actu);
 ---
 
-<Base titre={titre} description={resume}>
+<Base titre={titre} description={resume} apercu={couverture} type="article">
   <article class="prose">
     <p class="meta"><a href={lien('actualites/')}>← Toutes les actualités</a></p>
     <h1>{titre}</h1>

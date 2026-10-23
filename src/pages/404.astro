@@ -1,0 +1,24 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.png';
+import Base from '../layouts/Base.astro';
+import { lien } from '../lib/format';
+---
+
+<Base titre="Page introuvable">
+  <section class="introuvable">
+    <Image src={logo} alt="" width={160} height={160} class="logo-404" />
+    <h1>Crevaison !</h1>
+    <p>Cette page n'existe pas, ou elle a changé d'adresse.</p>
+    <p class="actions">
+      <a class="bouton" href={lien('/')}>Retour à l'accueil</a>
+      <a class="bouton secondaire" href={lien('sorties/')}>Voir les sorties</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .introuvable { text-align: center; padding: 32px 0; }
+  .logo-404 { margin: 0 auto 16px; border-radius: 50%; background: #fff; }
+  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+</style>

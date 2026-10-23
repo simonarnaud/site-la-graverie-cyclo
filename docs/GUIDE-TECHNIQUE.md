@@ -50,6 +50,14 @@ Aujourd'hui, Sveltia CMS ne sait pas se connecter à GitHub sans serveur interm�
 1. **Jeton personnel (PAT)**, possible tout de suite : sur GitHub, Settings → Developer settings → Fine-grained token, avec l'accès au repo et la permission *Contents: read and write*. Dans le CMS, choisissez « Sign In with Token ».
 2. **Bouton « Se connecter avec GitHub »** : créez une OAuth App (sous l'organisation du club, le moment venu), déployez [sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth) sur Cloudflare Workers (gratuit), puis renseignez `base_url` dans `public/admin/config.yml`.
 
+## Mettre à jour Sveltia CMS
+
+La version est figée dans `public/admin/index.html` (Dependabot ne peut pas la suivre, car le script vient d'un CDN). Deux fois par an environ :
+
+1. Consultez la dernière version avec `npm view @sveltia/cms version` et lisez les [notes de version](https://github.com/sveltia/sveltia-cms/releases).
+2. Changez le numéro dans l'URL du script.
+3. Testez en local (`/admin/index.html`, « Travailler avec un dépôt local ») : ouvrez une sortie, une actualité et un album.
+
 ## Passer au domaine du club
 
 1. Achetez le domaine au nom de l'association, avec le renouvellement automatique activé.

@@ -18,7 +18,7 @@ const deniveleM = parcours.data.deniveleM ?? trace.deniveleM;
 const { Content } = await render(parcours);
 ---
 
-<Base titre={titre} description={`${titre} : ${distanceKm} km, ${deniveleM} m de dénivelé`}>
+<Base titre={titre} description={`${titre} : ${distanceKm} km, ${deniveleM} m de dénivelé`} apercu={parcours.data.couverture}>
   <p class="meta"><a href={lien('parcours/')}>← Tous les parcours</a></p>
   <h1>{titre}</h1>
   <p class="meta">{distanceKm} km · {deniveleM} m D+ · {type} · {difficulte}</p>

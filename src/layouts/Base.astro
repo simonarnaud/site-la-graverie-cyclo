@@ -1,17 +1,24 @@
 ---
-import { Image } from 'astro:assets';
+import { getImage, Image } from 'astro:assets';
 import '../styles/global.css';
 import logo from '../assets/logo.png';
+import apercuParDefaut from '../assets/apercu.jpg';
 import club from '../data/club.json';
 import { lien } from '../lib/format';
 
 interface Props {
   titre?: string;
   description?: string;
+  // Image affichée quand la page est partagée (WhatsApp, Facebook…) ; par défaut, l'aperçu du club
+  apercu?: ImageMetadata;
+  type?: 'website' | 'article';
 }
 
-const { titre, description = club.slogan } = Astro.props;
+const { titre, description = club.slogan, apercu = apercuParDefaut, type = 'website' } = Astro.props;
 const titreComplet = titre ? `${titre} · ${club.nom}` : club.nom;
+const urlCanonique = new URL(Astro.url.pathname, Astro.site);
+const imageApercu = await getImage({ src: apercu, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+const urlApercu = new URL(imageApercu.src, Astro.site);
 
 const navigation = [
   { href: 'sorties/', label: 'Sorties' },
@@ -33,6 +40,18 @@ const courant = Astro.url.pathname;
     <meta name="theme-color" content="#b5121b" />
     <link rel="alternate" type="text/calendar" title="Calendrier des sorties" href={lien('sorties.ics')} />
     <meta name="description" content={description} />
+    <link rel="canonical" href={urlCanonique} />
+    <link rel="sitemap" href={lien('sitemap-index.xml')} />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={club.nom} />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:title" content={titre ?? club.nom} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={urlCanonique} />
+    <meta property="og:image" content={urlApercu} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="generator" content={Astro.generator} />
     <title>{titreComplet}</title>
   </head>
@@ -43,7 +62,10 @@ const courant = Astro.url.pathname;
           <Image src={logo} alt="" width={56} height={56} loading="eager" class="logo-image" />
           <span>{club.nom}</span>
         </a>
-        <nav aria-label="Navigation principale">
+        <button class="menu-bouton" type="button" aria-expanded="false" aria-controls="navigation" hidden>
+          <span aria-hidden="true">☰</span> Menu
+        </button>
+        <nav id="navigation" aria-label="Navigation principale">
           <ul>
             {navigation.map((item) => (
               <li>
@@ -71,6 +93,20 @@ const courant = Astro.url.pathname;
         </ul>
       </div>
     </footer>
+
+    <script>
+      // Menu repliable sur mobile. Sans JavaScript, le menu reste simplement affiché.
+      const entete = document.querySelector<HTMLElement>('.entete');
+      const bouton = entete?.querySelector<HTMLButtonElement>('.menu-bouton');
+      if (entete && bouton) {
+        entete.dataset.replie = '';
+        bouton.hidden = false;
+        bouton.addEventListener('click', () => {
+          const ouvert = bouton.getAttribute('aria-expanded') === 'true';
+          bouton.setAttribute('aria-expanded', String(!ouvert));
+        });
+      }
+    </script>
   </body>
 </html>
 
@@ -85,6 +121,22 @@ const courant = Astro.url.pathname;
   nav a { display: inline-block; padding: 4px 0; color: var(--texte-doux); text-decoration: none; font-weight: 500; border-bottom: 3px solid transparent; }
   nav a:hover { color: var(--accent); }
   nav a[aria-current='page'] { color: var(--texte); border-bottom-color: var(--jaune); }
+
+  .menu-bouton { display: none; }
+  @media (max-width: 640px) {
+    .logo { font-size: 1.05rem; gap: 10px; }
+    .logo-image { width: 44px; height: 44px; }
+    .entete[data-replie] .menu-bouton {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 999px; border: 1px solid var(--bordure);
+      background: var(--fond); color: var(--texte); font: inherit; font-weight: 600; cursor: pointer;
+    }
+    .entete[data-replie] nav { display: none; flex-basis: 100%; }
+    .entete[data-replie]:has(.menu-bouton[aria-expanded='true']) nav { display: block; }
+    .entete[data-replie] nav ul { flex-direction: column; gap: 0; padding: 4px 0 8px; }
+    .entete[data-replie] nav a { display: block; padding: 10px 0; border-bottom: 1px solid var(--bordure); }
+    .entete[data-replie] nav a[aria-current='page'] { border-bottom-color: var(--jaune); }
+  }
   .pied { margin-top: 32px; background: var(--surface); border-top: 1px solid var(--bordure); color: var(--texte-doux); font-size: .9rem; }
   .pied-contenu { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 20px; padding-bottom: 20px; }
   .pied p { margin: 0; }

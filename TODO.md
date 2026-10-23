@@ -40,11 +40,11 @@ Aucun contenu n'a encore été créé depuis l'interface `/admin/`. À vérifier
 - [ ] Désigner 1-2 référents
 
 ## Technique
-- [ ] Figer la version de Sveltia CMS dans `public/admin/index.html` (aujourd'hui : toujours la dernière)
+- [x] Figer la version de Sveltia CMS (0.250.2) : mise à jour manuelle, voir `docs/GUIDE-TECHNIQUE.md`
 - [x] Corriger `CLAUDE.md` : `club.yml` → `club.json`
-- [ ] Page 404 aux couleurs du club
-- [ ] Plan du site (sitemap) et image d'aperçu pour les partages (WhatsApp, Facebook)
-- [ ] Menu repliable sur mobile (facultatif)
+- [x] Page 404 aux couleurs du club
+- [x] Plan du site (sitemap), robots.txt et image d'aperçu pour les partages (WhatsApp, Facebook)
+- [x] Menu repliable sur mobile
 - [ ] Plus tard : profil d'altitude des parcours, statistiques sans cookie (GoatCounter)
 
 ## Rappel : mises à jour Dependabot
