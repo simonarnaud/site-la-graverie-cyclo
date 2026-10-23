@@ -2,7 +2,7 @@
 import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
-import { IDS_CATEGORIES } from './lib/categories';
+import { IDS_CATEGORIES, IDS_DISCIPLINES } from './lib/categories';
 
 const parcours = defineCollection({
   loader: glob({ pattern: '**/index.md', base: './src/content/parcours' }),
@@ -27,6 +27,7 @@ const sorties = defineCollection({
   schema: z.object({
     titre: z.string(),
     categorie: z.enum(IDS_CATEGORIES).default('sortie'),
+    discipline: z.enum(IDS_DISCIPLINES).optional(),
     date: z.coerce.date(),
     dureeHeures: z.number().positive().default(3),
     lieuRdv: z.string(),

@@ -50,6 +50,16 @@ collections:
           - { label: Rando, value: rando }
           - { label: Course, value: course }
           - { label: Autre, value: autre }
+      # Valeurs à garder synchronisées avec src/lib/categories.ts
+      - name: discipline
+        label: Discipline
+        widget: select
+        required: false
+        options:
+          - { label: Cyclo, value: cyclo }
+          - { label: Cyclosport, value: cyclosport }
+          - { label: VTT, value: vtt }
+          - { label: Cyclo-cross, value: cyclo-cross }
       - { name: date, label: Date et heure de départ, widget: datetime, input_timezone: Europe/Paris }
       - { name: dureeHeures, label: Durée estimée (heures), widget: number, value_type: float, default: 3, min: 0.5 }
       - { name: lieuRdv, label: Lieu / rendez-vous, widget: string }

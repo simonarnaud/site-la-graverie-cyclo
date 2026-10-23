@@ -1,6 +1,7 @@
 ---
 titre: Cyclo-cross de la Souleuvre
 categorie: course
+discipline: cyclo-cross
 date: 2026-11-22T13:30:00+01:00
 dureeHeures: 4
 lieuRdv: Souleuvre-en-Bocage

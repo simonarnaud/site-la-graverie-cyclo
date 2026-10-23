@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { CATEGORIES } from '../lib/categories';
+import { CATEGORIES, DISCIPLINES } from '../lib/categories';
 import { dateLongue, heure, lien } from '../lib/format';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { sortie } = Astro.props;
-const { titre, categorie, date, lieuRdv, organisateur, niveau, annulee } = sortie.data;
+const { titre, categorie, discipline, date, lieuRdv, organisateur, niveau, annulee } = sortie.data;
 ---
 
 <article class="carte" data-categorie={categorie}>
@@ -19,6 +19,7 @@ const { titre, categorie, date, lieuRdv, organisateur, niveau, annulee } = sorti
     <p class="meta">{lieuRdv}{organisateur && ` · ${organisateur}`}</p>
     <ul class="etiquettes">
       <li class="categorie" data-categorie={categorie}>{CATEGORIES[categorie].label}</li>
+      {discipline && <li class="discipline">{DISCIPLINES[discipline]}</li>}
       {niveau && <li>{niveau}</li>}
     </ul>
   </div>

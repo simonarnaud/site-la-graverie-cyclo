@@ -1,9 +1,9 @@
 ---
-// Calendrier : une grille par mois + la liste des événements, filtrables par type.
+// Calendrier : une grille par mois + la liste des événements, filtrables par type et par discipline.
 import Base from '../../layouts/Base.astro';
 import CarteSortie from '../../components/CarteSortie.astro';
 import { sortiesTriees } from '../../lib/contenus';
-import { CATEGORIES, type Categorie } from '../../lib/categories';
+import { CATEGORIES, DISCIPLINES, type Categorie, type Discipline } from '../../lib/categories';
 import { jourParis, lien } from '../../lib/format';
 
 const { aVenir, passees } = await sortiesTriees();
@@ -36,9 +36,9 @@ function nomMois(mois: string) {
   return nom.charAt(0).toUpperCase() + nom.slice(1);
 }
 
-const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) =>
-  [...aVenir, ...passees].some((s) => s.data.categorie === c),
-);
+const tous = [...aVenir, ...passees];
+const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) => tous.some((s) => s.data.categorie === c));
+const disciplinesPresentes = (Object.keys(DISCIPLINES) as Discipline[]).filter((d) => tous.some((s) => s.data.discipline === d));
 ---
 
 <Base titre="Calendrier" description="Sorties club, entraînements, randos et courses">
@@ -48,11 +48,23 @@ const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) 
     Ajoutez tout le calendrier à l'agenda de votre téléphone : <a href={lien('sorties.ics')}>s'abonner</a>.
   </p>
 
-  <div class="filtres" role="group" aria-label="Filtrer par type" hidden>
-    <button type="button" aria-pressed="true" data-filtre="tout">Tout</button>
-    {categoriesPresentes.map((c) => (
-      <button type="button" aria-pressed="false" data-filtre={c} data-categorie={c}>{CATEGORIES[c].pluriel}</button>
-    ))}
+  <div class="filtres" hidden>
+    <div class="filtre-groupe" role="group" aria-label="Filtrer par type" data-groupe="type">
+      <span class="filtre-titre">Type</span>
+      <button type="button" aria-pressed="true" data-filtre="tout">Tout</button>
+      {categoriesPresentes.map((c) => (
+        <button type="button" aria-pressed="false" data-filtre={c} data-categorie={c}>{CATEGORIES[c].pluriel}</button>
+      ))}
+    </div>
+    {disciplinesPresentes.length > 0 && (
+      <div class="filtre-groupe" role="group" aria-label="Filtrer par discipline" data-groupe="discipline">
+        <span class="filtre-titre">Discipline</span>
+        <button type="button" aria-pressed="true" data-filtre="tout">Toutes</button>
+        {disciplinesPresentes.map((d) => (
+          <button type="button" aria-pressed="false" data-filtre={d}>{DISCIPLINES[d]}</button>
+        ))}
+      </div>
+    )}
   </div>
 
   {[...parMois].map(([mois, evenements]) => (
@@ -71,7 +83,7 @@ const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) 
                     <td class:list={[{ aujourdhui: c.date === aujourdhui, passe: c.date < aujourdhui }]}>
                       <span class="numero">{c.jour}</span>
                       {c.evenements.map((s) => (
-                        <a class="pastille" href={`#${s.id}`} data-categorie={s.data.categorie} title={s.data.titre}></a>
+                        <a class="pastille" href={`#${s.id}`} data-categorie={s.data.categorie} data-type={s.data.categorie} data-discipline={s.data.discipline} title={s.data.titre}></a>
                       ))}
                     </td>
                   );
@@ -84,14 +96,14 @@ const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) 
         <div class="liste">
           {evenements.length > 0 ? (
             evenements.map((s) => (
-              <div class="evenement" id={s.id} data-type={s.data.categorie}>
+              <div class="evenement" id={s.id} data-type={s.data.categorie} data-discipline={s.data.discipline}>
                 <CarteSortie sortie={s} />
               </div>
             ))
           ) : (
             <p class="vide">Rien de prévu ce mois-ci pour le moment.</p>
           )}
-          <p class="vide aucun" hidden>Aucun événement de ce type ce mois-ci.</p>
+          <p class="vide aucun" hidden>Aucun événement correspondant ce mois-ci.</p>
         </div>
       </div>
     </section>
@@ -103,7 +115,7 @@ const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) 
         <summary><h2>Événements passés</h2></summary>
         <div class="grille-cartes">
           {passees.slice(0, 24).map((s) => (
-            <div class="evenement" data-type={s.data.categorie}><CarteSortie sortie={s} /></div>
+            <div class="evenement" data-type={s.data.categorie} data-discipline={s.data.discipline}><CarteSortie sortie={s} /></div>
           ))}
         </div>
       </details>
@@ -112,22 +124,24 @@ const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) 
 </Base>
 
 <script>
-  // Filtres par type. Sans JavaScript, tout reste affiché.
+  // Filtres par type et par discipline (cumulables). Sans JavaScript, tout reste affiché.
   const filtres = document.querySelector<HTMLElement>('.filtres');
   if (filtres) {
     filtres.hidden = false;
+    const choix: Record<string, string> = { type: 'tout', discipline: 'tout' };
+    const correspond = (el: HTMLElement) =>
+      (choix.type === 'tout' || el.dataset.type === choix.type) &&
+      (choix.discipline === 'tout' || el.dataset.discipline === choix.discipline);
+
     filtres.addEventListener('click', (e) => {
       const bouton = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-filtre]');
-      if (!bouton) return;
-      const filtre = bouton.dataset.filtre!;
-      filtres.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === bouton)));
+      const groupe = bouton?.closest<HTMLElement>('[data-groupe]');
+      if (!bouton || !groupe) return;
+      choix[groupe.dataset.groupe!] = bouton.dataset.filtre!;
+      groupe.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === bouton)));
 
-      document.querySelectorAll<HTMLElement>('.evenement').forEach((el) => {
-        el.hidden = filtre !== 'tout' && el.dataset.type !== filtre;
-      });
-      document.querySelectorAll<HTMLElement>('.pastille').forEach((el) => {
-        el.classList.toggle('attenuee', filtre !== 'tout' && el.dataset.categorie !== filtre);
-      });
+      document.querySelectorAll<HTMLElement>('.evenement').forEach((el) => (el.hidden = !correspond(el)));
+      document.querySelectorAll<HTMLElement>('.pastille').forEach((el) => el.classList.toggle('attenuee', !correspond(el)));
       document.querySelectorAll<HTMLElement>('.mois').forEach((mois) => {
         const tous = mois.querySelectorAll('.evenement');
         const visibles = mois.querySelectorAll('.evenement:not([hidden])');
@@ -138,7 +152,10 @@ const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) 
 </script>
 
 <style>
-  .filtres { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0; }
+  .filtres { display: grid; gap: 10px; margin: 24px 0 0; }
+  .filtre-groupe { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .filtre-titre { width: 88px; font-size: .85rem; font-weight: 600; color: var(--texte-doux); }
+  @media (max-width: 640px) { .filtre-titre { width: 100%; } }
   .filtres button {
     font: inherit; font-size: .9rem; font-weight: 600; cursor: pointer;
     padding: 6px 14px; border-radius: 999px;

@@ -18,6 +18,7 @@ Ensuite, votre navigateur se souvient de vous.
 
 1. Menu **Calendrier** → **Nouveau**.
 2. Choisissez le **type** : sortie club, entraînement, rando, course ou autre. Chaque type a sa couleur sur le site.
+   Indiquez aussi la **discipline** si elle est utile : cyclo, cyclosport, VTT ou cyclo-cross.
 3. Remplissez le titre, la date et l'heure de départ, le lieu et, si besoin, le niveau.
 4. Pour une rando ou une course organisée par un autre club, indiquez l'**organisateur**.
 5. Choisissez le parcours dans la liste, s'il existe déjà.
