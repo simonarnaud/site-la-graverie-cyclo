@@ -23,7 +23,7 @@ Premier essai réussi (sortie « La Mont-Blanc » + parcours, 23/10/2026). Reste
 ## 3. Connexion des bénévoles au CMS
 À faire avant d'inviter des bénévoles (le jeton d'accès est trop technique pour eux) :
 - [x] Option A : OAuth App GitHub + relais `sveltia-cms-auth` sur Cloudflare Workers, `base_url` dans le CMS (23/10/2026)
-- [ ] Tester « Se connecter avec GitHub » sur le site en ligne
+- [x] Tester « Se connecter avec GitHub » sur le site en ligne (OK le 23/10/2026)
 - [ ] Supprimer le Worker Cloudflare `site-la-graverie-cyclo` créé par erreur (garder le jeton d'API « site-la-graverie-cyclo build token », utilisé par le relais)
 - [ ] Restreindre l'app GitHub « Cloudflare Workers and Pages » au seul repo `sveltia-cms-auth`
 - [ ] Si un bénévole bloque sur GitHub : tester Pages CMS (invitation par email, sans compte GitHub)
