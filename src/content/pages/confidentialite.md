@@ -9,7 +9,7 @@ Ce site **ne collecte aucune donnée personnelle** : pas de compte, pas de formu
 ## Services tiers
 
 - **Cartes** : les fonds de carte proviennent d'[OpenStreetMap](https://www.openstreetmap.org). En affichant une carte, votre navigateur leur transmet votre adresse IP.
-- **Inscriptions aux sorties** : les liens « Je participe » mènent vers des services externes (Strava, Framadate, HelloAsso…) qui ont leur propre politique de confidentialité.
+- **Participation et inscriptions** : les boutons « Je participe sur Strava » et « S'inscrire auprès de l'organisateur » mènent vers des services externes (Strava, HelloAsso…) qui ont leur propre politique de confidentialité.
 - **Hébergement** : GitHub peut conserver des journaux techniques (adresse IP) pour assurer la sécurité du service.
 
 ## Vos droits

@@ -7,7 +7,7 @@ dureeHeures: 3.5
 lieuRdv: Place de la mairie, La Graverie
 niveau: intermédiaire
 parcours: boucle-du-bocage
-lienInscription: https://framadate.org/
+lienStrava: https://www.strava.com/clubs/exemple/group_events/1
 ---
 
 Attention : passage à l'heure d'hiver la nuit précédente. Prévoir éclairage et coupe-vent. *(Contenu d'exemple.)*

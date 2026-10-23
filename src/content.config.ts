@@ -35,6 +35,14 @@ const sorties = defineCollection({
     organisateur: z.string().optional(),
     niveau: z.enum(['découverte', 'intermédiaire', 'sportif']).optional(),
     parcours: reference('parcours').optional(),
+    // Participation : événement créé au préalable dans le club Strava
+    lienStrava: z
+      .url()
+      .refine((u) => /(^|\.)strava\.(com|app\.link)$/.test(new URL(u).hostname), {
+        message: 'Le lien de participation doit être un lien Strava (strava.com ou strava.app.link)',
+      })
+      .optional(),
+    // Inscription auprès d'un organisateur extérieur (rando, course), si elle est nécessaire
     lienInscription: z.url().optional(),
     annulee: z.boolean().default(false),
   }),

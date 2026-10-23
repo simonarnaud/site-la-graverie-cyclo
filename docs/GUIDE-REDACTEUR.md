@@ -22,10 +22,11 @@ Ensuite, votre navigateur se souvient de vous.
 3. Remplissez le titre, la date et l'heure de départ, le lieu et, si besoin, le niveau.
 4. Pour une rando ou une course organisée par un autre club, indiquez l'**organisateur**.
 5. Choisissez le parcours dans la liste, s'il existe déjà.
-6. Collez le lien d'inscription (événement Strava, sondage Framadate, HelloAsso, site de la FSGT…), si vous en avez un.
+6. **Participation** : créez d'abord l'événement dans le club Strava, puis collez son lien dans « Lien de l'événement Strava » (dans l'application Strava : Partager → Copier le lien). Les membres indiquent leur participation sur Strava, et l'on voit combien de personnes viennent.
+   Pour une rando ou une course organisée ailleurs qui demande une inscription, collez aussi le lien d'inscription de l'organisateur.
 7. Cliquez sur **Enregistrer**.
 
-L'événement apparaît dans le calendrier, au mois de sa date ; les visiteurs passent d'un mois à l'autre avec les flèches. Pour annuler un événement, ouvrez-le et cochez **Sortie annulée** plutôt que de le supprimer : les membres abonnés au calendrier seront prévenus.
+L'événement apparaît dans le calendrier, au mois de sa date ; les visiteurs passent d'un mois à l'autre avec les flèches. Pour annuler un événement, ouvrez-le et cochez **Événement annulé** plutôt que de le supprimer : les membres abonnés au calendrier seront prévenus.
 
 ## Publier un document PDF
 

@@ -6,7 +6,7 @@ dureeHeures: 4
 lieuRdv: Parking de l'église, La Graverie
 niveau: sportif
 parcours: gravel-des-collines
-lienInscription: https://www.strava.com/
+lienStrava: https://www.strava.com/clubs/exemple/group_events/2
 ---
 
 Chemins parfois boueux : pneus de 40 mm minimum conseillés. *(Contenu d'exemple.)*

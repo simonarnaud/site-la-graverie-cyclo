@@ -18,7 +18,7 @@ Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECT
 - **GitHub Pages** déployé par **GitHub Actions** à chaque push sur `main` + rebuild quotidien (cron) + manuel.
 - Cartes : **Leaflet**, fond OSM, uniquement sur les pages parcours. Tracé simplifié, distance et D+ calculés au build depuis le GPX.
 - Contact : `mailto:` vers une adresse du club (formulaire Web3Forms/Formspree seulement si besoin, à déclarer RGPD).
-- Participation aux sorties : champ `lienInscription` (événement club Strava, Framadate ou billetterie gratuite HelloAsso). Vote maison (Firebase/Supabase) = v2 éventuelle, pas avant.
+- Participation aux événements : champ `lienStrava` (événement créé au préalable dans le club Strava, validé strava.com / strava.app.link) → bouton « Je participe sur Strava ». `lienInscription` facultatif = inscription chez un organisateur extérieur (rando, course). Vote maison (Firebase/Supabase) = v2 éventuelle, pas avant.
 - Flux calendrier `/sorties.ics` généré au build.
 - Adhésions : lien/widget HelloAsso (optionnel au début).
 - Stats éventuelles : GoatCounter (sans cookie) ou rien.
@@ -26,7 +26,7 @@ Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECT
 ## Organisation
 - Démarrage sur le **GitHub perso** du mainteneur, transfert prévu vers une **organisation GitHub du club** (Settings → Transfer ; les redirections sont conservées).
 - Collections : `sorties` (fichiers plats datés, champ `categorie` : entrainement | rando | course | autre, champ facultatif `discipline` : cyclo | cyclosport | vtt | cyclo-cross, cf. `src/lib/categories.ts` ; page `/calendrier/`), `parcours` (dossier + GPX dans `public/gpx/`), `actualites` (dossier par article, images colocalisées), `albums` (≤ 12 photos + lien album complet), `documents` (PDF dans `public/documents/`), `pages`. Données globales : `src/data/club.json`.
-- Champs de frontmatter **en français** (titre, date, lieuRdv, niveau, lienInscription, annulee, brouillon…), libellés CMS en français.
+- Champs de frontmatter **en français** (titre, date, lieuRdv, niveau, lienStrava, lienInscription, annulee, brouillon…), libellés CMS en français.
 
 ## Conventions de travail
 - Langue du projet, des commits, de l'UI et de la doc : **français**.

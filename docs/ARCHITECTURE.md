@@ -12,7 +12,7 @@ Ce document garde la trace des choix faits au lancement du projet (octobre 2026)
 | Galeries | Liens externes (Google Photos, Flickr, Piwigo) | Limites de taille de Pages / du repo | — |
 | Carte | Leaflet + leaflet-gpx + tuiles OSM | Léger, sans clé, chargé à la demande | MapLibre + OpenFreeMap, iframes Komoot / RideWithGPS |
 | Contact | `mailto:` | Aucune donnée collectée | Web3Forms (250/mois), Formspree (50/mois) avec honeypot |
-| Participation | Champ `lienInscription` | Un site statique ne peut pas compter seul | Événement club Strava, Framadate, billetterie gratuite HelloAsso ; v2 : Firebase/Supabase |
+| Participation | Champ `lienStrava` (événement du club Strava) | Un site statique ne peut pas compter seul ; les membres sont déjà sur Strava | Framadate, billetterie gratuite HelloAsso ; v2 : Firebase/Supabase |
 | Adhésions | HelloAsso | Gratuit pour les associations | — |
 | Stats | GoatCounter ou rien | Sans cookie | — |
 
@@ -36,7 +36,7 @@ docs/{ARCHITECTURE.md, GUIDE-REDACTEUR.md, GUIDE-TECHNIQUE.md}
 ```
 
 ### Schémas prévus
-- **sorties** (`*.md` plats, nom `AAAA-MM-JJ-slug.md`) : `titre`, `date` (date+heure), `lieuRdv`, `niveau` (découverte | intermédiaire | sportif), `parcours` (référence, optionnel), `lienInscription` (URL, optionnel), `annulee` (bool), corps = description.
+- **sorties** (`*.md` plats, nom `AAAA-MM-JJ-slug.md`) : `titre`, `date` (date+heure), `lieuRdv`, `niveau` (découverte | intermédiaire | sportif), `parcours` (référence, optionnel), `lienStrava` (URL Strava, optionnel), `lienInscription` (URL organisateur, optionnel), `annulee` (bool), corps = description.
 - **parcours** (`slug/index.md` + couverture) : `titre`, `type` (route | gravel | vtt), `difficulte` (facile | moyen | difficile), `gpx` (`/gpx/xxx.gpx`), `distanceKm`/`deniveleM` (optionnels, sinon calculés), `couverture`.
 - **actualites** (`slug/index.md` + images colocalisées, `media_folder: ''`) : `titre`, `date`, `auteur`, `couverture`, `couvertureAlt`, `brouillon`.
 - **albums** : `titre`, `date`, `photos` (≤ 12 × {src, alt}), `lienAlbumComplet`.

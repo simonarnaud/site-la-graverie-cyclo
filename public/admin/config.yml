@@ -80,12 +80,17 @@ collections:
         search_fields: [titre]
         display_fields: [titre]
         required: false
-      - name: lienInscription
-        label: Lien d'inscription
-        hint: Lien vers l'événement Strava, le sondage Framadate ou la billetterie HelloAsso.
+      - name: lienStrava
+        label: Lien de l'événement Strava
+        hint: "Créez d'abord l'événement dans le club Strava, puis collez son lien ici (Partager → Copier le lien). Les membres indiquent leur participation sur Strava."
         widget: string
         required: false
-      - { name: annulee, label: Sortie annulée, widget: boolean, default: false }
+      - name: lienInscription
+        label: Lien d'inscription chez l'organisateur
+        hint: Seulement pour une rando ou une course organisée ailleurs, si l'organisateur demande une inscription (HelloAsso, site de la FSGT…).
+        widget: string
+        required: false
+      - { name: annulee, label: Événement annulé, widget: boolean, default: false }
       - { name: body, label: Description, widget: markdown, required: false, editor_components: [] }
 
   - name: actualites
