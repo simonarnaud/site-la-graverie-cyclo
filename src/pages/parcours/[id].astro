@@ -25,7 +25,7 @@ const urlGpx = new URL(lien(gpx), Astro.site);
   <p class="meta ecran-seulement"><a href={lien('parcours/')}>← Tous les parcours</a></p>
   <p class="meta impression-seulement">{club.nom}</p>
   <h1>{titre}</h1>
-  <p class="meta">{distanceKm} km · {deniveleM} m D+ · {type} · {difficulte}</p>
+  <p class="meta">{[`${distanceKm} km`, `${deniveleM} m D+`, type, difficulte].filter(Boolean).join(' · ')}</p>
 
   <Carte points={trace.points} titre={titre} />
   <ProfilAltitude profil={trace.profil} />

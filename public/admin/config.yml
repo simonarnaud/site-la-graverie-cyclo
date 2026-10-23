@@ -126,7 +126,7 @@ collections:
     fields:
       - { name: titre, label: Titre, widget: string }
       - { name: type, label: Type, widget: select, options: [route, gravel, vtt] }
-      - { name: difficulte, label: Difficulté, widget: select, options: [facile, moyen, difficile] }
+      - { name: difficulte, label: Difficulté (facultatif), widget: select, required: false, options: [facile, moyen, difficile] }
       - name: gpx
         label: Trace GPX
         hint: Coupez le début et la fin de la trace pour ne pas révéler le domicile de quelqu'un.

@@ -10,7 +10,7 @@ const parcours = defineCollection({
     z.object({
       titre: z.string(),
       type: z.enum(['route', 'gravel', 'vtt']),
-      difficulte: z.enum(['facile', 'moyen', 'difficile']),
+      difficulte: z.enum(['facile', 'moyen', 'difficile']).optional(),
       // Chemin du fichier dans public/, ex. /gpx/tour-du-lac.gpx
       gpx: z.string().startsWith('/gpx/'),
       // Facultatifs : sinon calculés depuis le GPX

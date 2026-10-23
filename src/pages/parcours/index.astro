@@ -23,7 +23,7 @@ const parcours = (await getCollection('parcours'))
           <div class="corps">
             <h3><a href={lien(`parcours/${p.id}/`)}>{p.data.titre}</a></h3>
             <p class="meta">{p.distanceKm} km · {p.deniveleM} m D+</p>
-            <ul class="etiquettes"><li>{p.data.type}</li><li>{p.data.difficulte}</li></ul>
+            <ul class="etiquettes"><li>{p.data.type}</li>{p.data.difficulte && <li>{p.data.difficulte}</li>}</ul>
           </div>
         </article>
       ))}

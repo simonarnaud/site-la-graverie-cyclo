@@ -37,7 +37,7 @@ docs/{ARCHITECTURE.md, GUIDE-REDACTEUR.md, GUIDE-TECHNIQUE.md}
 
 ### Schémas prévus
 - **sorties** (`*.md` plats, nom `AAAA-MM-JJ-slug.md`) : `titre`, `date` (date+heure), `lieuRdv`, `niveau` (découverte | intermédiaire | sportif), `parcours` (référence, optionnel), `lienStrava` (URL Strava, optionnel), `lienInscription` (URL organisateur, optionnel), `annulee` (bool), corps = description.
-- **parcours** (`slug/index.md` + couverture) : `titre`, `type` (route | gravel | vtt), `difficulte` (facile | moyen | difficile), `gpx` (`/gpx/xxx.gpx`), `distanceKm`/`deniveleM` (optionnels, sinon calculés), `couverture`.
+- **parcours** (`slug/index.md` + couverture) : `titre`, `type` (route | gravel | vtt), `difficulte` (facile | moyen | difficile, facultatif), `gpx` (`/gpx/xxx.gpx`), `distanceKm`/`deniveleM` (optionnels, sinon calculés), `couverture`.
 - **actualites** (`slug/index.md` + images colocalisées, `media_folder: ''`) : `titre`, `date`, `auteur`, `couverture`, `couvertureAlt`, `brouillon`.
 - **albums** : `titre`, `date`, `photos` (≤ 12 × {src, alt}), `lienAlbumComplet`.
 - Sveltia : `media_libraries.default.config.transformations.raster_image` → webp, qualité 85, 2048 px max (syntaxe à vérifier dans la doc).
