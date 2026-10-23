@@ -58,10 +58,10 @@ const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) 
 const disciplinesPresentes = (Object.keys(DISCIPLINES) as Discipline[]).filter((d) => evenements.some((s) => s.data.discipline === d));
 ---
 
-<Base titre="Calendrier" description="Sorties club, randos et courses">
+<Base titre="Calendrier" description="Entraînements, randos et courses">
   <h1>Calendrier</h1>
   <p>
-    Sorties club, randos et courses.
+    Entraînements, randos et courses.
     Ajoutez tout le calendrier à l'agenda de votre téléphone : <a href={lien('sorties.ics')}>s'abonner</a>.
   </p>
 

@@ -30,7 +30,7 @@ collections:
   - name: sorties
     label: Calendrier
     label_singular: Événement
-    description: Sorties club (y compris les entraînements), randos, courses… Les événements passés restent consultables en remontant les mois du calendrier.
+    description: Entraînements (sorties du club), randos, courses… Les événements passés restent consultables en remontant les mois du calendrier.
     folder: src/content/sorties
     create: true
     identifier_field: titre
@@ -43,9 +43,9 @@ collections:
       - name: categorie
         label: Type
         widget: select
-        default: sortie
+        default: entrainement
         options:
-          - { label: Sortie club, value: sortie }
+          - { label: Entraînement, value: entrainement }
           - { label: Rando, value: rando }
           - { label: Course, value: course }
           - { label: Autre, value: autre }

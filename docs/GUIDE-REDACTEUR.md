@@ -17,7 +17,7 @@ Ensuite, votre navigateur se souvient de vous.
 ## Ajouter un événement au calendrier
 
 1. Menu **Calendrier** → **Nouveau**.
-2. Choisissez le **type** : sortie club (y compris les entraînements), rando, course ou autre. Chaque type a sa couleur sur le site.
+2. Choisissez le **type** : entraînement (sorties du club), rando, course ou autre. Chaque type a sa couleur sur le site.
    Indiquez aussi la **discipline** si elle est utile : cyclo, cyclosport, VTT ou cyclo-cross.
 3. Remplissez le titre, la date et l'heure de départ, le lieu et, si besoin, le niveau.
 4. Pour une rando ou une course organisée par un autre club, indiquez l'**organisateur**.

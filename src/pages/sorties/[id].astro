@@ -36,7 +36,7 @@ const aVenir = date.getTime() > Date.now();
   </dl>
 
   {lienInscription && aVenir && !annulee && (
-    <p><a class="bouton" href={lienInscription} rel="noopener">{categorie === 'sortie' ? 'Je participe' : "S'inscrire"}</a></p>
+    <p><a class="bouton" href={lienInscription} rel="noopener">{categorie === 'entrainement' ? 'Je participe' : "S'inscrire"}</a></p>
   )}
 
   <div class="prose"><Content /></div>

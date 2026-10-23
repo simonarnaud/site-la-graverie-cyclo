@@ -1,6 +1,6 @@
 ---
 titre: Sortie d'automne
-categorie: sortie
+categorie: entrainement
 discipline: cyclo
 date: 2026-10-25T09:00:00+01:00
 dureeHeures: 3.5

@@ -21,12 +21,12 @@ const parcours = defineCollection({
     }),
 });
 
-// Événements du calendrier : sorties club, randos, courses…
+// Événements du calendrier : entraînements, randos, courses…
 const sorties = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/sorties' }),
   schema: z.object({
     titre: z.string(),
-    categorie: z.enum(IDS_CATEGORIES).default('sortie'),
+    categorie: z.enum(IDS_CATEGORIES).default('entrainement'),
     discipline: z.enum(IDS_DISCIPLINES).optional(),
     date: z.coerce.date(),
     dureeHeures: z.number().positive().default(3),
