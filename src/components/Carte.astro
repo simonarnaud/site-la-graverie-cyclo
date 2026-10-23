@@ -24,9 +24,11 @@ const { points, titre } = Astro.props;
       attribution: '© <a href="https://www.openstreetmap.org/copyright">contributeurs OpenStreetMap</a>',
     }).addTo(carte);
 
-    const couleur = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#2f6b3f';
-    const trace = L.polyline(points, { color: couleur, weight: 4 }).addTo(carte);
-    L.circleMarker(points[0], { radius: 7, color: '#fff', fillColor: couleur, fillOpacity: 1, weight: 2 })
+    const style = getComputedStyle(document.documentElement);
+    const rouge = style.getPropertyValue('--rouge-logo').trim() || '#e30613';
+    const jaune = style.getPropertyValue('--jaune-logo').trim() || '#fddc09';
+    const trace = L.polyline(points, { color: rouge, weight: 4, opacity: 0.85 }).addTo(carte);
+    L.circleMarker(points[0], { radius: 8, color: rouge, fillColor: jaune, fillOpacity: 1, weight: 3 })
       .bindTooltip('Départ')
       .addTo(carte);
     carte.fitBounds(trace.getBounds(), { padding: [20, 20] });

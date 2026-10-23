@@ -4,7 +4,7 @@ titre: Mentions légales
 
 ## Éditeur du site
 
-**La Graverie Cyclo**, association loi 1901
+**La Graverie Cyclos**, association loi 1901
 Siège : *adresse à compléter*
 Numéro RNA : *à compléter*
 Contact : voir l'adresse email en bas de page

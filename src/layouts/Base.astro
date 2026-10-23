@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import '../styles/global.css';
+import logo from '../assets/logo.png';
 import club from '../data/club.json';
 import { lien } from '../lib/format';
 
@@ -26,7 +28,9 @@ const courant = Astro.url.pathname;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href={lien('favicon.svg')} />
+    <link rel="icon" type="image/png" href={lien('favicon.png')} />
+    <link rel="apple-touch-icon" href={lien('apple-touch-icon.png')} />
+    <meta name="theme-color" content="#b5121b" />
     <link rel="alternate" type="text/calendar" title="Calendrier des sorties" href={lien('sorties.ics')} />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
@@ -35,7 +39,10 @@ const courant = Astro.url.pathname;
   <body>
     <header class="entete">
       <div class="conteneur entete-contenu">
-        <a class="logo" href={lien('/')}>{club.nom}</a>
+        <a class="logo" href={lien('/')}>
+          <Image src={logo} alt="" width={56} height={56} loading="eager" class="logo-image" />
+          <span>{club.nom}</span>
+        </a>
         <nav aria-label="Navigation principale">
           <ul>
             {navigation.map((item) => (
@@ -68,13 +75,17 @@ const courant = Astro.url.pathname;
 </html>
 
 <style>
-  .entete { background: var(--surface); border-bottom: 1px solid var(--bordure); }
-  .entete-contenu { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; padding-top: 14px; padding-bottom: 14px; }
-  .logo { font-weight: 800; font-size: 1.2rem; color: var(--texte); text-decoration: none; }
-  nav ul { display: flex; flex-wrap: wrap; gap: 4px 18px; list-style: none; margin: 0; padding: 0; }
-  nav a { color: var(--texte-doux); text-decoration: none; font-weight: 500; }
-  nav a:hover, nav a[aria-current='page'] { color: var(--accent); }
-  .pied { border-top: 1px solid var(--bordure); color: var(--texte-doux); font-size: .9rem; }
+  .entete { background: var(--surface); border-top: 4px solid var(--rouge-logo); border-bottom: 1px solid var(--bordure); }
+  .entete-contenu { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; padding-top: 10px; padding-bottom: 10px; }
+  .logo { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.2rem; color: var(--texte); text-decoration: none; }
+  .logo:hover { color: var(--texte); }
+  /* Le logo a un fond blanc : on l'affiche dans une pastille ronde, lisible aussi en mode sombre */
+  .logo-image { border-radius: 50%; background: #fff; }
+  nav ul { display: flex; flex-wrap: wrap; gap: 4px 20px; list-style: none; margin: 0; padding: 0; }
+  nav a { display: inline-block; padding: 4px 0; color: var(--texte-doux); text-decoration: none; font-weight: 500; border-bottom: 3px solid transparent; }
+  nav a:hover { color: var(--accent); }
+  nav a[aria-current='page'] { color: var(--texte); border-bottom-color: var(--jaune); }
+  .pied { margin-top: 32px; background: var(--surface); border-top: 1px solid var(--bordure); color: var(--texte-doux); font-size: .9rem; }
   .pied-contenu { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 20px; padding-bottom: 20px; }
   .pied p { margin: 0; }
   .pied ul { display: flex; flex-wrap: wrap; gap: 4px 18px; list-style: none; margin: 0; padding: 0; }

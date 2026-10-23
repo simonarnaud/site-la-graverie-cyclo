@@ -1,4 +1,4 @@
-# Site de La Graverie Cyclo
+# Site de La Graverie Cyclos
 
 Site statique du club : sorties, parcours avec carte et GPX, actualités, photos.
 

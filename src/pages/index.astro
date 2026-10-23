@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.png';
 import Base from '../layouts/Base.astro';
 import CarteSortie from '../components/CarteSortie.astro';
 import CarteActu from '../components/CarteActu.astro';
@@ -12,12 +14,17 @@ const actus = (await actualitesPubliees()).slice(0, 3);
 
 <Base>
   <section class="accueil">
-    <h1>{club.nom}</h1>
-    <p class="slogan">{club.slogan}</p>
-    <p class="actions">
-      <a class="bouton" href={lien('sorties/')}>Voir les prochaines sorties</a>
-      {club.lienAdhesion && <a class="bouton secondaire" href={club.lienAdhesion}>Adhérer au club</a>}
-    </p>
+    <div>
+      <h1>{club.nom}</h1>
+      <p class="slogan">{club.slogan}</p>
+      <p class="actions">
+        <a class="bouton" href={lien('sorties/')}>Voir les prochaines sorties</a>
+        <a class="bouton secondaire" href={club.lienAdhesion || lien('le-club/')}>
+          {club.lienAdhesion ? 'Adhérer au club' : 'Découvrir le club'}
+        </a>
+      </p>
+    </div>
+    <Image src={logo} alt={`Logo de ${club.nom}`} width={260} height={260} loading="eager" class="accueil-logo" />
   </section>
 
   <section class="section">
@@ -46,7 +53,18 @@ const actus = (await actualitesPubliees()).slice(0, 3);
 </Base>
 
 <style>
-  .accueil { padding: 24px 0 8px; }
-  .slogan { font-size: 1.2rem; color: var(--texte-doux); margin: 0 0 1.2em; }
-  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .accueil {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px 40px;
+    padding: 32px clamp(20px, 4vw, 48px);
+    background: var(--surface); border: 1px solid var(--bordure); border-radius: 20px; box-shadow: var(--ombre);
+    /* touche jaune très légère dans le coin, sans effet « flash » */
+    background-image: radial-gradient(circle at 100% 0%, var(--jaune-doux), transparent 45%);
+  }
+  .slogan { font-size: 1.2rem; color: var(--texte-doux); margin: 0 0 1.4em; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; }
+  .accueil-logo { flex-shrink: 0; width: clamp(140px, 24vw, 240px); border-radius: 50%; background: #fff; }
+  @media (max-width: 640px) {
+    .accueil { flex-direction: column-reverse; text-align: center; }
+    .actions { justify-content: center; }
+  }
 </style>
