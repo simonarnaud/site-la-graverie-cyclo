@@ -1,0 +1,31 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Carte from '../../components/Carte.astro';
+import { lireGpx } from '../../lib/gpx';
+import { lien } from '../../lib/format';
+
+export async function getStaticPaths() {
+  const parcours = await getCollection('parcours');
+  return parcours.map((p) => ({ params: { id: p.id }, props: { parcours: p } }));
+}
+
+const { parcours } = Astro.props;
+const { titre, type, difficulte, gpx } = parcours.data;
+const trace = lireGpx(gpx);
+const distanceKm = parcours.data.distanceKm ?? trace.distanceKm;
+const deniveleM = parcours.data.deniveleM ?? trace.deniveleM;
+const { Content } = await render(parcours);
+---
+
+<Base titre={titre} description={`${titre} : ${distanceKm} km, ${deniveleM} m de dénivelé`}>
+  <p class="meta"><a href={lien('parcours/')}>← Tous les parcours</a></p>
+  <h1>{titre}</h1>
+  <p class="meta">{distanceKm} km · {deniveleM} m D+ · {type} · {difficulte}</p>
+
+  <Carte points={trace.points} titre={titre} />
+
+  <p><a class="bouton" href={lien(gpx)} download>Télécharger la trace GPX</a></p>
+
+  <div class="prose"><Content /></div>
+</Base>

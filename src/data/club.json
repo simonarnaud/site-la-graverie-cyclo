@@ -1,0 +1,15 @@
+{
+  "nom": "La Graverie Cyclo",
+  "slogan": "Route, gravel et VTT entre bocage et collines",
+  "email": "contact@exemple.fr",
+  "ville": "La Graverie (Calvados)",
+  "lienAdhesion": "",
+  "reseaux": [
+    { "nom": "Strava", "url": "https://www.strava.com/" }
+  ],
+  "bureau": [
+    { "role": "Président·e", "nom": "À compléter" },
+    { "role": "Trésorier·ère", "nom": "À compléter" },
+    { "role": "Secrétaire", "nom": "À compléter" }
+  ]
+}

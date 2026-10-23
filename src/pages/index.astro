@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import CarteSortie from '../components/CarteSortie.astro';
+import CarteActu from '../components/CarteActu.astro';
+import club from '../data/club.json';
+import { sortiesTriees, actualitesPubliees } from '../lib/contenus';
+import { lien } from '../lib/format';
+
+const { aVenir } = await sortiesTriees();
+const actus = (await actualitesPubliees()).slice(0, 3);
+---
+
+<Base>
+  <section class="accueil">
+    <h1>{club.nom}</h1>
+    <p class="slogan">{club.slogan}</p>
+    <p class="actions">
+      <a class="bouton" href={lien('sorties/')}>Voir les prochaines sorties</a>
+      {club.lienAdhesion && <a class="bouton secondaire" href={club.lienAdhesion}>Adhérer au club</a>}
+    </p>
+  </section>
+
+  <section class="section">
+    <div class="section-titre">
+      <h2>Prochaines sorties</h2>
+      <a href={lien('sorties/')}>Toutes les sorties →</a>
+    </div>
+    {aVenir.length > 0 ? (
+      <div class="grille">{aVenir.slice(0, 3).map((sortie) => <CarteSortie sortie={sortie} />)}</div>
+    ) : (
+      <p class="vide">Aucune sortie programmée pour le moment.</p>
+    )}
+  </section>
+
+  <section class="section">
+    <div class="section-titre">
+      <h2>Actualités</h2>
+      <a href={lien('actualites/')}>Toutes les actualités →</a>
+    </div>
+    {actus.length > 0 ? (
+      <div class="grille">{actus.map((actu) => <CarteActu actu={actu} />)}</div>
+    ) : (
+      <p class="vide">Pas encore d'actualité.</p>
+    )}
+  </section>
+</Base>
+
+<style>
+  .accueil { padding: 24px 0 8px; }
+  .slogan { font-size: 1.2rem; color: var(--texte-doux); margin: 0 0 1.2em; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+</style>

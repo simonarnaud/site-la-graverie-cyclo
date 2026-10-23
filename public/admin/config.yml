@@ -1,0 +1,178 @@
+# Configuration de Sveltia CMS (https://sveltiacms.app/en/docs).
+# Toute modification de champ doit être répercutée dans src/content.config.ts (et inversement).
+
+backend:
+  name: github
+  repo: simonarnaud/site-la-graverie-cyclo
+  branch: main
+  # Connexion « avec GitHub » : décommenter quand le relais sveltia-cms-auth sera déployé.
+  # En attendant, connexion par jeton (« Sign In with Token »).
+  # base_url: https://sveltia-cms-auth.<compte>.workers.dev
+
+site_url: https://simonarnaud.github.io/site-la-graverie-cyclo/
+display_url: https://simonarnaud.github.io/site-la-graverie-cyclo/
+
+# Dossier par défaut (peu utilisé : les images sont rangées à côté de chaque contenu).
+media_folder: /public/uploads
+public_folder: /uploads
+
+# Les photos sont réduites et converties en WebP dans le navigateur, avant l'envoi.
+media_libraries:
+  all:
+    transformations:
+      raster_image:
+        format: webp
+        quality: 85
+        width: 2048
+        height: 2048
+
+collections:
+  - name: sorties
+    label: Sorties
+    label_singular: Sortie
+    description: Les sorties du calendrier. Elles passent automatiquement dans « Sorties passées » le lendemain.
+    folder: src/content/sorties
+    create: true
+    identifier_field: titre
+    slug: "{{fields.date | date('YYYY-MM-DD')}}-{{slug}}"
+    summary: "{{date | date('DD/MM/YYYY')}} – {{titre}}"
+    sortable_fields: [date, titre]
+    fields:
+      - { name: titre, label: Titre, widget: string }
+      - { name: date, label: Date et heure de départ, widget: datetime, input_timezone: Europe/Paris }
+      - { name: dureeHeures, label: Durée estimée (heures), widget: number, value_type: float, default: 3, min: 0.5 }
+      - { name: lieuRdv, label: Lieu de rendez-vous, widget: string }
+      - name: niveau
+        label: Niveau
+        widget: select
+        options: [découverte, intermédiaire, sportif]
+      - name: parcours
+        label: Parcours
+        widget: relation
+        collection: parcours
+        value_field: '{{slug}}'
+        search_fields: [titre]
+        display_fields: [titre]
+        required: false
+      - name: lienInscription
+        label: Lien d'inscription
+        hint: Lien vers l'événement Strava, le sondage Framadate ou la billetterie HelloAsso.
+        widget: string
+        required: false
+      - { name: annulee, label: Sortie annulée, widget: boolean, default: false }
+      - { name: body, label: Description, widget: markdown, required: false, editor_components: [] }
+
+  - name: actualites
+    label: Actualités
+    label_singular: Actualité
+    folder: src/content/actualites
+    path: '{{slug}}/index'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    identifier_field: titre
+    summary: "{{date | date('DD/MM/YYYY')}} – {{titre}}"
+    sortable_fields: [date, titre]
+    fields:
+      - { name: titre, label: Titre, widget: string }
+      - { name: date, label: Date, widget: datetime, input_timezone: Europe/Paris }
+      - { name: auteur, label: Auteur, widget: string }
+      - { name: resume, label: Résumé (une phrase), widget: string, required: false }
+      - { name: couverture, label: Image de couverture, widget: image, required: false }
+      - { name: couvertureAlt, label: Description de l'image (pour les malvoyants), widget: string, required: false }
+      - { name: brouillon, label: Brouillon (non publié), widget: boolean, default: false }
+      - { name: body, label: Texte, widget: markdown }
+
+  - name: parcours
+    label: Parcours
+    label_singular: Parcours
+    folder: src/content/parcours
+    path: '{{slug}}/index'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    identifier_field: titre
+    fields:
+      - { name: titre, label: Titre, widget: string }
+      - { name: type, label: Type, widget: select, options: [route, gravel, vtt] }
+      - { name: difficulte, label: Difficulté, widget: select, options: [facile, moyen, difficile] }
+      - name: gpx
+        label: Trace GPX
+        hint: Coupez le début et la fin de la trace pour ne pas révéler le domicile de quelqu'un.
+        widget: file
+        media_folder: /public/gpx
+        public_folder: /gpx
+      - { name: distanceKm, label: Distance (km), hint: Laisser vide pour la calculer depuis le GPX., widget: number, value_type: float, required: false }
+      - { name: deniveleM, label: Dénivelé positif (m), hint: Laisser vide pour le calculer depuis le GPX., widget: number, value_type: int, required: false }
+      - { name: couverture, label: Photo, widget: image, required: false }
+      - { name: couvertureAlt, label: Description de la photo, widget: string, required: false }
+      - { name: body, label: Description, widget: markdown, required: false }
+
+  - name: albums
+    label: Photos
+    label_singular: Album
+    description: Une sélection de 12 photos maximum par sortie. L'album complet reste sur Google Photos (ou autre).
+    folder: src/content/albums
+    path: '{{slug}}/index'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    identifier_field: titre
+    summary: "{{date | date('DD/MM/YYYY')}} – {{titre}}"
+    fields:
+      - { name: titre, label: Titre, widget: string }
+      - { name: date, label: Date, widget: datetime, input_timezone: Europe/Paris }
+      - { name: lienAlbumComplet, label: Lien vers l'album complet, widget: string }
+      - name: photos
+        label: Photos (12 maximum)
+        widget: list
+        min: 1
+        max: 12
+        fields:
+          - { name: src, label: Photo, widget: image }
+          - { name: alt, label: Description courte, widget: string }
+
+  - name: club
+    label: Le club
+    files:
+      - name: le-club
+        label: Page de présentation
+        file: src/content/pages/le-club.md
+        fields:
+          - { name: titre, label: Titre, widget: string }
+          - { name: description, label: Description, widget: string, required: false }
+          - { name: body, label: Texte, widget: markdown, editor_components: [] }
+      - name: infos
+        label: Coordonnées et bureau
+        file: src/data/club.json
+        fields:
+          - { name: nom, label: Nom du club, widget: string }
+          - { name: slogan, label: Slogan, widget: string }
+          - { name: email, label: Email de contact, widget: string }
+          - { name: ville, label: Ville, widget: string }
+          - { name: lienAdhesion, label: Lien d'adhésion HelloAsso, widget: string, required: false }
+          - name: reseaux
+            label: Réseaux sociaux
+            widget: list
+            fields:
+              - { name: nom, label: Nom, widget: string }
+              - { name: url, label: Lien, widget: string }
+          - name: bureau
+            label: Bureau
+            hint: Uniquement avec l'accord des personnes.
+            widget: list
+            fields:
+              - { name: role, label: Rôle, widget: string }
+              - { name: nom, label: Nom, widget: string }
+      - name: mentions-legales
+        label: Mentions légales
+        file: src/content/pages/mentions-legales.md
+        fields:
+          - { name: titre, label: Titre, widget: string }
+          - { name: body, label: Texte, widget: markdown, editor_components: [] }
+      - name: confidentialite
+        label: Politique de confidentialité
+        file: src/content/pages/confidentialite.md
+        fields:
+          - { name: titre, label: Titre, widget: string }
+          - { name: body, label: Texte, widget: markdown, editor_components: [] }

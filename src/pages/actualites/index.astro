@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro';
+import CarteActu from '../../components/CarteActu.astro';
+import { actualitesPubliees } from '../../lib/contenus';
+
+const actus = await actualitesPubliees();
+---
+
+<Base titre="Actualités" description="Les nouvelles du club">
+  <h1>Actualités</h1>
+  {actus.length > 0 ? (
+    <div class="grille">{actus.map((actu) => <CarteActu actu={actu} />)}</div>
+  ) : (
+    <p class="vide">Pas encore d'actualité.</p>
+  )}
+</Base>

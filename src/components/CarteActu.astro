@@ -1,0 +1,21 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { dateCourte, lien } from '../lib/format';
+
+interface Props {
+  actu: CollectionEntry<'actualites'>;
+}
+
+const { actu } = Astro.props;
+const { titre, date, auteur, resume, couverture, couvertureAlt } = actu.data;
+---
+
+<article class="carte">
+  {couverture && <Image src={couverture} alt={couvertureAlt ?? ''} width={640} />}
+  <div class="corps">
+    <p class="meta">{dateCourte(date)} · {auteur}</p>
+    <h3><a href={lien(`actualites/${actu.id}/`)}>{titre}</a></h3>
+    {resume && <p>{resume}</p>}
+  </div>
+</article>

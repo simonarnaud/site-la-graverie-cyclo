@@ -1,0 +1,52 @@
+# Site web du club de vélo
+
+Site statique du club, pensé pour être **maintenu par des bénévoles non-développeurs** et transmissible.
+Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+## Contraintes non négociables
+- **Tout gratuit** (seule dépense prévue : le nom de domaine, ~10-15 €/an, au nom de l'association).
+- **Pas de backend.** Tout ce qui est dynamique passe par des services externes.
+- **Repo public** (GitHub Pages gratuit) → **aucune donnée personnelle de membre commitée**, ni dans l'historique.
+- Les non-devs publient via le **CMS**, jamais en touchant au code.
+- Images optimisées au build ; galeries complètes hébergées ailleurs (liens externes).
+- RGPD : mentions légales + politique de confidentialité ; pas de traceur → pas de bandeau cookies.
+
+## Stack
+- **Astro** (content collections typées Zod, `astro:assets` + sharp pour les images, îles JS seulement si nécessaire).
+- **Sveltia CMS** dans `public/admin/` (auth GitHub via relais `sveltia-cms-auth` sur Cloudflare Workers, ou PAT).
+  Plan B : **Pages CMS** (invitation par email, sans compte GitHub). Le contenu reste du Markdown standard → CMS interchangeable.
+- **GitHub Pages** déployé par **GitHub Actions** à chaque push sur `main` + rebuild quotidien (cron) + manuel.
+- Cartes : **Leaflet**, fond OSM, uniquement sur les pages parcours. Tracé simplifié, distance et D+ calculés au build depuis le GPX.
+- Contact : `mailto:` vers une adresse du club (formulaire Web3Forms/Formspree seulement si besoin, à déclarer RGPD).
+- Participation aux sorties : champ `lienInscription` (événement club Strava, Framadate ou billetterie gratuite HelloAsso). Vote maison (Firebase/Supabase) = v2 éventuelle, pas avant.
+- Flux calendrier `/sorties.ics` généré au build.
+- Adhésions : lien/widget HelloAsso (optionnel au début).
+- Stats éventuelles : GoatCounter (sans cookie) ou rien.
+
+## Organisation
+- Démarrage sur le **GitHub perso** du mainteneur, transfert prévu vers une **organisation GitHub du club** (Settings → Transfer ; les redirections sont conservées).
+- Collections : `sorties` (fichiers plats datés), `parcours` (dossier + GPX dans `public/gpx/`), `actualites` (dossier par article, images colocalisées), `albums` (≤ 12 photos + lien album complet), `pages`. Données globales : `src/data/club.yml`.
+- Champs de frontmatter **en français** (titre, date, lieuRdv, niveau, lienInscription, annulee, brouillon…), libellés CMS en français.
+
+## Conventions de travail
+- Langue du projet, des commits, de l'UI et de la doc : **français**.
+- Minimum de code maison : chaque fonctionnalité doit être compréhensible par le prochain dev en 10 minutes. Préférer une config ou un service externe à du code.
+- Toute modif de schéma de collection doit être répercutée dans `public/admin/config.yml` (et inversement).
+- Ne pas protéger `main` contre les commits directs de la team Rédaction (le CMS commite sur `main`).
+- GPX : couper départ/arrivée pour ne jamais révéler un domicile.
+- Photos : consentement des personnes reconnaissables, autorisation parentale pour les mineurs.
+- Dépendances : mises à jour groupées (Dependabot mensuel), pas en continu.
+- Docs à maintenir : `docs/GUIDE-REDACTEUR.md` (bénévoles, avec captures) et `docs/GUIDE-TECHNIQUE.md` (prochain dev).
+
+## État actuel (octobre 2026)
+- Repo : `simonarnaud/site-la-graverie-cyclo` (GitHub perso), servi sur `https://simonarnaud.github.io/site-la-graverie-cyclo/` → `base` défini dans `astro.config.mjs`. **Tout lien interne passe par `lien()`** (`src/lib/format.ts`).
+- Astro 7 / Node 24 / Zod 4 : importer `z` depuis `astro/zod` (pas `astro:content`). Loader `glob` : `dossier/index.md` → id `dossier`.
+- Données globales dans `src/data/club.json` (JSON, éditable par le CMS).
+- GPX lus au build avec `@tmcw/togeojson` + `@xmldom/xmldom` ; carte = Leaflet seul (polyline), pas de `leaflet-gpx`.
+- Dates : build en UTC → affichage toujours en `Europe/Paris` ; CMS `input_timezone: Europe/Paris`.
+- Sveltia : PKCE non implémenté côté GitHub → PAT en attendant le relais `sveltia-cms-auth`. Transformations d'images sous `media_libraries.all.transformations`.
+- Contenus d'exemple (marqués « exemple ») à remplacer ; traces GPX générées autour de La Graverie (Calvados).
+
+## Commandes
+- `npm install` · `npm run dev` (http://localhost:4321/site-la-graverie-cyclo/) · `npm run build` · `npm run check`
+- Node n'est peut-être pas dans le PATH du shell de l'agent : `export PATH="/d/NodeJS:$PATH"`.

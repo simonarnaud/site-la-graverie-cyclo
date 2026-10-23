@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { dateLongue, heure, lien } from '../lib/format';
+
+interface Props {
+  sortie: CollectionEntry<'sorties'>;
+}
+
+const { sortie } = Astro.props;
+const { titre, date, lieuRdv, niveau, annulee } = sortie.data;
+---
+
+<article class="carte">
+  <div class="corps">
+    <p class="meta">{dateLongue(date)} · {heure(date)}</p>
+    <h3><a href={lien(`sorties/${sortie.id}/`)}>{titre}</a></h3>
+    {annulee && <p class="annulee">Sortie annulée</p>}
+    <p class="meta">Départ : {lieuRdv}</p>
+    <ul class="etiquettes"><li>{niveau}</li></ul>
+  </div>
+</article>

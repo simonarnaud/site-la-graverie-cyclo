@@ -1,0 +1,43 @@
+---
+// Carte Leaflet d'une trace. Les points sont calculés au build (src/lib/gpx.ts).
+interface Props {
+  points: [number, number][];
+  titre: string;
+}
+
+const { points, titre } = Astro.props;
+---
+
+<div class="carte-trace" data-points={JSON.stringify(points)} role="img" aria-label={`Carte du parcours ${titre}`}></div>
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+
+  for (const el of document.querySelectorAll<HTMLElement>('.carte-trace')) {
+    const points = JSON.parse(el.dataset.points ?? '[]') as [number, number][];
+    if (points.length === 0) continue;
+
+    const carte = L.map(el, { scrollWheelZoom: false });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">contributeurs OpenStreetMap</a>',
+    }).addTo(carte);
+
+    const couleur = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#2f6b3f';
+    const trace = L.polyline(points, { color: couleur, weight: 4 }).addTo(carte);
+    L.circleMarker(points[0], { radius: 7, color: '#fff', fillColor: couleur, fillOpacity: 1, weight: 2 })
+      .bindTooltip('Départ')
+      .addTo(carte);
+    carte.fitBounds(trace.getBounds(), { padding: [20, 20] });
+  }
+</script>
+
+<style>
+  .carte-trace {
+    height: clamp(320px, 55vh, 520px);
+    border-radius: var(--rayon);
+    border: 1px solid var(--bordure);
+    margin: 24px 0;
+  }
+</style>

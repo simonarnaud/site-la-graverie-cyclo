@@ -1,0 +1,30 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { actualitesPubliees } from '../../lib/contenus';
+import { dateLongue, lien } from '../../lib/format';
+
+export async function getStaticPaths() {
+  const actus = await actualitesPubliees();
+  return actus.map((actu) => ({ params: { id: actu.id }, props: { actu } }));
+}
+
+const { actu } = Astro.props;
+const { titre, date, auteur, resume, couverture, couvertureAlt } = actu.data;
+const { Content } = await render(actu);
+---
+
+<Base titre={titre} description={resume}>
+  <article class="prose">
+    <p class="meta"><a href={lien('actualites/')}>← Toutes les actualités</a></p>
+    <h1>{titre}</h1>
+    <p class="meta">{dateLongue(date)} · {auteur}</p>
+    {couverture && <Image src={couverture} alt={couvertureAlt ?? ''} width={1100} class="couverture" />}
+    <Content />
+  </article>
+</Base>
+
+<style>
+  .couverture { margin: 24px 0; border-radius: var(--rayon); }
+</style>

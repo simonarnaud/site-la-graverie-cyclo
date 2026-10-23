@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import CarteSortie from '../../components/CarteSortie.astro';
+import { sortiesTriees } from '../../lib/contenus';
+import { lien } from '../../lib/format';
+
+const { aVenir, passees } = await sortiesTriees();
+---
+
+<Base titre="Sorties" description="Calendrier des sorties du club">
+  <h1>Sorties</h1>
+  <p>
+    Ajoutez toutes les sorties à l'agenda de votre téléphone :
+    <a href={lien('sorties.ics')}>s'abonner au calendrier</a>.
+  </p>
+
+  <section class="section">
+    <h2>À venir</h2>
+    {aVenir.length > 0 ? (
+      <div class="grille">{aVenir.map((sortie) => <CarteSortie sortie={sortie} />)}</div>
+    ) : (
+      <p class="vide">Aucune sortie programmée pour le moment.</p>
+    )}
+  </section>
+
+  {passees.length > 0 && (
+    <section class="section">
+      <h2>Sorties passées</h2>
+      <div class="grille">{passees.slice(0, 12).map((sortie) => <CarteSortie sortie={sortie} />)}</div>
+    </section>
+  )}
+</Base>

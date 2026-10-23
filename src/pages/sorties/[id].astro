@@ -1,0 +1,45 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { dateLongue, heure, lien } from '../../lib/format';
+
+export async function getStaticPaths() {
+  const sorties = await getCollection('sorties');
+  return sorties.map((sortie) => ({ params: { id: sortie.id }, props: { sortie } }));
+}
+
+const { sortie } = Astro.props;
+const { titre, date, dureeHeures, lieuRdv, niveau, lienInscription, annulee } = sortie.data;
+const parcours = sortie.data.parcours ? await getEntry(sortie.data.parcours) : undefined;
+const { Content } = await render(sortie);
+const aVenir = date.getTime() > Date.now();
+---
+
+<Base titre={titre} description={`Sortie du ${dateLongue(date)} : ${titre}`}>
+  <p class="meta"><a href={lien('sorties/')}>← Toutes les sorties</a></p>
+  <h1>{titre}</h1>
+  {annulee && <p class="annulee">Cette sortie est annulée.</p>}
+
+  <dl class="infos">
+    <div><dt>Date</dt><dd>{dateLongue(date)}</dd></div>
+    <div><dt>Départ</dt><dd>{heure(date)} · {lieuRdv}</dd></div>
+    <div><dt>Durée estimée</dt><dd>{dureeHeures} h</dd></div>
+    <div><dt>Niveau</dt><dd>{niveau}</dd></div>
+    {parcours && (
+      <div><dt>Parcours</dt><dd><a href={lien(`parcours/${parcours.id}/`)}>{parcours.data.titre}</a></dd></div>
+    )}
+  </dl>
+
+  {lienInscription && aVenir && !annulee && (
+    <p><a class="bouton" href={lienInscription} rel="noopener">Je participe</a></p>
+  )}
+
+  <div class="prose"><Content /></div>
+</Base>
+
+<style>
+  .infos { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin: 24px 0; }
+  .infos div { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--rayon); padding: 12px 14px; }
+  .infos dt { color: var(--texte-doux); font-size: .85rem; }
+  .infos dd { margin: 0; font-weight: 600; }
+</style>

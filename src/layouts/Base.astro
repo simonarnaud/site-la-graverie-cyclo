@@ -1,0 +1,82 @@
+---
+import '../styles/global.css';
+import club from '../data/club.json';
+import { lien } from '../lib/format';
+
+interface Props {
+  titre?: string;
+  description?: string;
+}
+
+const { titre, description = club.slogan } = Astro.props;
+const titreComplet = titre ? `${titre} · ${club.nom}` : club.nom;
+
+const navigation = [
+  { href: 'sorties/', label: 'Sorties' },
+  { href: 'parcours/', label: 'Parcours' },
+  { href: 'actualites/', label: 'Actualités' },
+  { href: 'albums/', label: 'Photos' },
+  { href: 'le-club/', label: 'Le club' },
+];
+const courant = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href={lien('favicon.svg')} />
+    <link rel="alternate" type="text/calendar" title="Calendrier des sorties" href={lien('sorties.ics')} />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{titreComplet}</title>
+  </head>
+  <body>
+    <header class="entete">
+      <div class="conteneur entete-contenu">
+        <a class="logo" href={lien('/')}>{club.nom}</a>
+        <nav aria-label="Navigation principale">
+          <ul>
+            {navigation.map((item) => (
+              <li>
+                <a href={lien(item.href)} aria-current={courant.startsWith(lien(item.href)) ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="conteneur">
+      <slot />
+    </main>
+
+    <footer class="pied">
+      <div class="conteneur pied-contenu">
+        <p>© {new Date().getFullYear()} {club.nom} · <a href={`mailto:${club.email}`}>{club.email}</a></p>
+        <ul>
+          <li><a href={lien('sorties.ics')}>S'abonner au calendrier</a></li>
+          <li><a href={lien('mentions-legales/')}>Mentions légales</a></li>
+          <li><a href={lien('confidentialite/')}>Confidentialité</a></li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .entete { background: var(--surface); border-bottom: 1px solid var(--bordure); }
+  .entete-contenu { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; padding-top: 14px; padding-bottom: 14px; }
+  .logo { font-weight: 800; font-size: 1.2rem; color: var(--texte); text-decoration: none; }
+  nav ul { display: flex; flex-wrap: wrap; gap: 4px 18px; list-style: none; margin: 0; padding: 0; }
+  nav a { color: var(--texte-doux); text-decoration: none; font-weight: 500; }
+  nav a:hover, nav a[aria-current='page'] { color: var(--accent); }
+  .pied { border-top: 1px solid var(--bordure); color: var(--texte-doux); font-size: .9rem; }
+  .pied-contenu { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 20px; padding-bottom: 20px; }
+  .pied p { margin: 0; }
+  .pied ul { display: flex; flex-wrap: wrap; gap: 4px 18px; list-style: none; margin: 0; padding: 0; }
+  .pied a { color: inherit; }
+</style>

@@ -1,0 +1,34 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { lireGpx } from '../../lib/gpx';
+import { lien } from '../../lib/format';
+
+const parcours = (await getCollection('parcours'))
+  .map((p) => {
+    const trace = lireGpx(p.data.gpx);
+    return { ...p, distanceKm: p.data.distanceKm ?? trace.distanceKm, deniveleM: p.data.deniveleM ?? trace.deniveleM };
+  })
+  .sort((a, b) => a.distanceKm - b.distanceKm);
+---
+
+<Base titre="Parcours" description="Les parcours du club, avec traces GPX à télécharger">
+  <h1>Parcours</h1>
+  {parcours.length > 0 ? (
+    <div class="grille">
+      {parcours.map((p) => (
+        <article class="carte">
+          {p.data.couverture && <Image src={p.data.couverture} alt={p.data.couvertureAlt ?? ''} width={640} />}
+          <div class="corps">
+            <h3><a href={lien(`parcours/${p.id}/`)}>{p.data.titre}</a></h3>
+            <p class="meta">{p.distanceKm} km · {p.deniveleM} m D+</p>
+            <ul class="etiquettes"><li>{p.data.type}</li><li>{p.data.difficulte}</li></ul>
+          </div>
+        </article>
+      ))}
+    </div>
+  ) : (
+    <p class="vide">Aucun parcours pour le moment.</p>
+  )}
+</Base>

@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { dateCourte } from '../../lib/format';
+
+const albums = (await getCollection('albums')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Base titre="Photos" description="Une sélection de photos des sorties du club">
+  <h1>Photos</h1>
+  <p>Une sélection par sortie. Les albums complets sont hébergés en dehors du site.</p>
+
+  {albums.length === 0 && <p class="vide">Pas encore d'album.</p>}
+
+  {albums.map((album) => (
+    <section class="section">
+      <div class="section-titre">
+        <h2>{album.data.titre}</h2>
+        <a href={album.data.lienAlbumComplet} rel="noopener">Voir l'album complet →</a>
+      </div>
+      <p class="meta">{dateCourte(album.data.date)}</p>
+      <div class="photos">
+        {album.data.photos.map((photo) => (
+          <Image src={photo.src} alt={photo.alt} width={480} height={360} fit="cover" />
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .photos { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin-top: 12px; }
+  .photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; }
+</style>

@@ -1,0 +1,82 @@
+:root {
+  --fond: #f7f6f2;
+  --surface: #ffffff;
+  --texte: #1f2420;
+  --texte-doux: #5b635c;
+  --bordure: #dedbd2;
+  --accent: #2f6b3f;
+  --accent-texte: #ffffff;
+  --alerte: #a83a2a;
+  --rayon: 10px;
+  --largeur: 1080px;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fond: #141714;
+    --surface: #1d211d;
+    --texte: #e9ece7;
+    --texte-doux: #a3aba3;
+    --bordure: #333a33;
+    --accent: #7cc28e;
+    --accent-texte: #0f1a12;
+    --alerte: #ef8a78;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font: 17px/1.6 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Les tuiles Leaflet gèrent leur propre taille */
+img:not(.leaflet-container img) { max-width: 100%; height: auto; display: block; }
+a { color: var(--accent); }
+h1, h2, h3 { line-height: 1.2; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 .5em; }
+
+.conteneur { max-width: var(--largeur); margin: 0 auto; padding: 0 16px; }
+main.conteneur { padding-top: 32px; padding-bottom: 64px; }
+
+.grille { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+.carte {
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.carte > .corps { padding: 16px 18px 18px; flex: 1; }
+.carte h3 { margin: 0 0 .3em; font-size: 1.15rem; }
+.carte h3 a { color: inherit; text-decoration: none; }
+.carte h3 a:hover { text-decoration: underline; }
+
+.meta { color: var(--texte-doux); font-size: .92rem; margin: 0; }
+.etiquettes { display: flex; flex-wrap: wrap; gap: 6px; margin: .6em 0 0; padding: 0; list-style: none; }
+.etiquettes li {
+  font-size: .8rem; padding: 2px 9px; border-radius: 999px;
+  border: 1px solid var(--bordure); color: var(--texte-doux);
+}
+.annulee { color: var(--alerte); font-weight: 600; }
+
+.bouton {
+  display: inline-block; padding: 9px 16px; border-radius: 8px;
+  background: var(--accent); color: var(--accent-texte);
+  text-decoration: none; font-weight: 600;
+}
+.bouton.secondaire { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+
+.section { margin-top: 48px; }
+.section-titre { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+
+.prose { max-width: 70ch; }
+.prose img { border-radius: var(--rayon); }
+
+.vide { color: var(--texte-doux); font-style: italic; }
