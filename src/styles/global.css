@@ -17,7 +17,7 @@
   --alerte: #b5121b;
   --ombre: 0 1px 2px rgb(42 37 34 / 6%), 0 4px 14px rgb(42 37 34 / 6%);
   /* Couleurs des types d'événements (src/lib/categories.ts) : sourdes, pour rester lisibles côte à côte */
-  --cat-entrainement: #2c6e9b;
+  --cat-entrainement: #3f7a35;
   --cat-rando: #a87700;
   --cat-course: #b5121b;
   --cat-autre: #6b625b;
@@ -41,7 +41,7 @@
     --jaune-doux-texte: #f5d75a;
     --alerte: #ff7a6e;
     --ombre: 0 1px 2px rgb(0 0 0 / 30%);
-    --cat-entrainement: #7fb3d9;
+    --cat-entrainement: #8fcb7f;
     --cat-rando: #e6b84a;
     --cat-course: #ff7a6e;
     --cat-autre: #b3a99f;
@@ -111,7 +111,10 @@ main.conteneur { flex: 1 0 auto; width: 100%; padding-top: 32px; padding-bottom:
   color: var(--c); background: color-mix(in srgb, var(--c) 13%, transparent);
 }
 /* Discipline : étiquette neutre, pour ne pas concurrencer la couleur du type */
-.etiquettes li.discipline { background: transparent; color: var(--texte-doux); box-shadow: inset 0 0 0 1px var(--bordure); }
+.etiquettes li.discipline {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: transparent; color: var(--texte-doux); box-shadow: inset 0 0 0 1px var(--bordure);
+}
 .categorie::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
 
 .bouton {

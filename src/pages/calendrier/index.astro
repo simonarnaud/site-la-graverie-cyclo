@@ -4,6 +4,7 @@
 // Sans JavaScript, les mois ayant des événements s'affichent à la suite.
 import Base from '../../layouts/Base.astro';
 import CarteSortie from '../../components/CarteSortie.astro';
+import IconeDiscipline from '../../components/IconeDiscipline.astro';
 import { sortiesTriees } from '../../lib/contenus';
 import { CATEGORIES, DISCIPLINES, type Categorie, type Discipline } from '../../lib/categories';
 import { jourParis, lien } from '../../lib/format';
@@ -79,7 +80,7 @@ const disciplinesPresentes = (Object.keys(DISCIPLINES) as Discipline[]).filter((
         <span class="filtre-titre">Discipline</span>
         <button type="button" aria-pressed="true" data-filtre="tout">Toutes</button>
         {disciplinesPresentes.map((d) => (
-          <button type="button" aria-pressed="false" data-filtre={d}>{DISCIPLINES[d]}</button>
+          <button type="button" aria-pressed="false" data-filtre={d}><IconeDiscipline discipline={d} />{DISCIPLINES[d]}</button>
         ))}
       </div>
     )}
@@ -219,6 +220,7 @@ const disciplinesPresentes = (Object.keys(DISCIPLINES) as Discipline[]).filter((
     font: inherit; font-size: .9rem; font-weight: 600; cursor: pointer;
     padding: 6px 14px; border-radius: 999px;
     border: 1px solid var(--bordure); background: var(--surface); color: var(--texte-doux);
+    display: inline-flex; align-items: center; gap: 6px;
   }
   .filtres button[data-categorie] { color: var(--c); }
   .filtres button[aria-pressed='true'] { background: var(--texte); border-color: var(--texte); color: var(--fond); }

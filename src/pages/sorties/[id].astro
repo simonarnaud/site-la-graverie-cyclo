@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import IconeDiscipline from '../../components/IconeDiscipline.astro';
 import { CATEGORIES, DISCIPLINES } from '../../lib/categories';
 import { dateLongue, heure, jourParis, lien } from '../../lib/format';
 
@@ -27,7 +28,7 @@ const aVenir = date.getTime() > Date.now();
     <div><dt>Date</dt><dd>{dateLongue(date)}</dd></div>
     <div><dt>Départ</dt><dd>{heure(date)} · {lieuRdv}</dd></div>
     <div><dt>Durée estimée</dt><dd>{dureeHeures} h</dd></div>
-    {discipline && <div><dt>Discipline</dt><dd>{DISCIPLINES[discipline]}</dd></div>}
+    {discipline && <div><dt>Discipline</dt><dd class="avec-icone"><IconeDiscipline discipline={discipline} taille={18} />{DISCIPLINES[discipline]}</dd></div>}
     {niveau && <div><dt>Niveau</dt><dd>{niveau}</dd></div>}
     {organisateur && <div><dt>Organisateur</dt><dd>{organisateur}</dd></div>}
     {parcours && (
@@ -53,6 +54,7 @@ const aVenir = date.getTime() > Date.now();
   .infos div { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--rayon); padding: 12px 14px; }
   .infos dt { color: var(--texte-doux); font-size: .85rem; }
   .infos dd { margin: 0; font-weight: 600; }
+  .infos dd.avec-icone { display: flex; align-items: center; gap: 6px; }
   .participation { margin: 0 0 24px; }
   .participation .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 8px; }
 </style>

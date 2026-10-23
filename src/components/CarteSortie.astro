@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import IconeDiscipline from './IconeDiscipline.astro';
 import { CATEGORIES, DISCIPLINES } from '../lib/categories';
 import { dateLongue, heure, lien } from '../lib/format';
 
@@ -19,7 +20,7 @@ const { titre, categorie, discipline, date, lieuRdv, organisateur, niveau, annul
     <p class="meta">{lieuRdv}{organisateur && ` · ${organisateur}`}</p>
     <ul class="etiquettes">
       <li class="categorie" data-categorie={categorie}>{CATEGORIES[categorie].label}</li>
-      {discipline && <li class="discipline">{DISCIPLINES[discipline]}</li>}
+      {discipline && <li class="discipline"><IconeDiscipline discipline={discipline} taille={14} />{DISCIPLINES[discipline]}</li>}
       {niveau && <li>{niveau}</li>}
     </ul>
   </div>
