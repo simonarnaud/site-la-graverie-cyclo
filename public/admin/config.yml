@@ -168,12 +168,15 @@ collections:
       - { name: lienAlbumComplet, label: Lien vers l'album complet, widget: string }
       - name: photos
         label: Photos (12 maximum)
+        hint: Le 1er janvier, les photos des albums de l'année écoulée sont retirées du site pour gagner de la place. L'album reste listé avec son lien vers l'album complet.
         widget: list
-        min: 1
+        required: false
         max: 12
         fields:
           - { name: src, label: Photo, widget: image }
-          - { name: alt, label: Description courte, widget: string }
+          - { name: alt, label: Description courte, widget: string, required: false }
+      # Renseigné par l'archivage automatique du 1er janvier
+      - { name: archive, label: Album archivé, widget: hidden, default: false }
 
   - name: documents
     label: Documents

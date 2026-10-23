@@ -123,3 +123,22 @@ Dans le repo : Settings → General → Transfer ownership. Ensuite, mettez à j
 - **Supprimer une fiche libère de la place sur le site publié, mais pas dans l'historique Git** : un fichier envoyé puis supprimé reste dans l'historique du repo. D'où les règles : 12 photos maximum par album, albums complets sur Google Photos.
 - Pour mesurer : `gh api repos/<compte>/site-la-graverie-cyclo -q .size` (taille du repo en Ko) et `du -sh dist` après un build.
 - Si le repo approchait 1 Go (dans plusieurs années) : réduire la taille des photos dans `public/admin/config.yml` (`width`/`height` à 1600), ou archiver les vieux albums dans un repo séparé.
+
+## Archivage automatique des albums
+
+Chaque **1er janvier à 3 h (UTC)**, le workflow `.github/workflows/archiver-albums.yml` lance `scripts/archiver-albums.mjs` :
+
+- les albums **des années précédentes** perdent leurs photos (fichiers supprimés, `photos: []`, `archive: true`) ;
+- ils restent listés sur la page Photos, dans « Albums des années précédentes », avec leur **lien vers l'album complet** ;
+- le robot enregistre le changement puis relance la mise en ligne.
+
+Commandes utiles :
+
+```bash
+node scripts/archiver-albums.mjs --essai                # ce qui serait archivé aujourd'hui, sans rien modifier
+node scripts/archiver-albums.mjs --essai --annee 2028   # simulation pour une autre année
+```
+
+Le workflow peut aussi être lancé à la main : onglet **Actions → Archivage des albums → Run workflow**.
+
+⚠️ L'archivage allège le **site publié** et les fichiers du repo, mais les photos restent dans **l'historique Git** (voir « Poids du site et limites »). C'est sans conséquence avant de nombreuses années.

@@ -5,6 +5,14 @@ import Base from '../../layouts/Base.astro';
 import { dateCourte } from '../../lib/format';
 
 const albums = (await getCollection('albums')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+// Albums avec leur sélection de photos ; les albums archivés (années précédentes) n'ont plus que leur lien
+const recents = albums.filter((a) => a.data.photos.length > 0);
+const archives = albums.filter((a) => a.data.photos.length === 0);
+const anneeDe = (d: Date) => d.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris', year: 'numeric' });
+const archivesParAnnee = [...new Set(archives.map((a) => anneeDe(a.data.date)))].map((annee) => ({
+  annee,
+  albums: archives.filter((a) => anneeDe(a.data.date) === annee),
+}));
 ---
 
 <Base titre="Photos" description="Une sélection de photos des sorties du club">
@@ -13,7 +21,7 @@ const albums = (await getCollection('albums')).sort((a, b) => b.data.date.getTim
 
   {albums.length === 0 && <p class="vide">Pas encore d'album.</p>}
 
-  {albums.map((album) => (
+  {recents.map((album) => (
     <section class="section">
       <div class="section-titre">
         <h2>{album.data.titre}</h2>
@@ -22,14 +30,41 @@ const albums = (await getCollection('albums')).sort((a, b) => b.data.date.getTim
       <p class="meta">{dateCourte(album.data.date)}</p>
       <div class="photos">
         {album.data.photos.map((photo) => (
-          <Image src={photo.src} alt={photo.alt} width={480} height={360} fit="cover" />
+          <Image src={photo.src} alt={photo.alt ?? ''} width={480} height={360} fit="cover" />
         ))}
       </div>
     </section>
   ))}
+
+  {archivesParAnnee.length > 0 && (
+    <section class="section">
+      <h2>Albums des années précédentes</h2>
+      {archivesParAnnee.map(({ annee, albums }) => (
+        <div class="annee">
+          <h3>{annee}</h3>
+          <ul class="liste-albums">
+            {albums.map((album) => (
+              <li>
+                <a href={album.data.lienAlbumComplet} rel="noopener">{album.data.titre} ↗</a>
+                <span class="meta">{dateCourte(album.data.date)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </section>
+  )}
 </Base>
 
 <style>
   .photos { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin-top: 12px; }
   .photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; }
+  .annee h3 { margin: 24px 0 8px; font-size: 1.1rem; color: var(--texte-doux); }
+  .liste-albums { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .liste-albums li {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px;
+    padding: 10px 0; border-bottom: 1px solid var(--bordure);
+  }
+  .liste-albums a { font-weight: 600; text-decoration: none; }
+  .liste-albums a:hover { text-decoration: underline; }
 </style>

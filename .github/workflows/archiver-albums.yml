@@ -1,0 +1,40 @@
+name: Archivage des albums
+
+# Chaque 1er janvier : les albums des années précédentes perdent leurs photos (gain de place
+# sur le site) mais gardent leur lien vers l'album complet. Voir scripts/archiver-albums.mjs.
+on:
+  schedule:
+    - cron: '0 3 1 1 *' # 1er janvier, 3 h UTC
+  workflow_dispatch: # bouton « Run workflow » dans l'onglet Actions
+
+permissions:
+  contents: write # pour enregistrer l'archivage
+  actions: write # pour relancer la mise en ligne
+
+jobs:
+  archiver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Archiver les albums des années précédentes
+        run: node scripts/archiver-albums.mjs
+      - name: Enregistrer et remettre le site en ligne
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain src/content/albums)" ]; then
+            echo "Rien à archiver."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A src/content/albums
+          git commit -m "Archivage automatique des albums des années précédentes"
+          git push
+          # Un commit fait par le robot ne déclenche pas les autres workflows : on relance la mise en ligne
+          gh workflow run deploy.yml --ref main
