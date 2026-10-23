@@ -25,7 +25,8 @@ Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECT
 
 ## Organisation
 - Démarrage sur le **GitHub perso** du mainteneur, transfert prévu vers une **organisation GitHub du club** (Settings → Transfer ; les redirections sont conservées).
-- Collections : `sorties` (fichiers plats datés, champ `categorie` : entrainement (vert) | rando (ocre) | course (rouge) | autre (gris), champ facultatif `discipline` : cyclo | cyclosport | vtt | cyclo-cross, pictogrammes monochromes dans `src/components/IconeDiscipline.astro`, cf. `src/lib/categories.ts` ; page `/calendrier/`), `parcours` (dossier + GPX dans `public/gpx/`), `actualites` (dossier par article, images colocalisées), `albums` (≤ 12 photos + lien album complet), `documents` (PDF dans `public/documents/`), `pages`. Données globales : `src/data/club.json`.
+- **Chaque fiche a son dossier `<id>/index.md` avec ses fichiers** (images, `trace.gpx`, PDF) : supprimer une fiche dans le CMS supprime ses fichiers. GPX publiés via `src/pages/gpx/[id].gpx.ts`, PDF via `src/pages/documents/[id].pdf.ts` (`src/lib/fichiers.ts`).
+- Collections : `sorties` (dossiers datés, champ `categorie` : entrainement (vert) | rando (ocre) | course (rouge) | autre (gris), champ facultatif `discipline` : cyclo | cyclosport | vtt | cyclo-cross, pictogrammes monochromes dans `src/components/IconeDiscipline.astro`, cf. `src/lib/categories.ts` ; page `/calendrier/`), `parcours` (dossier + `trace.gpx`), `actualites` (dossier par article, images colocalisées), `albums` (≤ 12 photos + lien album complet), `documents` (dossier + PDF), `pages`. Données globales : `src/data/club.json`.
 - Champs de frontmatter **en français** (titre, date, lieuRdv, niveau, lienStrava, lienInscription, annulee, brouillon…), libellés CMS en français.
 
 ## Conventions de travail

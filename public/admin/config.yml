@@ -39,6 +39,10 @@ collections:
     label_singular: Événement
     description: Entraînements (sorties du club), randos, courses… Les événements passés restent consultables en remontant les mois du calendrier.
     folder: src/content/sorties
+    # Un dossier par événement : son image est supprimée avec lui
+    path: '{{slug}}/index'
+    media_folder: ''
+    public_folder: ''
     create: true
     identifier_field: titre
     slug: "{{fields.date | date('YYYY-MM-DD')}}-{{slug}}"
@@ -98,13 +102,7 @@ collections:
         widget: string
         required: false
       - { name: annulee, label: Événement annulé, widget: boolean, default: false }
-      # Rangées dans src/content/sorties/images/ : le chemin « images/… » est relatif au fichier de l'événement
-      - name: couverture
-        label: Image d'illustration (facultatif)
-        widget: image
-        required: false
-        media_folder: /src/content/sorties/images
-        public_folder: images
+      - { name: couverture, label: Image d'illustration (facultatif), widget: image, required: false }
       - { name: couvertureAlt, label: Description de l'image (pour les malvoyants), widget: string, required: false }
       - { name: body, label: Description, widget: markdown, required: false, editor_components: [] }
 
@@ -146,8 +144,7 @@ collections:
         label: Trace GPX
         hint: Coupez le début et la fin de la trace pour ne pas révéler le domicile de quelqu'un.
         widget: file
-        media_folder: /public/gpx
-        public_folder: /gpx
+        accept: .gpx
       - { name: distanceKm, label: Distance (km), hint: Laisser vide pour la calculer depuis le GPX., widget: number, value_type: float, required: false }
       - { name: deniveleM, label: Dénivelé positif (m), hint: Laisser vide pour le calculer depuis le GPX., widget: number, value_type: int, required: false }
       - { name: couverture, label: Photo, widget: image, required: false }
@@ -183,6 +180,10 @@ collections:
     label_singular: Document
     description: Fichiers PDF à télécharger (programme FSGT, règlements, comptes rendus). 10 Mo maximum par fichier.
     folder: src/content/documents
+    # Un dossier par document : le PDF est supprimé avec lui
+    path: '{{slug}}/index'
+    media_folder: ''
+    public_folder: ''
     create: true
     identifier_field: titre
     summary: "{{date | date('DD/MM/YYYY')}} – {{titre}}"
@@ -195,8 +196,6 @@ collections:
         label: Fichier PDF
         widget: file
         accept: application/pdf,.pdf
-        media_folder: /public/documents
-        public_folder: /documents
         media_libraries:
           default:
             config:

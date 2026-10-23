@@ -2,12 +2,13 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { cheminFichier } from '../../lib/fichiers';
 import { lireGpx } from '../../lib/gpx';
 import { lien } from '../../lib/format';
 
 const parcours = (await getCollection('parcours'))
   .map((p) => {
-    const trace = lireGpx(p.data.gpx);
+    const trace = lireGpx(cheminFichier(p, p.data.gpx));
     return { ...p, distanceKm: p.data.distanceKm ?? trace.distanceKm, deniveleM: p.data.deniveleM ?? trace.deniveleM };
   })
   .sort((a, b) => a.distanceKm - b.distanceKm);

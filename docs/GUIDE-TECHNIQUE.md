@@ -15,16 +15,20 @@ Bénévole ──(Sveltia CMS, /admin)──▶ commit sur main ──▶ GitHub
 | Chemin | Rôle |
 |---|---|
 | `src/content.config.ts` | Schémas des collections (à garder synchronisés avec `public/admin/config.yml`) |
-| `src/content/sorties/*.md` | Événements du calendrier ; images d'illustration facultatives dans `src/content/sorties/images/` (non supprimées avec l'événement) ; champ `categorie` : types et couleurs dans `src/lib/categories.ts` et `--cat-*` de `global.css`) |
-| `src/content/documents/*.md` | Documents PDF ; fichiers dans `public/documents/` (10 Mo max conseillé) |
-| `src/content/parcours/<id>/index.md` | Parcours (+ photo colocalisée) ; trace dans `public/gpx/` |
-| `src/content/actualites/<id>/index.md` | Articles (+ images colocalisées) |
+| `src/content/sorties/<id>/index.md` | Événements du calendrier (+ image d'illustration facultative dans le même dossier) ; types et couleurs dans `src/lib/categories.ts` et `--cat-*` de `global.css` |
+| `src/content/parcours/<id>/index.md` | Parcours + `trace.gpx` + photo dans le même dossier ; GPX publié en `/gpx/<id>.gpx` |
+| `src/content/actualites/<id>/index.md` | Articles (+ images dans le même dossier) |
 | `src/content/albums/<id>/index.md` | Sélections de photos (≤ 12) + lien vers l'album complet |
+| `src/content/documents/<id>/index.md` | Documents + PDF dans le même dossier ; publié en `/documents/<id>.pdf` (10 Mo max) |
 | `src/content/pages/*.md` | Le club, mentions légales, confidentialité |
-| `src/data/club.json` | Nom, email, bureau, lien HelloAsso |
-| `src/lib/gpx.ts` | Distance, D+ et tracé simplifié calculés au build |
+| `src/data/club.json` | Nom, email, bureau, lien HelloAsso, code GoatCounter |
+| `src/lib/fichiers.ts` | Accès aux GPX/PDF rangés dans le dossier d'une fiche |
+| `src/lib/gpx.ts` | Distance, D+, tracé et profil calculés au build |
+| `src/pages/gpx/[id].gpx.ts`, `src/pages/documents/[id].pdf.ts` | Publication des GPX et PDF |
 | `src/pages/sorties.ics.ts` | Flux calendrier |
 | `src/components/Carte.astro` | Carte Leaflet (tuiles OpenStreetMap) |
+
+**Règle : chaque fiche a son dossier, et ses fichiers (images, GPX, PDF) sont dedans.** Supprimer une fiche dans le CMS supprime donc aussi ses fichiers : rien ne reste orphelin.
 
 ## Développer en local
 
@@ -106,3 +110,16 @@ Dans le repo : Settings → General → Transfer ownership. Ensuite, mettez à j
 ## QR code du site
 
 `npm run qrcode` génère dans `docs/qrcode/` le QR code du site (SVG pour l'impression, PNG, et une version « affiche » avec le nom du club). L'adresse est lue dans `astro.config.mjs` : **après le passage au domaine du club, relancez la commande** et remplacez les supports déjà imprimés.
+
+## Poids du site et limites
+
+| Limite (GitHub, gratuit) | Valeur | Ce qui compte |
+|---|---|---|
+| Site publié (GitHub Pages) | **1 Go** | les fichiers actuels du site (`dist/`) |
+| Taille du repo | **1 Go recommandé**, 5 Go maximum conseillé | tous les fichiers **et tout l'historique** |
+| Taille d'un fichier | 100 Mo (bloqué) | PDF limités à 10 Mo par le CMS |
+
+- Les photos sont réduites à 2048 px en WebP avant l'envoi (~200 à 600 Ko chacune).
+- **Supprimer une fiche libère de la place sur le site publié, mais pas dans l'historique Git** : un fichier envoyé puis supprimé reste dans l'historique du repo. D'où les règles : 12 photos maximum par album, albums complets sur Google Photos.
+- Pour mesurer : `gh api repos/<compte>/site-la-graverie-cyclo -q .size` (taille du repo en Ko) et `du -sh dist` après un build.
+- Si le repo approchait 1 Go (dans plusieurs années) : réduire la taille des photos dans `public/admin/config.yml` (`width`/`height` à 1600), ou archiver les vieux albums dans un repo séparé.

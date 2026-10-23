@@ -16,8 +16,8 @@ const parcours = defineCollection({
       titre: z.string(),
       type: z.enum(['route', 'gravel', 'vtt']),
       difficulte: facultatif(z.enum(['facile', 'moyen', 'difficile'])),
-      // Chemin du fichier dans public/, ex. /gpx/tour-du-lac.gpx
-      gpx: z.string().startsWith('/gpx/'),
+      // Fichier GPX rangé dans le dossier du parcours, ex. trace.gpx (publié en /gpx/<parcours>.gpx)
+      gpx: z.string().regex(/^(\.\/)?[^/]+\.gpx$/i, 'Le GPX doit être rangé dans le dossier du parcours'),
       // Facultatifs : sinon calculés depuis le GPX
       distanceKm: facultatif(z.number()),
       deniveleM: facultatif(z.number()),
@@ -28,7 +28,7 @@ const parcours = defineCollection({
 
 // Événements du calendrier : entraînements, randos, courses…
 const sorties = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/sorties' }),
+  loader: glob({ pattern: '**/index.md', base: './src/content/sorties' }),
   schema: ({ image }) => z.object({
     titre: z.string(),
     categorie: z.enum(IDS_CATEGORIES).default('entrainement'),
@@ -49,7 +49,7 @@ const sorties = defineCollection({
     // Inscription auprès d'un organisateur extérieur (rando, course), si elle est nécessaire
     lienInscription: facultatif(z.url()),
     annulee: z.boolean().default(false),
-    // Image d'illustration facultative, rangée dans src/content/sorties/images/
+    // Image d'illustration facultative, rangée dans le dossier de l'événement
     couverture: facultatif(image()),
     couvertureAlt: facultatif(z.string()),
   }),
@@ -90,13 +90,13 @@ const pages = defineCollection({
 
 // Documents PDF à télécharger (programme FSGT, règlements, comptes rendus…)
 const documents = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/documents' }),
+  loader: glob({ pattern: '**/index.md', base: './src/content/documents' }),
   schema: z.object({
     titre: z.string(),
     date: z.coerce.date(),
     type: z.enum(['calendrier', 'règlement', 'compte rendu', 'autre']).default('autre'),
-    // Chemin du fichier dans public/, ex. /documents/programme-fsgt-14-2022.pdf
-    fichier: z.string().startsWith('/documents/'),
+    // PDF rangé dans le dossier du document (publié en /documents/<document>.pdf)
+    fichier: z.string().regex(/^(\.\/)?[^/]+\.pdf$/i, 'Le PDF doit être rangé dans le dossier du document'),
     description: facultatif(z.string()),
   }),
 });

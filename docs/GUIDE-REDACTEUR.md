@@ -29,6 +29,8 @@ Ne cliquez pas sur « Travailler avec un dépôt local » ni sur « Se connecter
 7. Si vous le souhaitez, ajoutez une **image d'illustration** (photo du lieu, affiche de la rando…) et sa description. Elle s'affiche sur la carte de l'événement et sur sa fiche.
 8. Cliquez sur **Enregistrer**.
 
+Supprimer un événement, un parcours, un album ou un document supprime aussi ses photos et fichiers.
+
 L'événement apparaît dans le calendrier, au mois de sa date ; les visiteurs passent d'un mois à l'autre avec les flèches. Pour annuler un événement, ouvrez-le et cochez **Événement annulé** plutôt que de le supprimer : les membres abonnés au calendrier seront prévenus.
 
 ## Publier un document PDF

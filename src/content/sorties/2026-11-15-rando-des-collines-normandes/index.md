@@ -8,7 +8,7 @@ lieuRdv: Vire Normandie
 organisateur: Club voisin (exemple)
 lienStrava: https://www.strava.com/clubs/exemple/group_events/3
 lienInscription: https://www.helloasso.com/
-couverture: images/exemple-rando.jpg
+couverture: illustration.jpg
 couvertureAlt: Illustration d'exemple
 ---
 

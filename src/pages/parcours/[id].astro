@@ -5,6 +5,7 @@ import LienRetour from '../../components/LienRetour.astro';
 import Carte from '../../components/Carte.astro';
 import ProfilAltitude from '../../components/ProfilAltitude.astro';
 import club from '../../data/club.json';
+import { cheminFichier } from '../../lib/fichiers';
 import { lireGpx } from '../../lib/gpx';
 import { lien } from '../../lib/format';
 
@@ -15,11 +16,12 @@ export async function getStaticPaths() {
 
 const { parcours } = Astro.props;
 const { titre, type, difficulte, gpx } = parcours.data;
-const trace = lireGpx(gpx);
+const trace = lireGpx(cheminFichier(parcours, gpx));
+const lienGpx = lien(`gpx/${parcours.id}.gpx`);
 const distanceKm = parcours.data.distanceKm ?? trace.distanceKm;
 const deniveleM = parcours.data.deniveleM ?? trace.deniveleM;
 const { Content } = await render(parcours);
-const urlGpx = new URL(lien(gpx), Astro.site);
+const urlGpx = new URL(lienGpx, Astro.site);
 ---
 
 <Base titre={titre} description={`${titre} : ${distanceKm} km, ${deniveleM} m de dénivelé`} apercu={parcours.data.couverture}>
@@ -32,7 +34,7 @@ const urlGpx = new URL(lien(gpx), Astro.site);
   <ProfilAltitude profil={trace.profil} />
 
   <p class="actions ecran-seulement">
-    <a class="bouton" href={lien(gpx)} download>Télécharger la trace GPX</a>
+    <a class="bouton" href={lienGpx} download>Télécharger la trace GPX</a>
     <button class="bouton secondaire" type="button" data-imprimer>Imprimer le parcours</button>
   </p>
   <p class="meta impression-seulement">Trace GPX : {urlGpx.href}</p>

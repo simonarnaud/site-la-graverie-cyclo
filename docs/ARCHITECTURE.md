@@ -26,18 +26,18 @@ Ce document garde la trace des choix faits au lancement du projet (octobre 2026)
 ```
 .github/workflows/deploy.yml
 public/admin/{index.html,config.yml}
-public/gpx/
 src/content.config.ts
-src/content/{sorties,parcours,actualites,albums,pages}/
-src/data/club.yml
+src/content/{sorties,parcours,actualites,albums,documents}/<id>/index.md   (+ fichiers de la fiche)
+src/content/pages/*.md
+src/data/club.json
 src/components/  src/layouts/
 src/pages/{index.astro, sorties/, parcours/[id].astro, actualites/, sorties.ics.ts}
 docs/{ARCHITECTURE.md, GUIDE-REDACTEUR.md, GUIDE-TECHNIQUE.md}
 ```
 
 ### Schémas prévus
-- **sorties** (`*.md` plats, nom `AAAA-MM-JJ-slug.md`) : `titre`, `date` (date+heure), `lieuRdv`, `niveau` (découverte | intermédiaire | sportif), `parcours` (référence, optionnel), `lienStrava` (URL Strava, optionnel), `lienInscription` (URL organisateur, optionnel), `annulee` (bool), corps = description.
-- **parcours** (`slug/index.md` + couverture) : `titre`, `type` (route | gravel | vtt), `difficulte` (facile | moyen | difficile, facultatif), `gpx` (`/gpx/xxx.gpx`), `distanceKm`/`deniveleM` (optionnels, sinon calculés), `couverture`.
+- **sorties** (`AAAA-MM-JJ-slug/index.md` + image facultative) : `titre`, `date` (date+heure), `lieuRdv`, `niveau` (découverte | intermédiaire | sportif), `parcours` (référence, optionnel), `lienStrava` (URL Strava, optionnel), `lienInscription` (URL organisateur, optionnel), `annulee` (bool), corps = description.
+- **parcours** (`slug/index.md` + couverture) : `titre`, `type` (route | gravel | vtt), `difficulte` (facile | moyen | difficile, facultatif), `gpx` (`trace.gpx` dans le dossier, publié en `/gpx/<id>.gpx`), `distanceKm`/`deniveleM` (optionnels, sinon calculés), `couverture`.
 - **actualites** (`slug/index.md` + images colocalisées, `media_folder: ''`) : `titre`, `date`, `auteur`, `couverture`, `couvertureAlt`, `brouillon`.
 - **albums** : `titre`, `date`, `photos` (≤ 12 × {src, alt}), `lienAlbumComplet`.
 - Sveltia : `media_libraries.default.config.transformations.raster_image` → webp, qualité 85, 2048 px max (syntaxe à vérifier dans la doc).

@@ -1,26 +1,14 @@
 ---
 // Documents PDF : programme FSGT, règlements, comptes rendus…
-import { statSync } from 'node:fs';
-import { join } from 'node:path';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { cheminFichier, tailleLisible } from '../../lib/fichiers';
 import { dateCourte, lien } from '../../lib/format';
 
+// Le PDF est publié en /documents/<document>.pdf par la route [id].pdf.ts
 const documents = (await getCollection('documents'))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .map((d) => {
-    let taille: number;
-    try {
-      taille = statSync(join(process.cwd(), 'public', d.data.fichier)).size;
-    } catch {
-      throw new Error(`Document « ${d.data.titre} » : fichier introuvable (public${d.data.fichier})`);
-    }
-    const enMo = taille / 1024 / 1024;
-    const texte = enMo >= 1
-      ? `${enMo.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} Mo`
-      : `${Math.max(1, Math.round(taille / 1024))} Ko`;
-    return { ...d, taille: texte };
-  });
+  .map((d) => ({ ...d, url: lien(`documents/${d.id}.pdf`), taille: tailleLisible(cheminFichier(d, d.data.fichier)) }));
 ---
 
 <Base titre="Documents" description="Calendriers, règlements et comptes rendus à télécharger">
@@ -35,10 +23,10 @@ const documents = (await getCollection('documents'))
             <span class="icone" aria-hidden="true">PDF</span>
             <div class="texte">
               <p class="meta">{dateCourte(d.data.date)} · {d.data.type}</p>
-              <h3><a href={lien(d.data.fichier)} target="_blank" rel="noopener">{d.data.titre}</a></h3>
+              <h3><a href={d.url} target="_blank" rel="noopener">{d.data.titre}</a></h3>
               {d.data.description && <p>{d.data.description}</p>}
             </div>
-            <a class="bouton secondaire" href={lien(d.data.fichier)} download>Télécharger ({d.taille})</a>
+            <a class="bouton secondaire" href={d.url} download>Télécharger ({d.taille})</a>
           </div>
         </li>
       ))}

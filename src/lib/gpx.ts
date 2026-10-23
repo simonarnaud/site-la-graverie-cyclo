@@ -1,7 +1,6 @@
 // Lecture des traces GPX au build : distance, dénivelé positif, tracé simplifié pour la carte
 // et profil d'altitude.
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { DOMParser } from '@xmldom/xmldom';
 import { gpx } from '@tmcw/togeojson';
 
@@ -19,8 +18,9 @@ const POINTS_PROFIL_MAX = 300;
 // Seuil d'hystérésis : ignore le bruit d'altitude des GPS
 const SEUIL_DENIVELE_M = 3;
 
-export function lireGpx(cheminPublic: string): TraceGpx {
-  const xml = readFileSync(join(process.cwd(), 'public', cheminPublic), 'utf-8');
+// `chemin` : chemin du fichier sur le disque (voir cheminFichier() dans src/lib/fichiers.ts)
+export function lireGpx(chemin: string): TraceGpx {
+  const xml = readFileSync(chemin, 'utf-8');
   const geojson = gpx(new DOMParser().parseFromString(xml, 'text/xml') as unknown as Document);
 
   const coords: number[][] = [];
