@@ -3,6 +3,7 @@ name: Déploiement
 on:
   push:
     branches: [main]
+  pull_request: # vérifie les PR (dont Dependabot) sans déployer
   workflow_dispatch: # bouton « Run workflow » dans l'onglet Actions
   schedule:
     - cron: '0 4 * * *' # chaque nuit : les sorties passées basculent en archive
@@ -13,7 +14,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -41,6 +42,7 @@ jobs:
 
   deploy:
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

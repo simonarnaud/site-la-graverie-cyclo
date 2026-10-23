@@ -8,6 +8,13 @@ updates:
     groups:
       dependances:
         patterns: ['*']
+    ignore:
+      # @astrojs/check n'accepte pas encore TypeScript 7 : à lever quand ce sera le cas
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
+      # Les types doivent suivre la version de Node utilisée (24)
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions
     directory: /
     schedule:

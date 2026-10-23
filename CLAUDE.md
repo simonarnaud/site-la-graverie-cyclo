@@ -25,7 +25,7 @@ Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECT
 
 ## Organisation
 - Démarrage sur le **GitHub perso** du mainteneur, transfert prévu vers une **organisation GitHub du club** (Settings → Transfer ; les redirections sont conservées).
-- Collections : `sorties` (fichiers plats datés), `parcours` (dossier + GPX dans `public/gpx/`), `actualites` (dossier par article, images colocalisées), `albums` (≤ 12 photos + lien album complet), `pages`. Données globales : `src/data/club.yml`.
+- Collections : `sorties` (fichiers plats datés), `parcours` (dossier + GPX dans `public/gpx/`), `actualites` (dossier par article, images colocalisées), `albums` (≤ 12 photos + lien album complet), `pages`. Données globales : `src/data/club.json`.
 - Champs de frontmatter **en français** (titre, date, lieuRdv, niveau, lienInscription, annulee, brouillon…), libellés CMS en français.
 
 ## Conventions de travail
