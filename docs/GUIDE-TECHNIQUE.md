@@ -102,3 +102,7 @@ La version est figée dans `public/admin/index.html` (Dependabot ne peut pas la 
 ## Transférer le repo à l'organisation du club
 
 Dans le repo : Settings → General → Transfer ownership. Ensuite, mettez à jour `repo:` dans `public/admin/config.yml` et les URL `simonarnaud.github.io` partout où elles apparaissent.
+
+## QR code du site
+
+`npm run qrcode` génère dans `docs/qrcode/` le QR code du site (SVG pour l'impression, PNG, et une version « affiche » avec le nom du club). L'adresse est lue dans `astro.config.mjs` : **après le passage au domaine du club, relancez la commande** et remplacez les supports déjà imprimés.

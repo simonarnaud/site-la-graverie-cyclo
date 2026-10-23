@@ -38,6 +38,7 @@ Premier essai réussi (sortie « La Mont-Blanc » + parcours, 23/10/2026). Reste
 - [ ] Achat au nom de l'association, renouvellement automatique activé
 - [ ] DNS + HTTPS (procédure dans `docs/GUIDE-TECHNIQUE.md`)
 - [ ] Mettre à jour `astro.config.mjs` (`site`, supprimer `base`) et `public/admin/config.yml`
+- [ ] Régénérer le QR code (`npm run qrcode`) avec la nouvelle adresse, avant toute impression
 
 ## 6. Accompagner les bénévoles
 - [ ] Captures d'écran dans `docs/GUIDE-REDACTEUR.md`
