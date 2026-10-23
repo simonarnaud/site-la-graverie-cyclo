@@ -59,6 +59,8 @@ Les photos sont réduites automatiquement : inutile de les redimensionner avant.
 
 **Attendez 2 minutes puis rechargez le site** : la mise en ligne n'est pas instantanée.
 
+Le navigateur garde aussi chaque page en mémoire jusqu'à 10 minutes : si une page déjà visitée semble ancienne, forcez son rechargement (**Ctrl + F5** sur ordinateur, ou tirez la page vers le bas sur téléphone).
+
 Si votre modification n'apparaît toujours pas après 10 minutes, prévenez le responsable du site. Le site reste en ligne dans sa version précédente : vous ne pouvez rien casser.
 
 ## Contact
