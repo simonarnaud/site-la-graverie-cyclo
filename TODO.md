@@ -3,11 +3,11 @@
 Liste des prochains travaux, par ordre de priorité. Cocher au fur et à mesure.
 
 ## 1. Tester la publication depuis le CMS
-Aucun contenu n'a encore été créé depuis l'interface `/admin/`. À vérifier :
-- [ ] Créer une sortie : nom du fichier (date de la sortie), heure enregistrée avec le fuseau de Paris, liste des parcours
+Premier essai réussi (sortie « La Mont-Blanc » + parcours, 23/10/2026). Reste à vérifier :
+- [x] Créer une sortie : nom du fichier (date de la sortie), heure enregistrée avec le fuseau de Paris, liste des parcours
 - [ ] Créer une actualité avec une photo prise au téléphone : conversion WebP, photo rangée à côté de l'article
 - [ ] Créer un album photo
-- [ ] Ajouter une rando ou une course (champ « Type » et « Organisateur »)
+- [x] Ajouter une rando ou une course (champ « Type » et « Organisateur »)
 - [ ] Déposer un PDF dans « Documents »
 - [ ] Vérifier que le site se met à jour environ 2 minutes après l'enregistrement
 

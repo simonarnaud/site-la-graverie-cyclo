@@ -4,20 +4,25 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { IDS_CATEGORIES, IDS_DISCIPLINES } from './lib/categories';
 
+// Le CMS enregistre un champ facultatif laissé vide sous la forme '' ou null :
+// on le traite comme « non renseigné ».
+const vide = (v: unknown) => (v === '' || v === null ? undefined : v);
+const facultatif = <T extends z.ZodType>(schema: T) => z.preprocess(vide, schema.optional());
+
 const parcours = defineCollection({
   loader: glob({ pattern: '**/index.md', base: './src/content/parcours' }),
   schema: ({ image }) =>
     z.object({
       titre: z.string(),
       type: z.enum(['route', 'gravel', 'vtt']),
-      difficulte: z.enum(['facile', 'moyen', 'difficile']).optional(),
+      difficulte: facultatif(z.enum(['facile', 'moyen', 'difficile'])),
       // Chemin du fichier dans public/, ex. /gpx/tour-du-lac.gpx
       gpx: z.string().startsWith('/gpx/'),
       // Facultatifs : sinon calculés depuis le GPX
-      distanceKm: z.number().optional(),
-      deniveleM: z.number().optional(),
-      couverture: image().optional(),
-      couvertureAlt: z.string().optional(),
+      distanceKm: facultatif(z.number()),
+      deniveleM: facultatif(z.number()),
+      couverture: facultatif(image()),
+      couvertureAlt: facultatif(z.string()),
     }),
 });
 
@@ -27,23 +32,22 @@ const sorties = defineCollection({
   schema: z.object({
     titre: z.string(),
     categorie: z.enum(IDS_CATEGORIES).default('entrainement'),
-    discipline: z.enum(IDS_DISCIPLINES).optional(),
+    discipline: facultatif(z.enum(IDS_DISCIPLINES)),
     date: z.coerce.date(),
-    dureeHeures: z.number().positive().default(3),
+    dureeHeures: z.preprocess(vide, z.number().positive().default(3)),
     lieuRdv: z.string(),
     // Club ou fédération organisatrice, si ce n'est pas le club
-    organisateur: z.string().optional(),
-    niveau: z.enum(['découverte', 'intermédiaire', 'sportif']).optional(),
-    parcours: reference('parcours').optional(),
+    organisateur: facultatif(z.string()),
+    niveau: facultatif(z.enum(['découverte', 'intermédiaire', 'sportif'])),
+    parcours: facultatif(reference('parcours')),
     // Participation : événement créé au préalable dans le club Strava
-    lienStrava: z
-      .url()
-      .refine((u) => /(^|\.)strava\.(com|app\.link)$/.test(new URL(u).hostname), {
+    lienStrava: facultatif(
+      z.url().refine((u) => URL.canParse(u) && /(^|\.)strava\.(com|app\.link)$/.test(new URL(u).hostname), {
         message: 'Le lien de participation doit être un lien Strava (strava.com ou strava.app.link)',
-      })
-      .optional(),
+      }),
+    ),
     // Inscription auprès d'un organisateur extérieur (rando, course), si elle est nécessaire
-    lienInscription: z.url().optional(),
+    lienInscription: facultatif(z.url()),
     annulee: z.boolean().default(false),
   }),
 });
@@ -55,9 +59,9 @@ const actualites = defineCollection({
       titre: z.string(),
       date: z.coerce.date(),
       auteur: z.string(),
-      resume: z.string().optional(),
-      couverture: image().optional(),
-      couvertureAlt: z.string().optional(),
+      resume: facultatif(z.string()),
+      couverture: facultatif(image()),
+      couvertureAlt: facultatif(z.string()),
       brouillon: z.boolean().default(false),
     }),
 });
@@ -77,7 +81,7 @@ const pages = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/pages' }),
   schema: z.object({
     titre: z.string(),
-    description: z.string().optional(),
+    description: facultatif(z.string()),
   }),
 });
 
@@ -90,7 +94,7 @@ const documents = defineCollection({
     type: z.enum(['calendrier', 'règlement', 'compte rendu', 'autre']).default('autre'),
     // Chemin du fichier dans public/, ex. /documents/programme-fsgt-14-2022.pdf
     fichier: z.string().startsWith('/documents/'),
-    description: z.string().optional(),
+    description: facultatif(z.string()),
   }),
 });
 
