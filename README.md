@@ -1,6 +1,9 @@
 # Site de La Graverie Cyclos
 
-Site statique du club : sorties, parcours avec carte et GPX, actualités, photos.
+Site statique du club : calendrier, parcours avec carte et GPX, actualités, photos, documents.
+
+- **Site en ligne** : https://simonarnaud.github.io/site-la-graverie-cyclo/ (adresse provisoire, en attendant le domaine du club)
+- **Espace rédaction (CMS)** : https://simonarnaud.github.io/site-la-graverie-cyclo/admin/ (aussi accessible par le lien « Espace rédaction » en bas de chaque page)
 
 - **Publier du contenu** (bénévoles) : [docs/GUIDE-REDACTEUR.md](docs/GUIDE-REDACTEUR.md)
 - **Faire évoluer le site** (développeurs) : [docs/GUIDE-TECHNIQUE.md](docs/GUIDE-TECHNIQUE.md)
