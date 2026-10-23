@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import LienRetour from '../../components/LienRetour.astro';
 import Carte from '../../components/Carte.astro';
 import ProfilAltitude from '../../components/ProfilAltitude.astro';
 import club from '../../data/club.json';
@@ -22,7 +23,7 @@ const urlGpx = new URL(lien(gpx), Astro.site);
 ---
 
 <Base titre={titre} description={`${titre} : ${distanceKm} km, ${deniveleM} m de dénivelé`} apercu={parcours.data.couverture}>
-  <p class="meta ecran-seulement"><a href={lien('parcours/')}>← Tous les parcours</a></p>
+  <LienRetour href={lien('parcours/')} libelle="Tous les parcours" />
   <p class="meta impression-seulement">{club.nom}</p>
   <h1>{titre}</h1>
   <p class="meta">{[`${distanceKm} km`, `${deniveleM} m D+`, type, difficulte].filter(Boolean).join(' · ')}</p>

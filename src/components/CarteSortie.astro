@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import IconeDiscipline from './IconeDiscipline.astro';
 import { CATEGORIES, DISCIPLINES } from '../lib/categories';
@@ -9,10 +10,11 @@ interface Props {
 }
 
 const { sortie } = Astro.props;
-const { titre, categorie, discipline, date, lieuRdv, organisateur, niveau, annulee } = sortie.data;
+const { titre, categorie, discipline, date, lieuRdv, organisateur, niveau, annulee, couverture, couvertureAlt } = sortie.data;
 ---
 
 <article class="carte" data-categorie={categorie}>
+  {couverture && <Image src={couverture} alt={couvertureAlt ?? ''} width={800} height={200} fit="cover" class="illustration" />}
   <div class="corps">
     <p class="meta">{dateLongue(date)} · {heure(date)}</p>
     <h3><a href={lien(`sorties/${sortie.id}/`)}>{titre}</a></h3>
@@ -25,3 +27,8 @@ const { titre, categorie, discipline, date, lieuRdv, organisateur, niveau, annul
     </ul>
   </div>
 </article>
+
+<style>
+  /* Bandeau fin : l'image illustre sans écraser les autres cartes de la liste */
+  .illustration { width: 100%; aspect-ratio: 4 / 1; object-fit: cover; }
+</style>

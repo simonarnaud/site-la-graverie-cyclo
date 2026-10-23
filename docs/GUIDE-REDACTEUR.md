@@ -26,7 +26,8 @@ Ne cliquez pas sur « Travailler avec un dépôt local » ni sur « Se connecter
 5. Choisissez le parcours dans la liste, s'il existe déjà.
 6. **Participation** : créez d'abord l'événement dans le club Strava, puis collez son lien dans « Lien de l'événement Strava » (dans l'application Strava : Partager → Copier le lien). Les membres indiquent leur participation sur Strava, et l'on voit combien de personnes viennent.
    Pour une rando ou une course organisée ailleurs qui demande une inscription, collez aussi le lien d'inscription de l'organisateur.
-7. Cliquez sur **Enregistrer**.
+7. Si vous le souhaitez, ajoutez une **image d'illustration** (photo du lieu, affiche de la rando…) et sa description. Elle s'affiche sur la carte de l'événement et sur sa fiche.
+8. Cliquez sur **Enregistrer**.
 
 L'événement apparaît dans le calendrier, au mois de sa date ; les visiteurs passent d'un mois à l'autre avec les flèches. Pour annuler un événement, ouvrez-le et cochez **Événement annulé** plutôt que de le supprimer : les membres abonnés au calendrier seront prévenus.
 

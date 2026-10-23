@@ -98,6 +98,14 @@ collections:
         widget: string
         required: false
       - { name: annulee, label: Événement annulé, widget: boolean, default: false }
+      # Rangées dans src/content/sorties/images/ : le chemin « images/… » est relatif au fichier de l'événement
+      - name: couverture
+        label: Image d'illustration (facultatif)
+        widget: image
+        required: false
+        media_folder: /src/content/sorties/images
+        public_folder: images
+      - { name: couvertureAlt, label: Description de l'image (pour les malvoyants), widget: string, required: false }
       - { name: body, label: Description, widget: markdown, required: false, editor_components: [] }
 
   - name: actualites

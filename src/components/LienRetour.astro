@@ -1,0 +1,32 @@
+---
+// Lien « ← Retour » : revient à la page précédente du site (calendrier au bon mois, accueil, parcours…).
+// Si on arrive d'ailleurs (lien partagé, moteur de recherche), il mène à la page de secours `href`.
+interface Props {
+  href: string; // page de secours, ex. lien('parcours/')
+  libelle: string; // texte affiché dans ce cas, ex. « Tous les parcours »
+}
+
+const { href, libelle } = Astro.props;
+---
+
+<p class="meta lien-retour ecran-seulement">
+  <a href={href} data-retour>← {libelle}</a>
+</p>
+
+<script>
+  for (const lienRetour of document.querySelectorAll<HTMLAnchorElement>('a[data-retour]')) {
+    let depuisLeSite = false;
+    try {
+      depuisLeSite = document.referrer !== '' && new URL(document.referrer).origin === location.origin && history.length > 1;
+    } catch {
+      // referrer illisible : on garde le lien de secours
+    }
+    if (depuisLeSite) {
+      lienRetour.textContent = '← Retour';
+      lienRetour.addEventListener('click', (e) => {
+        e.preventDefault();
+        history.back();
+      });
+    }
+  }
+</script>

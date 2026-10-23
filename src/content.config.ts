@@ -29,7 +29,7 @@ const parcours = defineCollection({
 // Événements du calendrier : entraînements, randos, courses…
 const sorties = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/sorties' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     titre: z.string(),
     categorie: z.enum(IDS_CATEGORIES).default('entrainement'),
     discipline: facultatif(z.enum(IDS_DISCIPLINES)),
@@ -49,6 +49,9 @@ const sorties = defineCollection({
     // Inscription auprès d'un organisateur extérieur (rando, course), si elle est nécessaire
     lienInscription: facultatif(z.url()),
     annulee: z.boolean().default(false),
+    // Image d'illustration facultative, rangée dans src/content/sorties/images/
+    couverture: facultatif(image()),
+    couvertureAlt: facultatif(z.string()),
   }),
 });
 

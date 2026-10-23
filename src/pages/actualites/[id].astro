@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import LienRetour from '../../components/LienRetour.astro';
 import { actualitesPubliees } from '../../lib/contenus';
 import { dateLongue, lien } from '../../lib/format';
 
@@ -17,7 +18,7 @@ const { Content } = await render(actu);
 
 <Base titre={titre} description={resume} apercu={couverture} type="article">
   <article class="prose">
-    <p class="meta"><a href={lien('actualites/')}>← Toutes les actualités</a></p>
+    <LienRetour href={lien('actualites/')} libelle="Toutes les actualités" />
     <h1>{titre}</h1>
     <p class="meta">{dateLongue(date)} · {auteur}</p>
     {couverture && <Image src={couverture} alt={couvertureAlt ?? ''} width={1100} class="couverture" />}

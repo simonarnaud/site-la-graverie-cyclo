@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import LienRetour from '../../components/LienRetour.astro';
 import IconeDiscipline from '../../components/IconeDiscipline.astro';
 import { CATEGORIES, DISCIPLINES } from '../../lib/categories';
 import { dateLongue, heure, jourParis, lien } from '../../lib/format';
@@ -11,18 +13,19 @@ export async function getStaticPaths() {
 }
 
 const { sortie } = Astro.props;
-const { titre, categorie, discipline, date, dureeHeures, lieuRdv, organisateur, niveau, lienStrava, lienInscription, annulee } = sortie.data;
+const { titre, categorie, discipline, date, dureeHeures, lieuRdv, organisateur, niveau, lienStrava, lienInscription, annulee, couverture, couvertureAlt } = sortie.data;
 const libelle = CATEGORIES[categorie].label;
 const parcours = sortie.data.parcours ? await getEntry(sortie.data.parcours) : undefined;
 const { Content } = await render(sortie);
 const aVenir = date.getTime() > Date.now();
 ---
 
-<Base titre={titre} description={`${libelle} du ${dateLongue(date)} : ${titre}`}>
-  <p class="meta"><a href={lien(`calendrier/?mois=${jourParis(date).slice(0, 7)}`)}>← Calendrier</a></p>
+<Base titre={titre} description={`${libelle} du ${dateLongue(date)} : ${titre}`} apercu={couverture}>
+  <LienRetour href={lien(`calendrier/?mois=${jourParis(date).slice(0, 7)}`)} libelle="Calendrier" />
   <p><span class="categorie" data-categorie={categorie}>{libelle}</span></p>
   <h1>{titre}</h1>
   {annulee && <p class="annulee">Cet événement est annulé.</p>}
+  {couverture && <Image src={couverture} alt={couvertureAlt ?? ''} width={1100} class="illustration" />}
 
   <dl class="infos">
     <div><dt>Date</dt><dd>{dateLongue(date)}</dd></div>
@@ -56,5 +59,6 @@ const aVenir = date.getTime() > Date.now();
   .infos dd { margin: 0; font-weight: 600; }
   .infos dd.avec-icone { display: flex; align-items: center; gap: 6px; }
   .participation { margin: 0 0 24px; }
+  .illustration { margin: 16px 0 0; border-radius: var(--rayon); max-height: 480px; width: 100%; object-fit: cover; }
   .participation .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 8px; }
 </style>

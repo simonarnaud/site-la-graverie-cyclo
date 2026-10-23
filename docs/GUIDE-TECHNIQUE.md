@@ -15,7 +15,7 @@ Bénévole ──(Sveltia CMS, /admin)──▶ commit sur main ──▶ GitHub
 | Chemin | Rôle |
 |---|---|
 | `src/content.config.ts` | Schémas des collections (à garder synchronisés avec `public/admin/config.yml`) |
-| `src/content/sorties/*.md` | Événements du calendrier (champ `categorie` : types et couleurs dans `src/lib/categories.ts` et `--cat-*` de `global.css`) |
+| `src/content/sorties/*.md` | Événements du calendrier ; images d'illustration facultatives dans `src/content/sorties/images/` (non supprimées avec l'événement) ; champ `categorie` : types et couleurs dans `src/lib/categories.ts` et `--cat-*` de `global.css`) |
 | `src/content/documents/*.md` | Documents PDF ; fichiers dans `public/documents/` (10 Mo max conseillé) |
 | `src/content/parcours/<id>/index.md` | Parcours (+ photo colocalisée) ; trace dans `public/gpx/` |
 | `src/content/actualites/<id>/index.md` | Articles (+ images colocalisées) |
