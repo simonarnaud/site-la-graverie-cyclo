@@ -2,6 +2,7 @@
 import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { IDS_CATEGORIES } from './lib/categories';
 
 const parcours = defineCollection({
   loader: glob({ pattern: '**/index.md', base: './src/content/parcours' }),
@@ -20,14 +21,18 @@ const parcours = defineCollection({
     }),
 });
 
+// Événements du calendrier : sorties club, entraînements, brevets, courses…
 const sorties = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/sorties' }),
   schema: z.object({
     titre: z.string(),
+    categorie: z.enum(IDS_CATEGORIES).default('sortie'),
     date: z.coerce.date(),
     dureeHeures: z.number().positive().default(3),
     lieuRdv: z.string(),
-    niveau: z.enum(['découverte', 'intermédiaire', 'sportif']),
+    // Club ou fédération organisatrice, si ce n'est pas le club
+    organisateur: z.string().optional(),
+    niveau: z.enum(['découverte', 'intermédiaire', 'sportif']).optional(),
     parcours: reference('parcours').optional(),
     lienInscription: z.url().optional(),
     annulee: z.boolean().default(false),
@@ -67,4 +72,17 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { parcours, sorties, actualites, albums, pages };
+// Documents PDF à télécharger (calendrier FFC, règlements, comptes rendus…)
+const documents = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/documents' }),
+  schema: z.object({
+    titre: z.string(),
+    date: z.coerce.date(),
+    type: z.enum(['calendrier', 'règlement', 'compte rendu', 'autre']).default('autre'),
+    // Chemin du fichier dans public/, ex. /documents/calendrier-ffc-2027.pdf
+    fichier: z.string().startsWith('/documents/'),
+    description: z.string().optional(),
+  }),
+});
+
+export const collections = { parcours, sorties, actualites, albums, pages, documents };

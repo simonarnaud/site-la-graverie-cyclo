@@ -31,7 +31,14 @@ const { points, titre } = Astro.props;
     L.circleMarker(points[0], { radius: 8, color: rouge, fillColor: jaune, fillOpacity: 1, weight: 3 })
       .bindTooltip('Départ')
       .addTo(carte);
-    carte.fitBounds(trace.getBounds(), { padding: [20, 20] });
+    const recadrer = () => {
+      carte.invalidateSize();
+      carte.fitBounds(trace.getBounds(), { padding: [20, 20] });
+    };
+    recadrer();
+    // À l'impression, la carte change de taille : on recadre la trace avant et après
+    window.addEventListener('beforeprint', recadrer);
+    window.addEventListener('afterprint', recadrer);
   }
 </script>
 
@@ -41,5 +48,9 @@ const { points, titre } = Astro.props;
     border-radius: var(--rayon);
     border: 1px solid var(--bordure);
     margin: 24px 0;
+  }
+  @media print {
+    .carte-trace { height: 15cm; margin: 12px 0; break-inside: avoid; }
+    .carte-trace :global(.leaflet-control-zoom) { display: none; }
   }
 </style>

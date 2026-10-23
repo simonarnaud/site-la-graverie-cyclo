@@ -14,15 +14,27 @@ Ce guide s'adresse aux bénévoles qui publient sur le site. Aucune connaissance
 
 Ensuite, votre navigateur se souvient de vous.
 
-## Annoncer une sortie
+## Ajouter un événement au calendrier
 
-1. Menu **Sorties** → **Nouveau**.
-2. Remplissez le titre, la date et l'heure de départ, le lieu de rendez-vous et le niveau.
-3. Choisissez le parcours dans la liste, s'il existe déjà.
-4. Collez le lien d'inscription (événement Strava, sondage Framadate…), si vous en avez un.
-5. Cliquez sur **Enregistrer**.
+1. Menu **Calendrier** → **Nouveau**.
+2. Choisissez le **type** : sortie club, entraînement, brevet, course ou autre. Chaque type a sa couleur sur le site.
+3. Remplissez le titre, la date et l'heure de départ, le lieu et, si besoin, le niveau.
+4. Pour un brevet ou une course organisés par un autre club, indiquez l'**organisateur**.
+5. Choisissez le parcours dans la liste, s'il existe déjà.
+6. Collez le lien d'inscription (événement Strava, sondage Framadate, HelloAsso, site de la FFC…), si vous en avez un.
+7. Cliquez sur **Enregistrer**.
 
-La sortie passe automatiquement dans « Sorties passées » le lendemain. Pour annuler une sortie, ouvrez-la et cochez **Sortie annulée** plutôt que de la supprimer : les membres abonnés au calendrier seront prévenus.
+L'événement passe automatiquement dans « Événements passés » le lendemain. Pour annuler un événement, ouvrez-le et cochez **Sortie annulée** plutôt que de le supprimer : les membres abonnés au calendrier seront prévenus.
+
+## Publier un document PDF
+
+Par exemple, le calendrier des activités envoyé par la FFC.
+
+1. Menu **Documents** → **Nouveau**.
+2. Ajoutez un titre, la date et le type, puis choisissez le fichier PDF (10 Mo maximum).
+3. Cliquez sur **Enregistrer**.
+
+Le document apparaît dans la page **Documents** du site, à consulter ou à télécharger. Si le fichier est trop lourd, réduisez-le d'abord, par exemple avec le site gratuit [iLovePDF](https://www.ilovepdf.com/fr/compresser_pdf).
 
 ## Publier une actualité
 

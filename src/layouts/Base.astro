@@ -21,10 +21,11 @@ const imageApercu = await getImage({ src: apercu, width: 1200, height: 630, fit:
 const urlApercu = new URL(imageApercu.src, Astro.site);
 
 const navigation = [
-  { href: 'sorties/', label: 'Sorties' },
+  { href: 'calendrier/', label: 'Calendrier' },
   { href: 'parcours/', label: 'Parcours' },
   { href: 'actualites/', label: 'Actualités' },
   { href: 'albums/', label: 'Photos' },
+  { href: 'documents/', label: 'Documents' },
   { href: 'le-club/', label: 'Le club' },
 ];
 const courant = Astro.url.pathname;

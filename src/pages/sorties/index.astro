@@ -1,32 +1,17 @@
 ---
-import Base from '../../layouts/Base.astro';
-import CarteSortie from '../../components/CarteSortie.astro';
-import { sortiesTriees } from '../../lib/contenus';
+// Ancienne adresse de la liste des sorties, conservée pour les liens déjà partagés.
 import { lien } from '../../lib/format';
-
-const { aVenir, passees } = await sortiesTriees();
+const cible = lien('calendrier/');
 ---
 
-<Base titre="Sorties" description="Calendrier des sorties du club">
-  <h1>Sorties</h1>
-  <p>
-    Ajoutez toutes les sorties à l'agenda de votre téléphone :
-    <a href={lien('sorties.ics')}>s'abonner au calendrier</a>.
-  </p>
-
-  <section class="section">
-    <h2>À venir</h2>
-    {aVenir.length > 0 ? (
-      <div class="grille">{aVenir.map((sortie) => <CarteSortie sortie={sortie} />)}</div>
-    ) : (
-      <p class="vide">Aucune sortie programmée pour le moment.</p>
-    )}
-  </section>
-
-  {passees.length > 0 && (
-    <section class="section">
-      <h2>Sorties passées</h2>
-      <div class="grille">{passees.slice(0, 12).map((sortie) => <CarteSortie sortie={sortie} />)}</div>
-    </section>
-  )}
-</Base>
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0;url=${cible}`} />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={new URL(cible, Astro.site)} />
+    <title>Calendrier</title>
+  </head>
+  <body><a href={cible}>Le calendrier a déménagé : cliquez ici.</a></body>
+</html>

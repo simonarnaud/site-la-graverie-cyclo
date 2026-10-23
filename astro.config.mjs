@@ -9,5 +9,5 @@ export default defineConfig({
   site: 'https://simonarnaud.github.io',
   base: '/site-la-graverie-cyclo',
   // Plan du site pour les moteurs de recherche (sitemap-index.xml)
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => !page.endsWith('/sorties/') })],
 });

@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { CATEGORIES } from '../../lib/categories';
 import { dateLongue, heure, lien } from '../../lib/format';
 
 export async function getStaticPaths() {
@@ -9,29 +10,32 @@ export async function getStaticPaths() {
 }
 
 const { sortie } = Astro.props;
-const { titre, date, dureeHeures, lieuRdv, niveau, lienInscription, annulee } = sortie.data;
+const { titre, categorie, date, dureeHeures, lieuRdv, organisateur, niveau, lienInscription, annulee } = sortie.data;
+const libelle = CATEGORIES[categorie].label;
 const parcours = sortie.data.parcours ? await getEntry(sortie.data.parcours) : undefined;
 const { Content } = await render(sortie);
 const aVenir = date.getTime() > Date.now();
 ---
 
-<Base titre={titre} description={`Sortie du ${dateLongue(date)} : ${titre}`}>
-  <p class="meta"><a href={lien('sorties/')}>← Toutes les sorties</a></p>
+<Base titre={titre} description={`${libelle} du ${dateLongue(date)} : ${titre}`}>
+  <p class="meta"><a href={lien('calendrier/')}>← Calendrier</a></p>
+  <p><span class="categorie" data-categorie={categorie}>{libelle}</span></p>
   <h1>{titre}</h1>
-  {annulee && <p class="annulee">Cette sortie est annulée.</p>}
+  {annulee && <p class="annulee">Cet événement est annulé.</p>}
 
   <dl class="infos">
     <div><dt>Date</dt><dd>{dateLongue(date)}</dd></div>
     <div><dt>Départ</dt><dd>{heure(date)} · {lieuRdv}</dd></div>
     <div><dt>Durée estimée</dt><dd>{dureeHeures} h</dd></div>
-    <div><dt>Niveau</dt><dd>{niveau}</dd></div>
+    {niveau && <div><dt>Niveau</dt><dd>{niveau}</dd></div>}
+    {organisateur && <div><dt>Organisateur</dt><dd>{organisateur}</dd></div>}
     {parcours && (
       <div><dt>Parcours</dt><dd><a href={lien(`parcours/${parcours.id}/`)}>{parcours.data.titre}</a></dd></div>
     )}
   </dl>
 
   {lienInscription && aVenir && !annulee && (
-    <p><a class="bouton" href={lienInscription} rel="noopener">Je participe</a></p>
+    <p><a class="bouton" href={lienInscription} rel="noopener">{categorie === 'sortie' || categorie === 'entrainement' ? 'Je participe' : "S'inscrire"}</a></p>
   )}
 
   <div class="prose"><Content /></div>

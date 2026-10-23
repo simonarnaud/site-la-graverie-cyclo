@@ -1,0 +1,61 @@
+---
+// Documents PDF : calendrier FFC, règlements, comptes rendus…
+import { statSync } from 'node:fs';
+import { join } from 'node:path';
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { dateCourte, lien } from '../../lib/format';
+
+const documents = (await getCollection('documents'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .map((d) => {
+    let taille: number;
+    try {
+      taille = statSync(join(process.cwd(), 'public', d.data.fichier)).size;
+    } catch {
+      throw new Error(`Document « ${d.data.titre} » : fichier introuvable (public${d.data.fichier})`);
+    }
+    const enMo = taille / 1024 / 1024;
+    const texte = enMo >= 1
+      ? `${enMo.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} Mo`
+      : `${Math.max(1, Math.round(taille / 1024))} Ko`;
+    return { ...d, taille: texte };
+  });
+---
+
+<Base titre="Documents" description="Calendriers, règlements et comptes rendus à télécharger">
+  <h1>Documents</h1>
+  <p>Calendriers de la fédération, règlements, comptes rendus d'assemblée générale…</p>
+
+  {documents.length > 0 ? (
+    <ul class="documents">
+      {documents.map((d) => (
+        <li class="carte">
+          <div class="corps">
+            <span class="icone" aria-hidden="true">PDF</span>
+            <div class="texte">
+              <p class="meta">{dateCourte(d.data.date)} · {d.data.type}</p>
+              <h3><a href={lien(d.data.fichier)} target="_blank" rel="noopener">{d.data.titre}</a></h3>
+              {d.data.description && <p>{d.data.description}</p>}
+            </div>
+            <a class="bouton secondaire" href={lien(d.data.fichier)} download>Télécharger ({d.taille})</a>
+          </div>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="vide">Aucun document pour le moment.</p>
+  )}
+</Base>
+
+<style>
+  .documents { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 14px; }
+  .documents .corps { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .texte { flex: 1; min-width: 200px; }
+  .texte p { margin: 0; }
+  .icone {
+    flex-shrink: 0; width: 48px; height: 58px; display: grid; place-items: center;
+    border-radius: 6px 14px 6px 6px; font-size: .75rem; font-weight: 800;
+    color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent);
+  }
+</style>

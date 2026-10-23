@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Carte from '../../components/Carte.astro';
+import club from '../../data/club.json';
 import { lireGpx } from '../../lib/gpx';
 import { lien } from '../../lib/format';
 
@@ -16,16 +17,31 @@ const trace = lireGpx(gpx);
 const distanceKm = parcours.data.distanceKm ?? trace.distanceKm;
 const deniveleM = parcours.data.deniveleM ?? trace.deniveleM;
 const { Content } = await render(parcours);
+const urlGpx = new URL(lien(gpx), Astro.site);
 ---
 
 <Base titre={titre} description={`${titre} : ${distanceKm} km, ${deniveleM} m de dénivelé`} apercu={parcours.data.couverture}>
-  <p class="meta"><a href={lien('parcours/')}>← Tous les parcours</a></p>
+  <p class="meta ecran-seulement"><a href={lien('parcours/')}>← Tous les parcours</a></p>
+  <p class="meta impression-seulement">{club.nom}</p>
   <h1>{titre}</h1>
   <p class="meta">{distanceKm} km · {deniveleM} m D+ · {type} · {difficulte}</p>
 
   <Carte points={trace.points} titre={titre} />
 
-  <p><a class="bouton" href={lien(gpx)} download>Télécharger la trace GPX</a></p>
+  <p class="actions ecran-seulement">
+    <a class="bouton" href={lien(gpx)} download>Télécharger la trace GPX</a>
+    <button class="bouton secondaire" type="button" data-imprimer>Imprimer le parcours</button>
+  </p>
+  <p class="meta impression-seulement">Trace GPX : {urlGpx.href}</p>
 
   <div class="prose"><Content /></div>
 </Base>
+
+<script>
+  document.querySelector('[data-imprimer]')?.addEventListener('click', () => window.print());
+</script>
+
+<style>
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  button.bouton { font: inherit; font-weight: 600; cursor: pointer; border: 0; }
+</style>

@@ -1,0 +1,13 @@
+// Types d'événements du calendrier. Les identifiants sont ceux enregistrés par le CMS (public/admin/config.yml).
+// Les couleurs sont définies dans src/styles/global.css (--cat-<id>).
+export const CATEGORIES = {
+  sortie: { label: 'Sortie club', pluriel: 'Sorties club' },
+  entrainement: { label: 'Entraînement', pluriel: 'Entraînements' },
+  brevet: { label: 'Brevet', pluriel: 'Brevets' },
+  course: { label: 'Course', pluriel: 'Courses' },
+  autre: { label: 'Autre', pluriel: 'Autres' },
+} as const;
+
+export type Categorie = keyof typeof CATEGORIES;
+
+export const IDS_CATEGORIES = Object.keys(CATEGORIES) as [Categorie, ...Categorie[]];

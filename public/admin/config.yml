@@ -28,23 +28,40 @@ media_libraries:
 
 collections:
   - name: sorties
-    label: Sorties
-    label_singular: Sortie
-    description: Les sorties du calendrier. Elles passent automatiquement dans « Sorties passées » le lendemain.
+    label: Calendrier
+    label_singular: Événement
+    description: Sorties club, entraînements, brevets, courses… Ils passent automatiquement dans « Événements passés » le lendemain.
     folder: src/content/sorties
     create: true
     identifier_field: titre
     slug: "{{fields.date | date('YYYY-MM-DD')}}-{{slug}}"
-    summary: "{{date | date('DD/MM/YYYY')}} – {{titre}}"
-    sortable_fields: [date, titre]
+    summary: "{{date | date('DD/MM/YYYY')}} – {{categorie}} – {{titre}}"
+    sortable_fields: [date, titre, categorie]
     fields:
       - { name: titre, label: Titre, widget: string }
+      # Valeurs à garder synchronisées avec src/lib/categories.ts
+      - name: categorie
+        label: Type
+        widget: select
+        default: sortie
+        options:
+          - { label: Sortie club, value: sortie }
+          - { label: Entraînement, value: entrainement }
+          - { label: Brevet, value: brevet }
+          - { label: Course, value: course }
+          - { label: Autre, value: autre }
       - { name: date, label: Date et heure de départ, widget: datetime, input_timezone: Europe/Paris }
       - { name: dureeHeures, label: Durée estimée (heures), widget: number, value_type: float, default: 3, min: 0.5 }
-      - { name: lieuRdv, label: Lieu de rendez-vous, widget: string }
+      - { name: lieuRdv, label: Lieu / rendez-vous, widget: string }
+      - name: organisateur
+        label: Organisateur
+        hint: À remplir si ce n'est pas le club (club voisin, FFC…).
+        widget: string
+        required: false
       - name: niveau
         label: Niveau
         widget: select
+        required: false
         options: [découverte, intermédiaire, sportif]
       - name: parcours
         label: Parcours
@@ -131,6 +148,31 @@ collections:
         fields:
           - { name: src, label: Photo, widget: image }
           - { name: alt, label: Description courte, widget: string }
+
+  - name: documents
+    label: Documents
+    label_singular: Document
+    description: Fichiers PDF à télécharger (calendrier FFC, règlements, comptes rendus). 10 Mo maximum par fichier.
+    folder: src/content/documents
+    create: true
+    identifier_field: titre
+    summary: "{{date | date('DD/MM/YYYY')}} – {{titre}}"
+    sortable_fields: [date, titre]
+    fields:
+      - { name: titre, label: Titre, widget: string }
+      - { name: date, label: Date de publication, widget: datetime, type: date }
+      - { name: type, label: Type, widget: select, default: autre, options: [calendrier, règlement, compte rendu, autre] }
+      - name: fichier
+        label: Fichier PDF
+        widget: file
+        accept: application/pdf,.pdf
+        media_folder: /public/documents
+        public_folder: /documents
+        media_libraries:
+          default:
+            config:
+              max_file_size: 10485760 # 10 Mo
+      - { name: description, label: Description courte, widget: string, required: false }
 
   - name: club
     label: Le club

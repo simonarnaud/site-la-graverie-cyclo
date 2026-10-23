@@ -18,7 +18,7 @@ const actus = (await actualitesPubliees()).slice(0, 3);
       <h1>{club.nom}</h1>
       <p class="slogan">{club.slogan}</p>
       <p class="actions">
-        <a class="bouton" href={lien('sorties/')}>Voir les prochaines sorties</a>
+        <a class="bouton" href={lien('calendrier/')}>Voir le calendrier</a>
         <a class="bouton secondaire" href={club.lienAdhesion || lien('le-club/')}>
           {club.lienAdhesion ? 'Adhérer au club' : 'Découvrir le club'}
         </a>
@@ -29,13 +29,13 @@ const actus = (await actualitesPubliees()).slice(0, 3);
 
   <section class="section">
     <div class="section-titre">
-      <h2>Prochaines sorties</h2>
-      <a href={lien('sorties/')}>Toutes les sorties →</a>
+      <h2>Prochains rendez-vous</h2>
+      <a href={lien('calendrier/')}>Tout le calendrier →</a>
     </div>
     {aVenir.length > 0 ? (
       <div class="grille">{aVenir.slice(0, 3).map((sortie) => <CarteSortie sortie={sortie} />)}</div>
     ) : (
-      <p class="vide">Aucune sortie programmée pour le moment.</p>
+      <p class="vide">Rien de programmé pour le moment.</p>
     )}
   </section>
 

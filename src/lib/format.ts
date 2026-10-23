@@ -13,6 +13,11 @@ export function heure(d: Date): string {
   return d.toLocaleTimeString('fr-FR', { timeZone: TZ, hour: '2-digit', minute: '2-digit' });
 }
 
+// Jour au format AAAA-MM-JJ, dans le fuseau du club
+export function jourParis(d: Date): string {
+  return d.toLocaleDateString('en-CA', { timeZone: TZ });
+}
+
 // Préfixe un chemin interne avec `base` (le site vit dans un sous-dossier tant que le domaine n'est pas branché).
 export function lien(chemin: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');

@@ -2,6 +2,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import club from '../data/club.json';
+import { CATEGORIES } from '../lib/categories';
 
 export const GET: APIRoute = async ({ site }) => {
   const sorties = await getCollection('sorties');
@@ -17,7 +18,8 @@ export const GET: APIRoute = async ({ site }) => {
       `DTSTAMP:${maintenant}`,
       `DTSTART:${horodatage(debut)}`,
       `DTEND:${horodatage(fin)}`,
-      `SUMMARY:${echapper((s.data.annulee ? 'ANNULÉE – ' : '') + s.data.titre)}`,
+      `SUMMARY:${echapper((s.data.annulee ? 'ANNULÉ – ' : '') + `${CATEGORIES[s.data.categorie].label} : ${s.data.titre}`)}`,
+      `CATEGORIES:${echapper(CATEGORIES[s.data.categorie].label)}`,
       `LOCATION:${echapper(s.data.lieuRdv)}`,
       `URL:${new URL(`sorties/${s.id}/`, base)}`,
       `STATUS:${s.data.annulee ? 'CANCELLED' : 'CONFIRMED'}`,
