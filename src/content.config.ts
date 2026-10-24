@@ -116,4 +116,19 @@ const partenaires = defineCollection({
     }),
 });
 
-export const collections = { parcours, sorties, actualites, albums, pages, documents, partenaires };
+// Programmes FSGT en PDF : leurs activités sont créées dans le calendrier par scripts/importer-fsgt.mjs
+// (GitHub Action). statut, resume, rapport et traiteLe sont remplis par le script, pas par le rédacteur.
+const importsFsgt = defineCollection({
+  loader: globTolerant({ pattern: '**/index.md', base: './src/content/imports-fsgt' }),
+  schema: z.object({
+    titre: z.string(),
+    fichier: z.string().regex(/^(\.\/)?[^/]+\.pdf$/i, "Le PDF doit être rangé dans le dossier de l'import"),
+    annee: facultatif(z.number().int()),
+    statut: z.preprocess(vide, z.enum(['a-traiter', 'termine', 'partiel', 'echec']).default('a-traiter')),
+    resume: facultatif(z.string()),
+    rapport: facultatif(z.string()),
+    traiteLe: facultatif(z.coerce.date()),
+  }),
+});
+
+export const collections = { parcours, sorties, actualites, albums, pages, documents, partenaires, importsFsgt };

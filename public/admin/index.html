@@ -22,6 +22,7 @@
       #etat-publication li { margin: 4px 0; }
       #etat-publication .detail { color: #6b625b; }
       #etat-publication a { color: #b5121b; }
+      #etat-publication hr { border: 0; border-top: 1px solid #ddd; margin: 10px 0; }
       /* Lien permanent vers le site, en bas à gauche */
       #voir-le-site {
         position: fixed; left: 16px; bottom: 16px; z-index: 100000;
@@ -42,21 +43,31 @@
 
     <script>
       // Bandeau d'état de la publication :
-      // - mise en ligne en cours / échouée (API publique de GitHub, dernier passage du workflow « Déploiement ») ;
-      // - contenus écartés car invalides (rapport /etat-publication.json produit à chaque mise en ligne).
+      // - mise en ligne et import FSGT en cours / échoués (API publique de GitHub, derniers passages des workflows) ;
+      // - contenus écartés car invalides et comptes rendus des imports FSGT récents
+      //   (rapport /etat-publication.json produit à chaque mise en ligne).
       (() => {
         const bandeau = document.getElementById('etat-publication');
         let ferme = false;
         let etaitEnCours = false;
         const echapper = (t) => String(t ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+        // Comptes rendus d'import déjà lus (bandeau fermé) : on ne les réaffiche pas
+        const importsVus = () => {
+          try {
+            return JSON.parse(localStorage.getItem('imports-vus') ?? '[]');
+          } catch {
+            return [];
+          }
+        };
 
-        function afficher(classe, html) {
+        function afficher(classe, html, auFermer) {
           if (ferme) return;
           bandeau.className = classe;
           bandeau.innerHTML = `${html}<button type="button" aria-label="Fermer">×</button>`;
           bandeau.querySelector('button').onclick = () => {
             ferme = true;
             bandeau.hidden = true;
+            auFermer?.();
           };
           bandeau.hidden = false;
         }
@@ -66,41 +77,79 @@
           const config = await fetch('config.yml', { cache: 'no-store' }).then((r) => r.text());
           const depot = config.match(/^\s*repo:\s*(\S+)/m)?.[1];
 
-          let passage;
+          // Un seul appel pour tous les workflows (l'API de GitHub limite à 60 requêtes par heure)
+          let passages = [];
           try {
-            const reponse = await fetch(`https://api.github.com/repos/${depot}/actions/workflows/deploy.yml/runs?branch=main&per_page=1`);
-            if (reponse.ok) passage = (await reponse.json()).workflow_runs?.[0];
+            const reponse = await fetch(`https://api.github.com/repos/${depot}/actions/runs?branch=main&per_page=10`);
+            if (reponse.ok) passages = (await reponse.json()).workflow_runs ?? [];
           } catch {
             // GitHub injoignable ou limite de requêtes atteinte : on se contente du rapport
           }
+          const dernier = (workflow) => passages.find((p) => p.path?.endsWith(workflow));
+          const passage = dernier('deploy.yml');
+          const passageImport = dernier('importer-fsgt.yml');
           let rapport;
           try {
             rapport = await fetch(`../etat-publication.json?t=${Date.now()}`, { cache: 'no-store' }).then((r) => (r.ok ? r.json() : undefined));
           } catch {}
 
+          if (passageImport && passageImport.status !== 'completed') {
+            etaitEnCours = true;
+            return afficher('attention', "<strong>⏳ Lecture du programme FSGT en cours…</strong><span class=\"detail\">Les activités seront créées dans le Calendrier d'ici une à deux minutes, puis mises en ligne.</span>");
+          }
           if (passage && passage.status !== 'completed') {
             etaitEnCours = true;
             return afficher('attention', '<strong>⏳ Mise en ligne en cours…</strong><span class="detail">Vos dernières modifications apparaîtront sur le site dans une à deux minutes.</span>');
           }
-          if (passage?.conclusion === 'failure') {
+          for (const [p, quoi] of [[passage, 'La dernière mise en ligne'], [passageImport, 'La lecture du programme FSGT']]) {
+            if (p?.conclusion !== 'failure') continue;
             return afficher(
               'erreur',
-              `<strong>❌ La dernière mise en ligne a échoué</strong>
-               <span class="detail">Le site reste dans sa version précédente. Il s'agit d'un problème technique : prévenez le responsable du site.</span>
-               <br><a href="${echapper(passage.html_url)}" target="_blank" rel="noopener">Voir le détail sur GitHub</a>`,
+              `<strong>❌ ${quoi} a échoué</strong>
+               <span class="detail">${p === passage ? 'Le site reste dans sa version précédente. ' : ''}Il s'agit d'un problème technique : prévenez le responsable du site.</span>
+               <br><a href="${echapper(p.html_url)}" target="_blank" rel="noopener">Voir le détail sur GitHub</a>`,
             );
           }
+
+          const blocs = [];
+          let classe = 'ok';
           const problemes = rapport?.problemes ?? [];
           if (problemes.length) {
+            classe = 'erreur';
             const liste = problemes
               .map((p) => `<li><b>${echapper(p.menu)} › ${echapper(p.titre || p.id)}</b><br><span class="detail">${echapper(p.message)}</span></li>`)
               .join('');
-            return afficher(
-              'erreur',
+            blocs.push(
               `<strong>⚠️ ${problemes.length} contenu${problemes.length > 1 ? 's ne sont' : " n'est"} pas publié${problemes.length > 1 ? 's' : ''}</strong>
                <span class="detail">Le reste du site est bien en ligne. Ouvrez ${problemes.length > 1 ? 'ces fiches' : 'cette fiche'} dans le CMS pour corriger :</span>
                <ul>${liste}</ul>`,
             );
+          }
+          // Imports FSGT récents ou en attente : résumé, le détail est dans la fiche de l'import
+          const cle = (i) => `${i.id}|${i.traiteLe}`;
+          const imports = (rapport?.imports ?? []).filter((i) => !importsVus().includes(cle(i)));
+          if (imports.length) {
+            const icones = { 'a-traiter': '⏳', termine: '✅', partiel: '⚠️', echec: '❌' };
+            if (classe !== 'erreur') {
+              classe = imports.some((i) => i.statut === 'echec') ? 'erreur' : imports.some((i) => i.statut !== 'termine') ? 'attention' : 'ok';
+            }
+            const liste = imports
+              .map((i) => `<li>${icones[i.statut] ?? ''} <b>${echapper(i.titre)}</b> : ${i.statut === 'a-traiter' ? 'en attente de lecture' : echapper(i.resume)}</li>`)
+              .join('');
+            blocs.push(
+              `<strong>📄 Import FSGT</strong><ul>${liste}</ul>
+               <span class="detail">Compte rendu détaillé : menu <b>Import FSGT</b>, ouvrez l'import (faites d'abord F5 pour voir les activités créées).</span>`,
+            );
+          }
+          if (blocs.length) {
+            // Fermer le bandeau = comptes rendus d'import lus
+            const marquerLus = () => {
+              try {
+                const lus = imports.filter((i) => i.statut !== 'a-traiter').map(cle);
+                localStorage.setItem('imports-vus', JSON.stringify([...importsVus(), ...lus].slice(-50)));
+              } catch {}
+            };
+            return afficher(classe, blocs.join('<hr>'), marquerLus);
           }
           if (etaitEnCours) {
             etaitEnCours = false;

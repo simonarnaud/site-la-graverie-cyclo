@@ -33,6 +33,8 @@ jobs:
           key: astro-assets-${{ hashFiles('src/**/*.jpg', 'src/**/*.jpeg', 'src/**/*.png', 'src/**/*.webp') }}
           restore-keys: astro-assets-
       - run: npm ci
+      - name: Tests de lecture des programmes FSGT
+        run: npm run test:fsgt
       - name: Vérification des contenus
         run: npx astro check
       - run: npm run build

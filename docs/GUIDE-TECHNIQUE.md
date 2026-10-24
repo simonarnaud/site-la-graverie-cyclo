@@ -31,6 +31,7 @@ Une erreur **technique** (bug dans le code, dépendance cassée) fait toujours �
 | `src/content/albums/<id>/index.md` | Sélections de photos (≤ 12) + lien vers l'album complet |
 | `src/content/documents/<id>/index.md` | Documents + PDF dans le même dossier ; publié en `/documents/<id>.pdf` (10 Mo max) |
 | `src/content/partenaires/<id>/index.md` | Partenaires (nom, logo dans le dossier, site, ordre) ; page `src/pages/partenaires.astro`, texte d'introduction dans `src/content/pages/partenaires.md` |
+| `src/content/imports-fsgt/<id>/index.md` | Programmes FSGT en PDF à importer dans le calendrier + compte rendu (voir « Import des programmes FSGT ») |
 | `src/content/pages/*.md` | Le club, mentions légales, confidentialité |
 | `src/data/club.json` | Nom, email, bureau, lien HelloAsso, code GoatCounter |
 | `src/lib/chargeur.ts` | Chargement tolérant des collections et rapport des fiches écartées (`/etat-publication.json`) |
@@ -155,6 +156,27 @@ node scripts/archiver-albums.mjs --essai --mois 2027-11   # simulation pour un a
 Le workflow peut aussi être lancé à la main : onglet **Actions → Archivage des albums → Run workflow**. La durée de conservation se règle avec `MOIS_CONSERVES` en tête du script.
 
 ⚠️ L'archivage allège le **site publié** et les fichiers du repo, mais les photos restent dans **l'historique Git** (voir « Poids du site et limites »). C'est sans conséquence avant de nombreuses années.
+
+## Import des programmes FSGT
+
+Menu CMS **Import FSGT** → `src/content/imports-fsgt/<id>/index.md` + PDF. Le workflow `.github/workflows/importer-fsgt.yml` (à chaque push touchant ce dossier) lance `scripts/importer-fsgt.mjs`, qui traite les imports `statut: a-traiter` :
+
+1. `scripts/fsgt/lire-programme.mjs` lit le texte du PDF **avec ses positions** (`unpdf`, basé sur pdf.js), trouve la ligne d'en-tête (cellule « DATE ») et reconstitue le tableau. Deux mises en page sont reconnues :
+   - **tableau** : une ligne par activité ; rôle des colonnes deviné d'après l'intitulé (club/organisateur, lieu/rendez-vous, heure, discipline, le reste en « détails ») ; une cellule « Route »/« VTT » donne la discipline ;
+   - **grille** : une ligne par jour, une colonne par discipline (CYCLO → rando cyclo, CYCLOSPORT → course cyclo, VTT → rando VTT, CYCLO CROSS → course VTT ; « championnat », « national », « CLM »… → course) ; les mois sont déduits des remises à zéro des numéros de jour et des noms de mois de la colonne MOIS.
+2. **Année** : champ « Année » de l'import, sinon écrite au-dessus du tableau (« SAISON 2022 »), sinon déduite des jours de la semaine (« Sam 19 Sept » → 2026). Chaque date est contrôlée (jour de la semaine, date impossible) : une ligne douteuse est **rejetée et listée** dans le compte rendu, jamais ignorée en silence.
+3. Les activités à venir sont créées dans `src/content/sorties/<date>-<club>/` (titre = club, `lieuRdv: À préciser` si absent, heure 00:00 = « horaire à préciser », détails dans le corps). Pas de doublon : même jour + même organisateur (ou même titre) = déjà au calendrier. Téléphones et emails sont retirés.
+4. Le compte rendu (`statut`, `resume`, `rapport`, `traiteLe`) est écrit dans la fiche de l'import ; le robot commite, puis relance la mise en ligne. Les imports des 7 derniers jours sont publiés dans `/etat-publication.json` et résumés dans le bandeau du CMS. Erreur fatale (PDF illisible, scanné, mise en page inconnue) → `statut: echec` avec l'explication ; plantage du script → workflow en échec, signalé aussi dans le bandeau.
+
+**Nouveau modèle de PDF** : l'essayer sans rien modifier, puis l'ajouter aux tests.
+
+```bash
+node scripts/importer-fsgt.mjs --essai chemin/programme.pdf            # activités à venir qui seraient créées
+node scripts/importer-fsgt.mjs --essai chemin/programme.pdf --toutes   # y compris les dates passées
+npm run test:fsgt                                                      # tests sur scripts/fsgt/exemples/*.pdf
+```
+
+Si le format n'est pas reconnu, adapter `lire-programme.mjs` (détection d'en-tête, rôle des colonnes), copier le PDF dans `scripts/fsgt/exemples/` et ajouter un test dans `lire-programme.test.mjs`. Les tests tournent aussi à chaque mise en ligne.
 
 ## Page Photos
 

@@ -3,6 +3,7 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import club from '../data/club.json';
 import { CATEGORIES, DISCIPLINES } from '../lib/categories';
+import { horaireConnu, jourParis } from '../lib/format';
 
 // La durée n'est pas saisie : dans l'agenda, chaque événement occupe ce créneau par défaut
 const DUREE_AGENDA_H = 3;
@@ -15,12 +16,16 @@ export const GET: APIRoute = async ({ site }) => {
   const evenements = sorties.flatMap((s) => {
     const debut = s.data.date;
     const fin = new Date(debut.getTime() + DUREE_AGENDA_H * 3600_000);
+    // Horaire pas encore connu : événement « toute la journée »
+    const jour = jourParis(debut).replace(/-/g, '');
+    const lendemain = jourParis(new Date(debut.getTime() + 36 * 3600_000)).replace(/-/g, '');
     return [
       'BEGIN:VEVENT',
       `UID:${s.id}@${base.host}`,
       `DTSTAMP:${maintenant}`,
-      `DTSTART:${horodatage(debut)}`,
-      `DTEND:${horodatage(fin)}`,
+      ...(horaireConnu(debut)
+        ? [`DTSTART:${horodatage(debut)}`, `DTEND:${horodatage(fin)}`]
+        : [`DTSTART;VALUE=DATE:${jour}`, `DTEND;VALUE=DATE:${lendemain}`]),
       `SUMMARY:${echapper((s.data.annulee ? 'ANNULÉ – ' : '') + `${CATEGORIES[s.data.categorie].label} : ${s.data.titre}`)}`,
       `CATEGORIES:${[CATEGORIES[s.data.categorie].label, s.data.discipline && DISCIPLINES[s.data.discipline]].filter(Boolean).map((c) => echapper(c!)).join(',')}`,
       `LOCATION:${echapper(s.data.lieuRdv)}`,

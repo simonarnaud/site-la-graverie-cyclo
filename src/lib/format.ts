@@ -13,6 +13,15 @@ export function heure(d: Date): string {
   return d.toLocaleTimeString('fr-FR', { timeZone: TZ, hour: '2-digit', minute: '2-digit' });
 }
 
+// Une activité à 00:00 n'a pas encore d'horaire (activités importées d'un programme FSGT, par exemple)
+export function horaireConnu(d: Date): boolean {
+  return heure(d) !== '00:00';
+}
+
+export function horaire(d: Date): string {
+  return horaireConnu(d) ? heure(d) : 'horaire à préciser';
+}
+
 // Jour au format AAAA-MM-JJ, dans le fuseau du club
 export function jourParis(d: Date): string {
   return d.toLocaleDateString('en-CA', { timeZone: TZ });

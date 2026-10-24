@@ -60,6 +60,29 @@ Par exemple, le programme de la saison envoyé par la FSGT.
 
 Le document apparaît dans la page **Documents** du site, à consulter ou à télécharger. Si le fichier est trop lourd, réduisez-le d'abord, par exemple avec le site gratuit [iLovePDF](https://www.ilovepdf.com/fr/compresser_pdf).
 
+## Importer un programme FSGT dans le calendrier
+
+Quand la FSGT envoie un programme en PDF (période ou saison), ses activités peuvent être créées **automatiquement** dans le calendrier.
+
+1. Menu **Import FSGT** → **Nouveau**.
+2. Donnez un titre (ex. « Programme FSGT septembre-octobre 2026 ») et choisissez le PDF. Laissez « Année » vide.
+3. Cliquez sur **Enregistrer**.
+
+Le bandeau en bas à droite indique « Lecture du programme FSGT en cours… ». Une à deux minutes plus tard :
+
+- les activités **à venir** du PDF sont dans le **Calendrier** (type « Rando FSGT » ou « Course », discipline Cyclo/VTT, club organisateur, lieu, horaire et distances quand le PDF les donne) ;
+- le bandeau résume l'import (✅ tout est compris, ⚠️ des points à vérifier, ❌ échec) ;
+- **faites F5**, puis rouvrez l'import : le **Compte rendu** liste les activités créées et, surtout, **les lignes non comprises et pourquoi** (date impossible, mise en page inconnue, PDF scanné…). Saisissez celles-ci à la main dans le Calendrier.
+
+Bon à savoir :
+
+- les activités passées et celles **déjà au calendrier** (même jour, même club) ne sont pas recréées : réimporter un programme mis à jour ne fait **pas de doublon** ;
+- une activité sans horaire s'affiche « horaire à préciser » : complétez-la ensuite dans le Calendrier (horaire, lieu, trace GPX, lien Strava…) ;
+- les numéros de téléphone et emails du PDF ne sont **pas** recopiés sur le site ;
+- pour relire un PDF (remplacé ou corrigé), mettez **État** sur « À traiter » et enregistrez ;
+- si le compte rendu dit que l'année n'a pas pu être devinée, remplissez **Année** et remettez « À traiter » ;
+- l'import ne publie pas le PDF dans la page Documents : si vous voulez le proposer au téléchargement, ajoutez-le aussi dans **Documents**.
+
 ## Publier une actualité
 
 1. Menu **Actualités** → **Nouveau**.

@@ -212,6 +212,49 @@ collections:
               max_file_size: 10485760 # 10 Mo
       - { name: description, label: Description courte, widget: string, required: false }
 
+  # Lu automatiquement par scripts/importer-fsgt.mjs (GitHub Action) : les activités du PDF sont créées dans le Calendrier
+  - name: imports-fsgt
+    label: Import FSGT
+    label_singular: Import de programme FSGT
+    description: "Déposez ici un programme FSGT en PDF : ses activités sont créées automatiquement dans le Calendrier (1 à 2 minutes), sans doublon. Rouvrez ensuite l'import (après F5) pour lire le compte rendu : activités créées, lignes non comprises et pourquoi."
+    folder: src/content/imports-fsgt
+    path: '{{slug}}/index'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    identifier_field: titre
+    summary: "{{titre}} – {{statut}}"
+    sortable_fields: [titre]
+    fields:
+      - { name: titre, label: Titre, widget: string, hint: "Ex. : Programme FSGT septembre-octobre 2026" }
+      - name: fichier
+        label: Programme FSGT (PDF)
+        widget: file
+        accept: application/pdf,.pdf
+        media_libraries:
+          default:
+            config:
+              max_file_size: 10485760 # 10 Mo
+      - name: annee
+        label: Année (facultatif)
+        widget: number
+        value_type: int
+        required: false
+        hint: "À remplir seulement si le compte rendu indique que l'année n'a pas pu être devinée."
+      - name: statut
+        label: État
+        widget: select
+        default: a-traiter
+        options:
+          - { label: "À traiter (lecture automatique au prochain enregistrement)", value: a-traiter }
+          - { label: "Terminé", value: termine }
+          - { label: "Terminé, avec des points à vérifier", value: partiel }
+          - { label: "Échec : voir le compte rendu", value: echec }
+        hint: "Rempli automatiquement. Pour relire le PDF (après l'avoir remplacé, par exemple), remettez « À traiter » et enregistrez : les activités déjà créées ne sont pas dupliquées."
+      - { name: resume, label: Résumé, widget: string, required: false, readonly: true, hint: Rempli automatiquement. }
+      - { name: rapport, label: Compte rendu, widget: text, required: false, readonly: true, hint: Rempli automatiquement. }
+      - { name: traiteLe, label: Lu le, widget: datetime, required: false, readonly: true, hint: Rempli automatiquement. }
+
   - name: partenaires
     label: Partenaires
     label_singular: Partenaire
