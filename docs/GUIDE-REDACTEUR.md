@@ -23,7 +23,11 @@ Ne cliquez pas sur « Travailler avec un dépôt local » ni sur « Se connecter
    Indiquez aussi la **discipline** si elle est utile : cyclo, cyclosport, VTT ou cyclo-cross.
 3. Remplissez le titre, la date et l'heure de départ, le lieu et, si besoin, le niveau.
 4. Pour une rando ou une course organisée par un autre club, indiquez l'**organisateur**.
-5. Choisissez le parcours dans la liste, s'il existe déjà.
+5. **Le parcours** :
+   - pour un **entraînement**, choisissez l'un des parcours habituels du club dans « Parcours d'entraînement » ;
+   - pour une **rando ou une course**, déposez directement son fichier GPX dans « Trace GPX » : la carte, le profil d'altitude et le téléchargement apparaîtront sur la fiche de l'événement. Inutile de créer un parcours.
+
+   Le menu **Parcours d'entraînement** du CMS ne sert qu'à enregistrer les parcours habituels des entraînements, réutilisés d'une semaine à l'autre.
 6. **Participation** : créez d'abord l'événement dans le club Strava, puis collez son lien dans « Lien de l'événement Strava » (dans l'application Strava : Partager → Copier le lien). Les membres indiquent leur participation sur Strava, et l'on voit combien de personnes viennent.
    Pour une rando ou une course organisée ailleurs qui demande une inscription, collez aussi le lien d'inscription de l'organisateur.
 7. Si vous le souhaitez, ajoutez une **image d'illustration** (photo du lieu, affiche de la rando…) et sa description. Elle s'affiche sur la carte de l'événement et sur sa fiche.

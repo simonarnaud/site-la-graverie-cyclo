@@ -15,8 +15,8 @@ Bénévole ──(Sveltia CMS, /admin)──▶ commit sur main ──▶ GitHub
 | Chemin | Rôle |
 |---|---|
 | `src/content.config.ts` | Schémas des collections (à garder synchronisés avec `public/admin/config.yml`) |
-| `src/content/sorties/<id>/index.md` | Événements du calendrier (+ image d'illustration facultative dans le même dossier) ; types et couleurs dans `src/lib/categories.ts` et `--cat-*` de `global.css` |
-| `src/content/parcours/<id>/index.md` | Parcours + `trace.gpx` + photo dans le même dossier ; GPX publié en `/gpx/<id>.gpx` |
+| `src/content/sorties/<id>/index.md` | Événements du calendrier (+ image d'illustration et GPX facultatifs dans le même dossier ; GPX publié en `/gpx/evenements/<id>.gpx`) ; types et couleurs dans `src/lib/categories.ts` et `--cat-*` de `global.css` |
+| `src/content/parcours/<id>/index.md` | **Parcours d'entraînement** (réutilisés par les entraînements) + `trace.gpx` + photo ; GPX publié en `/gpx/<id>.gpx`. Les randos et courses ont leur GPX dans l'événement. |
 | `src/content/actualites/<id>/index.md` | Articles (+ images dans le même dossier) |
 | `src/content/albums/<id>/index.md` | Sélections de photos (≤ 12) + lien vers l'album complet |
 | `src/content/documents/<id>/index.md` | Documents + PDF dans le même dossier ; publié en `/documents/<id>.pdf` (10 Mo max) |
@@ -24,7 +24,8 @@ Bénévole ──(Sveltia CMS, /admin)──▶ commit sur main ──▶ GitHub
 | `src/data/club.json` | Nom, email, bureau, lien HelloAsso, code GoatCounter |
 | `src/lib/fichiers.ts` | Accès aux GPX/PDF rangés dans le dossier d'une fiche |
 | `src/lib/gpx.ts` | Distance, D+, tracé et profil calculés au build |
-| `src/pages/gpx/[id].gpx.ts`, `src/pages/documents/[id].pdf.ts` | Publication des GPX et PDF |
+| `src/pages/gpx/[id].gpx.ts`, `src/pages/gpx/evenements/[id].gpx.ts`, `src/pages/documents/[id].pdf.ts` | Publication des GPX et PDF |
+| `src/components/FicheTrace.astro` | Carte + profil + téléchargement + impression d'un GPX (parcours et événements) |
 | `src/pages/sorties.ics.ts` | Flux calendrier |
 | `src/components/Carte.astro` | Carte Leaflet (tuiles OpenStreetMap) |
 

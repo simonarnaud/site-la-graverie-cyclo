@@ -71,7 +71,6 @@ collections:
           - { label: VTT, value: vtt }
           - { label: Cyclo-cross, value: cyclo-cross }
       - { name: date, label: Date et heure de départ, widget: datetime, input_timezone: Europe/Paris }
-      - { name: dureeHeures, label: Durée estimée (heures), widget: number, value_type: float, default: 3, min: 0.5 }
       - { name: lieuRdv, label: Lieu / rendez-vous, widget: string }
       - name: organisateur
         label: Organisateur
@@ -84,12 +83,19 @@ collections:
         required: false
         options: [découverte, intermédiaire, sportif]
       - name: parcours
-        label: Parcours
+        label: Parcours d'entraînement (entraînements)
+        hint: Pour un entraînement, choisissez l'un des parcours habituels du club.
         widget: relation
         collection: parcours
         value_field: '{{slug}}'
         search_fields: [titre]
         display_fields: [titre]
+        required: false
+      - name: gpx
+        label: Trace GPX (rando, course…)
+        hint: "Pour une rando ou une course, déposez directement son fichier GPX ici : inutile de créer un parcours. Coupez le début et la fin de la trace s'ils passent devant un domicile."
+        widget: file
+        accept: .gpx
         required: false
       - name: lienStrava
         label: Lien de l'événement Strava
@@ -128,8 +134,9 @@ collections:
       - { name: body, label: Texte, widget: markdown }
 
   - name: parcours
-    label: Parcours
+    label: Parcours d'entraînement
     label_singular: Parcours
+    description: Les parcours habituels des entraînements du club. Pour une rando ou une course, déposez plutôt le GPX directement dans l'événement du calendrier.
     folder: src/content/parcours
     path: '{{slug}}/index'
     media_folder: ''
@@ -139,7 +146,6 @@ collections:
     fields:
       - { name: titre, label: Titre, widget: string }
       - { name: type, label: Type, widget: select, options: [route, gravel, vtt] }
-      - { name: difficulte, label: Difficulté (facultatif), widget: select, required: false, options: [facile, moyen, difficile] }
       - name: gpx
         label: Trace GPX
         hint: Coupez le début et la fin de la trace pour ne pas révéler le domicile de quelqu'un.

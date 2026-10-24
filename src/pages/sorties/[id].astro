@@ -4,8 +4,11 @@ import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import LienRetour from '../../components/LienRetour.astro';
 import IconeDiscipline from '../../components/IconeDiscipline.astro';
+import FicheTrace from '../../components/FicheTrace.astro';
 import { CATEGORIES, DISCIPLINES } from '../../lib/categories';
+import { cheminFichier } from '../../lib/fichiers';
 import { dateLongue, heure, jourParis, lien } from '../../lib/format';
+import { lireGpx } from '../../lib/gpx';
 
 export async function getStaticPaths() {
   const sorties = await getCollection('sorties');
@@ -13,9 +16,11 @@ export async function getStaticPaths() {
 }
 
 const { sortie } = Astro.props;
-const { titre, categorie, discipline, date, dureeHeures, lieuRdv, organisateur, niveau, lienStrava, lienInscription, annulee, couverture, couvertureAlt } = sortie.data;
+const { titre, categorie, discipline, date, lieuRdv, organisateur, niveau, lienStrava, lienInscription, annulee, couverture, couvertureAlt } = sortie.data;
 const libelle = CATEGORIES[categorie].label;
 const parcours = sortie.data.parcours ? await getEntry(sortie.data.parcours) : undefined;
+// GPX propre à l'événement (rando, course…), publié en /gpx/evenements/<id>.gpx
+const trace = sortie.data.gpx ? lireGpx(cheminFichier(sortie, sortie.data.gpx)) : undefined;
 const { Content } = await render(sortie);
 const aVenir = date.getTime() > Date.now();
 ---
@@ -30,13 +35,13 @@ const aVenir = date.getTime() > Date.now();
   <dl class="infos">
     <div><dt>Date</dt><dd>{dateLongue(date)}</dd></div>
     <div><dt>Départ</dt><dd>{heure(date)} · {lieuRdv}</dd></div>
-    <div><dt>Durée estimée</dt><dd>{dureeHeures} h</dd></div>
     {discipline && <div><dt>Discipline</dt><dd class="avec-icone"><IconeDiscipline discipline={discipline} taille={18} />{DISCIPLINES[discipline]}</dd></div>}
     {niveau && <div><dt>Niveau</dt><dd>{niveau}</dd></div>}
     {organisateur && <div><dt>Organisateur</dt><dd>{organisateur}</dd></div>}
     {parcours && (
       <div><dt>Parcours</dt><dd><a href={lien(`parcours/${parcours.id}/`)}>{parcours.data.titre}</a></dd></div>
     )}
+    {trace && <div><dt>Parcours</dt><dd>{trace.distanceKm} km · {trace.deniveleM} m D+</dd></div>}
   </dl>
 
   {aVenir && !annulee && (lienStrava || lienInscription) && (
@@ -50,6 +55,13 @@ const aVenir = date.getTime() > Date.now();
   )}
 
   <div class="prose"><Content /></div>
+
+  {trace && (
+    <section class="section">
+      <h2>Le parcours</h2>
+      <FicheTrace trace={trace} titre={titre} lienGpx={lien(`gpx/evenements/${sortie.id}.gpx`)} />
+    </section>
+  )}
 </Base>
 
 <style>
@@ -59,6 +71,7 @@ const aVenir = date.getTime() > Date.now();
   .infos dd { margin: 0; font-weight: 600; }
   .infos dd.avec-icone { display: flex; align-items: center; gap: 6px; }
   .participation { margin: 0 0 24px; }
-  .illustration { margin: 16px 0 0; border-radius: var(--rayon); max-height: 480px; width: 100%; object-fit: cover; }
+  /* Jamais agrandie au-delà de sa taille réelle (une petite image resterait floue) */
+  .illustration { margin: 16px 0 0; border-radius: var(--rayon); max-height: 480px; width: auto; max-width: 100%; height: auto; object-fit: cover; }
   .participation .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 8px; }
 </style>

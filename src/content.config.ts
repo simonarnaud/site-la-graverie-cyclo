@@ -15,7 +15,6 @@ const parcours = defineCollection({
     z.object({
       titre: z.string(),
       type: z.enum(['route', 'gravel', 'vtt']),
-      difficulte: facultatif(z.enum(['facile', 'moyen', 'difficile'])),
       // Fichier GPX rangé dans le dossier du parcours, ex. trace.gpx (publié en /gpx/<parcours>.gpx)
       gpx: z.string().regex(/^(\.\/)?[^/]+\.gpx$/i, 'Le GPX doit être rangé dans le dossier du parcours'),
       // Facultatifs : sinon calculés depuis le GPX
@@ -34,12 +33,13 @@ const sorties = defineCollection({
     categorie: z.enum(IDS_CATEGORIES).default('entrainement'),
     discipline: facultatif(z.enum(IDS_DISCIPLINES)),
     date: z.coerce.date(),
-    dureeHeures: z.preprocess(vide, z.number().positive().default(3)),
     lieuRdv: z.string(),
     // Club ou fédération organisatrice, si ce n'est pas le club
     organisateur: facultatif(z.string()),
     niveau: facultatif(z.enum(['découverte', 'intermédiaire', 'sportif'])),
+    // Entraînement : parcours du club, réutilisable. Rando, course… : GPX déposé directement dans l'événement
     parcours: facultatif(reference('parcours')),
+    gpx: facultatif(z.string().regex(/^(\.\/)?[^/]+\.gpx$/i, "Le GPX doit être rangé dans le dossier de l'événement")),
     // Participation : événement créé au préalable dans le club Strava
     lienStrava: facultatif(
       z.url().refine((u) => URL.canParse(u) && /(^|\.)strava\.(com|app\.link)$/.test(new URL(u).hostname), {

@@ -123,9 +123,9 @@ main.conteneur { flex: 1 0 auto; width: 100%; padding-top: 32px; padding-bottom:
   text-decoration: none; font-weight: 600;
   transition: background .15s ease;
 }
-.bouton:hover { background: var(--accent-survol); }
+.bouton:hover { background: var(--accent-survol); color: var(--accent-texte); }
 .bouton.secondaire { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); }
-.bouton.secondaire:hover { background: var(--jaune-doux); }
+.bouton.secondaire:hover { background: var(--jaune-doux); color: var(--accent); }
 
 .section { margin-top: 56px; }
 .section-titre { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }

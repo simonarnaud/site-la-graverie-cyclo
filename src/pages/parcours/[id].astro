@@ -2,8 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import LienRetour from '../../components/LienRetour.astro';
-import Carte from '../../components/Carte.astro';
-import ProfilAltitude from '../../components/ProfilAltitude.astro';
+import FicheTrace from '../../components/FicheTrace.astro';
 import club from '../../data/club.json';
 import { cheminFichier } from '../../lib/fichiers';
 import { lireGpx } from '../../lib/gpx';
@@ -15,49 +14,20 @@ export async function getStaticPaths() {
 }
 
 const { parcours } = Astro.props;
-const { titre, type, difficulte, gpx } = parcours.data;
+const { titre, type, gpx } = parcours.data;
 const trace = lireGpx(cheminFichier(parcours, gpx));
-const lienGpx = lien(`gpx/${parcours.id}.gpx`);
 const distanceKm = parcours.data.distanceKm ?? trace.distanceKm;
 const deniveleM = parcours.data.deniveleM ?? trace.deniveleM;
 const { Content } = await render(parcours);
-const urlGpx = new URL(lienGpx, Astro.site);
 ---
 
 <Base titre={titre} description={`${titre} : ${distanceKm} km, ${deniveleM} m de dénivelé`} apercu={parcours.data.couverture}>
   <LienRetour href={lien('parcours/')} libelle="Tous les parcours" />
   <p class="meta impression-seulement">{club.nom}</p>
   <h1>{titre}</h1>
-  <p class="meta">{[`${distanceKm} km`, `${deniveleM} m D+`, type, difficulte].filter(Boolean).join(' · ')}</p>
+  <p class="meta">{distanceKm} km · {deniveleM} m D+ · {type}</p>
 
-  <Carte points={trace.points} titre={titre} />
-  <ProfilAltitude profil={trace.profil} />
-
-  <p class="actions ecran-seulement">
-    <a class="bouton" href={lienGpx} download>Télécharger la trace GPX</a>
-    <button class="bouton secondaire" type="button" data-imprimer>Imprimer le parcours</button>
-  </p>
-  <p class="meta impression-seulement">Trace GPX : {urlGpx.href}</p>
+  <FicheTrace trace={trace} titre={titre} lienGpx={lien(`gpx/${parcours.id}.gpx`)} />
 
   <div class="prose"><Content /></div>
 </Base>
-
-<script>
-  // La carte prépare sa version imprimée (taille, fonds de carte) avant l'ouverture de l'impression
-  document.querySelector<HTMLButtonElement>('[data-imprimer]')?.addEventListener('click', async (e) => {
-    const bouton = e.currentTarget as HTMLButtonElement;
-    const attentes: Promise<void>[] = [];
-    window.dispatchEvent(new CustomEvent('preparer-impression', { detail: attentes }));
-    bouton.disabled = true;
-    bouton.textContent = 'Préparation…';
-    await Promise.all(attentes);
-    bouton.disabled = false;
-    bouton.textContent = 'Imprimer le parcours';
-    window.print();
-  });
-</script>
-
-<style>
-  .actions { display: flex; flex-wrap: wrap; gap: 10px; }
-  button.bouton { font: inherit; font-weight: 600; cursor: pointer; border: 0; }
-</style>

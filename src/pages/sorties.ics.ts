@@ -4,6 +4,9 @@ import { getCollection } from 'astro:content';
 import club from '../data/club.json';
 import { CATEGORIES, DISCIPLINES } from '../lib/categories';
 
+// La durée n'est pas saisie : dans l'agenda, chaque événement occupe ce créneau par défaut
+const DUREE_AGENDA_H = 3;
+
 export const GET: APIRoute = async ({ site }) => {
   const sorties = await getCollection('sorties');
   const base = new URL(import.meta.env.BASE_URL.replace(/\/?$/, '/'), site);
@@ -11,7 +14,7 @@ export const GET: APIRoute = async ({ site }) => {
 
   const evenements = sorties.flatMap((s) => {
     const debut = s.data.date;
-    const fin = new Date(debut.getTime() + s.data.dureeHeures * 3600_000);
+    const fin = new Date(debut.getTime() + DUREE_AGENDA_H * 3600_000);
     return [
       'BEGIN:VEVENT',
       `UID:${s.id}@${base.host}`,

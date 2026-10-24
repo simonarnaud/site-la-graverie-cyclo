@@ -1,7 +1,6 @@
 ---
 titre: Boucle du bocage
 type: route
-difficulte: facile
 gpx: trace.gpx
 couverture: couverture.jpg
 couvertureAlt: Illustration d'exemple

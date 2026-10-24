@@ -19,7 +19,7 @@ const parcours = (await getCollection('parcours'))
       ...p,
       distanceKm: p.data.distanceKm ?? trace.distanceKm,
       deniveleM: p.data.deniveleM ?? trace.deniveleM,
-      texte: normaliser([p.data.titre, p.data.type, p.data.difficulte ?? '', description].join(' ')),
+      texte: normaliser([p.data.titre, p.data.type, description].join(' ')),
     };
   })
   .sort((a, b) => a.distanceKm - b.distanceKm);
@@ -78,7 +78,7 @@ const distanceDe = (km: number) => DISTANCES.find((d) => km >= d.min && km < d.m
           <div class="corps">
             <h3><a href={lien(`parcours/${p.id}/`)}>{p.data.titre}</a></h3>
             <p class="meta">{p.distanceKm} km · {p.deniveleM} m D+</p>
-            <ul class="etiquettes"><li>{p.data.type}</li>{p.data.difficulte && <li>{p.data.difficulte}</li>}</ul>
+            <ul class="etiquettes"><li>{p.data.type}</li></ul>
           </div>
         </article>
       ))}
