@@ -1,0 +1,446 @@
+---
+// Import d'un programme FSGT (PDF) dans le calendrier, ouvert depuis le CMS (bouton « Importer un programme FSGT »).
+// Tout se passe dans le navigateur de l'admin, sur une seule page :
+//   1. il choisit le PDF : il est lu tout de suite (src/lib/fsgt/lire-programme.mjs), sans être envoyé nulle part ;
+//   2. il vérifie les activités proposées (doublons avec le calendrier signalés et décochés), corrige, coche ;
+//   3. il clique sur « Créer » : les activités cochées sont enregistrées dans le dépôt GitHub en un seul commit,
+//      avec la connexion GitHub du CMS (même navigateur) ; le site se remet en ligne tout seul.
+import '../../styles/global.css';
+import club from '../../data/club.json';
+import { lien } from '../../lib/format';
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/png" href={lien('favicon.png')} />
+    <title>Importer un programme FSGT · {club.nom}</title>
+  </head>
+  <body>
+    <header class="entete">
+      <div class="conteneur">
+        <a href={lien('admin/')}>← Retour au CMS</a>
+        <span id="compte" class="meta"></span>
+      </div>
+    </header>
+
+    <main class="conteneur">
+      <h1>Importer un programme FSGT</h1>
+      <p class="meta">
+        Choisissez le PDF envoyé par la FSGT : ses activités s'affichent ci-dessous. Rien n'est ajouté au calendrier tant que vous
+        n'avez pas cliqué sur « Créer ».
+      </p>
+
+      <section id="connexion" class="encadre" hidden>
+        <p>Pour vérifier le calendrier et y ajouter des activités, connectez-vous avec votre compte GitHub (le même que pour le CMS).</p>
+        <button type="button" class="bouton" id="se-connecter">Se connecter avec GitHub</button>
+      </section>
+
+      <section id="etape-pdf">
+        <label class="depot" id="depot">
+          <input type="file" id="fichier" accept="application/pdf,.pdf" />
+          <strong>📄 Choisir le PDF</strong>
+          <span class="meta">ou le glisser ici</span>
+        </label>
+        <p id="lecture" class="meta" hidden></p>
+      </section>
+
+      <section id="etape-verif" hidden>
+        <div id="bilan"></div>
+        <ul id="propositions" class="propositions"></ul>
+        <div class="actions">
+          <button type="button" class="bouton" id="creer"></button>
+          <p id="message-creation" role="status"></p>
+        </div>
+      </section>
+
+      <section id="etape-fin" class="encadre ok" hidden>
+        <h2>✅ C'est fait</h2>
+        <div id="fin"></div>
+        <p>
+          Les activités seront en ligne dans une à deux minutes. Pour les compléter (horaire, lieu, trace GPX, lien Strava…) :
+          CMS, menu <b>Calendrier</b> (faites F5 si elles n'apparaissent pas).
+        </p>
+        <p class="boutons">
+          <a class="bouton" href={lien('admin/')}>Retour au CMS</a>
+          <button type="button" class="bouton secondaire" id="autre">Importer un autre PDF</button>
+        </p>
+      </section>
+    </main>
+
+    <script>
+      import { CATEGORIES, DISCIPLINES } from '../../lib/categories';
+      import { ErreurImport, lireProgramme } from '../../lib/fsgt/lire-programme.mjs';
+      import { chercherDoublon, dateLisible, ficheSortie, lireSortie, proposer } from '../../lib/fsgt/preparer.mjs';
+
+      type Existante = { id: string; titre: string; jour: string; mots: Set<string> };
+      // Activité proposée (src/lib/fsgt/preparer.mjs), modifiable par l'admin
+      type Proposition = {
+        titre: string;
+        categorie: string;
+        discipline: string;
+        jour: string; // AAAA-MM-JJ
+        heure: string; // HH:MM, vide = horaire à préciser
+        lieuRdv: string;
+        organisateur: string;
+        informations: string;
+        source: string;
+        ajouter: boolean;
+        doublon?: Existante;
+      };
+
+      const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+      const echapper = (t: unknown) => String(t ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+      let depot = '';
+      let relais = '';
+      let jeton = '';
+      let propositions: Proposition[] = [];
+      let nomPdf = '';
+
+      // ─── Connexion GitHub ──────────────────────────────────────────────────────────
+      // Réutilise la connexion du CMS (Sveltia la garde dans ce navigateur), sinon passe par le même relais.
+
+      async function graphql(requete: string, variables: Record<string, unknown> = {}) {
+        const reponse = await fetch('https://api.github.com/graphql', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${jeton}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: requete, variables }),
+        });
+        if (reponse.status === 401) throw new Error('connexion');
+        const json = await reponse.json();
+        if (json.errors?.length) throw new Error(json.errors.map((e: { message: string }) => e.message).join(' ; '));
+        return json.data;
+      }
+
+      async function verifierConnexion() {
+        const [owner, name] = depot.split('/');
+        try {
+          const d = await graphql('query($owner:String!,$name:String!){viewer{login} repository(owner:$owner,name:$name){viewerPermission}}', { owner, name });
+          if (!['ADMIN', 'MAINTAIN', 'WRITE'].includes(d.repository?.viewerPermission)) {
+            $('compte').textContent = `Connecté : ${d.viewer.login}, mais sans droit de publication sur le site`;
+            return false;
+          }
+          $('compte').textContent = `Connecté : ${d.viewer.login}`;
+          $('connexion').hidden = true;
+          return true;
+        } catch {
+          jeton = '';
+          $('connexion').hidden = false;
+          return false;
+        }
+      }
+
+      function seConnecter() {
+        const fenetre = window.open(`${relais}/auth?provider=github&site_id=${location.hostname}&scope=repo`, 'connexion-github', 'width=600,height=700');
+        const ecouter = async (e: MessageEvent) => {
+          if (typeof e.data !== 'string' || e.source !== fenetre) return;
+          if (e.data === 'authorizing:github') return fenetre?.postMessage(e.data, e.origin); // poignée de main du relais
+          const resultat = e.data.match(/^authorization:github:(success|error):(.+)$/);
+          if (!resultat) return;
+          window.removeEventListener('message', ecouter);
+          fenetre?.close();
+          if (resultat[1] === 'success') {
+            jeton = JSON.parse(resultat[2]).token;
+            await verifierConnexion();
+          } else alert(`La connexion à GitHub a échoué : ${resultat[2]}`);
+        };
+        window.addEventListener('message', ecouter);
+      }
+
+      // ─── Calendrier actuel (directement dans le dépôt : à jour, même avant la mise en ligne) ─
+
+      async function lireCalendrier() {
+        const [owner, name] = depot.split('/');
+        const d = await graphql(
+          `query($owner:String!,$name:String!){repository(owner:$owner,name:$name){
+            ref(qualifiedName:"refs/heads/main"){target{oid}}
+            object(expression:"main:src/content/sorties"){... on Tree{entries{name object{... on Tree{entries{name object{... on Blob{text}}}}}}}}}}`,
+          { owner, name },
+        );
+        const dossiers: { name: string; object?: { entries?: { name: string; object?: { text?: string } }[] } }[] = d.repository.object?.entries ?? [];
+        const existantes = dossiers
+          .map((dossier) => {
+            const index = dossier.object?.entries?.find((f) => f.name === 'index.md')?.object?.text;
+            return index ? (lireSortie(dossier.name, index) as Existante | undefined) : undefined;
+          })
+          .filter((s): s is Existante => !!s);
+        return { existantes, dossiers: new Set(dossiers.map((x) => x.name)), tete: d.repository.ref.target.oid as string };
+      }
+
+      // ─── 1. Lecture du PDF ─────────────────────────────────────────────────────────
+
+      async function lirePdf(fichier: File) {
+        nomPdf = fichier.name;
+        $('etape-verif').hidden = true;
+        $('etape-fin').hidden = true;
+        const lecture = $('lecture');
+        lecture.hidden = false;
+        lecture.className = 'meta';
+        lecture.textContent = `Lecture de « ${fichier.name} »…`;
+        try {
+          if (!jeton && !(await verifierConnexion())) throw new ErreurImport("Connectez-vous d'abord avec GitHub (bouton ci-dessus).");
+          const resultat = await lireProgramme(new Uint8Array(await fichier.arrayBuffer()), { nomFichier: fichier.name });
+          const { propositions: liste, passees, donneesRetirees } = proposer(resultat.activites);
+          const { existantes } = await lireCalendrier();
+          propositions = (liste as Omit<Proposition, 'ajouter' | 'doublon'>[]).map((p) => {
+            const doublon = chercherDoublon(p, existantes) as Existante | undefined;
+            return { ...p, doublon, ajouter: !doublon };
+          });
+          lecture.hidden = true;
+          afficherBilan(resultat, passees, donneesRetirees);
+          afficherPropositions();
+          $('etape-verif').hidden = false;
+        } catch (e) {
+          lecture.className = 'encadre erreur';
+          lecture.innerHTML =
+            e instanceof ErreurImport
+              ? `<strong>❌ Ce PDF n'a pas pu être lu.</strong><br>${echapper(e.message)}`
+              : `<strong>❌ Erreur inattendue.</strong><br>${echapper((e as Error).message)}<br>Prévenez le responsable du site en lui transmettant le PDF.`;
+        }
+      }
+
+      function afficherBilan(
+        lecture: Awaited<ReturnType<typeof lireProgramme>>,
+        passees: number,
+        donneesRetirees: boolean,
+      ) {
+        const doublons = propositions.filter((p) => p.doublon).length;
+        const lignes = [
+          propositions.length === 0 ? `<strong>Aucune activité à venir dans « ${echapper(nomPdf)} »</strong> : rien à ajouter au calendrier${passees ? ` (${passees} activité${passees > 1 ? 's' : ''} déjà passée${passees > 1 ? 's' : ''})` : ''}.` :
+          `<strong>${propositions.length} activité${propositions.length > 1 ? 's' : ''} à venir trouvée${propositions.length > 1 ? 's' : ''}</strong> dans « ${echapper(nomPdf)} »` +
+            (passees ? ` (${passees} déjà passée${passees > 1 ? 's' : ''}, ignorée${passees > 1 ? 's' : ''})` : '') + '.',
+          doublons ? `⚠️ ${doublons} semble${doublons > 1 ? 'nt' : ''} déjà au calendrier : décochée${doublons > 1 ? 's' : ''} par précaution.` : '',
+          `<span class="meta">Année : ${echapper(lecture.annee)}. Mise en page : ${echapper(lecture.format)}. Heure vide = « horaire à préciser » sur le site.</span>`,
+          ...lecture.avertissements.map((a: string) => `⚠️ ${echapper(a)}`),
+          donneesRetirees ? '<span class="meta">Les numéros de téléphone et emails du PDF ne sont pas recopiés (le site est public).</span>' : '',
+        ].filter(Boolean);
+        const rejets = lecture.rejets.length
+          ? `<div class="encadre erreur"><strong>${lecture.rejets.length} ligne${lecture.rejets.length > 1 ? 's' : ''} du PDF non comprise${lecture.rejets.length > 1 ? 's' : ''}</strong> : à ajouter à la main dans le Calendrier du CMS.<ul>${lecture.rejets
+              .map((r: { source: string; raison: string }) => `<li>${echapper(r.source)} : ${echapper(r.raison)}</li>`)
+              .join('')}</ul></div>`
+          : '';
+        $('bilan').innerHTML = `<div class="encadre">${lignes.map((l) => `<p>${l}</p>`).join('')}</div>${rejets}`;
+      }
+
+      // ─── 2. Vérification ───────────────────────────────────────────────────────────
+
+      const options = (valeurs: Record<string, string>, choisie: string, vide?: string) =>
+        (vide !== undefined ? `<option value="">${vide}</option>` : '') +
+        Object.entries(valeurs)
+          .map(([v, l]) => `<option value="${v}" ${v === choisie ? 'selected' : ''}>${echapper(l)}</option>`)
+          .join('');
+
+      function afficherPropositions() {
+        const types = Object.fromEntries(Object.entries(CATEGORIES).map(([id, c]) => [id, c.label]));
+        $('propositions').innerHTML = propositions
+          .map(
+            (p, i) => `
+          <li class="proposition ${p.doublon ? 'doublon' : ''}" data-i="${i}">
+            <label class="cocher"><input type="checkbox" name="ajouter" ${p.ajouter ? 'checked' : ''} /> Ajouter</label>
+            <div class="champs">
+              <label>Date<input type="date" name="jour" value="${p.jour}" required /></label>
+              <label>Heure<input type="time" name="heure" value="${p.heure}" title="Laisser vide si l'horaire n'est pas connu" /></label>
+              <label class="large">Titre<input type="text" name="titre" value="${echapper(p.titre)}" required /></label>
+              <label>Type<select name="categorie">${options(types, p.categorie)}</select></label>
+              <label>Discipline<select name="discipline">${options(DISCIPLINES, p.discipline, '—')}</select></label>
+              <label class="large">Lieu de rendez-vous<input type="text" name="lieuRdv" value="${echapper(p.lieuRdv)}" placeholder="À préciser" /></label>
+              <label class="large">Organisateur<input type="text" name="organisateur" value="${echapper(p.organisateur)}" /></label>
+            </div>
+            ${p.doublon ? `<p class="alerte">⚠️ Déjà au calendrier : « ${echapper(p.doublon.titre)} » le ${dateLisible(p.doublon.jour)}. Cochez « Ajouter » seulement s'il s'agit bien d'une autre activité.</p>` : ''}
+            <details><summary class="meta">Informations et ligne du PDF</summary>
+              <label>Informations (texte de la fiche)<textarea name="informations" rows="4">${echapper(p.informations)}</textarea></label>
+              <p class="meta">Ligne du PDF : ${echapper(p.source)}</p>
+            </details>
+          </li>`,
+          )
+          .join('');
+        document.querySelector<HTMLElement>('.actions')!.hidden = propositions.length === 0;
+        majBouton();
+      }
+
+      // Valeurs saisies par l'admin → propositions
+      function relireFormulaire() {
+        for (const li of document.querySelectorAll<HTMLElement>('.proposition')) {
+          const p = propositions[Number(li.dataset.i)];
+          const champ = (nom: string) => li.querySelector<HTMLInputElement>(`[name="${nom}"]`)!;
+          p.ajouter = champ('ajouter').checked;
+          for (const nom of ['jour', 'heure', 'titre', 'categorie', 'discipline', 'lieuRdv', 'organisateur', 'informations'] as const) {
+            (p as Record<string, unknown>)[nom] = champ(nom).value;
+          }
+        }
+      }
+
+      function majBouton() {
+        const n = document.querySelectorAll<HTMLInputElement>('.proposition [name="ajouter"]:checked').length;
+        const bouton = $<HTMLButtonElement>('creer');
+        bouton.disabled = n === 0;
+        bouton.textContent = n ? `Créer ${n} activité${n > 1 ? 's' : ''} dans le calendrier` : 'Cochez au moins une activité';
+      }
+
+      // ─── 3. Création ───────────────────────────────────────────────────────────────
+
+      const base64 = (texte: string) => {
+        const octets = new TextEncoder().encode(texte);
+        let binaire = '';
+        for (const o of octets) binaire += String.fromCharCode(o);
+        return btoa(binaire);
+      };
+
+      async function creer() {
+        relireFormulaire();
+        const message = $('message-creation');
+        const bouton = $<HTMLButtonElement>('creer');
+        const choisies = propositions.filter((p) => p.ajouter);
+        const invalide = choisies.find((p) => !p.titre.trim() || !/^\d{4}-\d{2}-\d{2}$/.test(p.jour));
+        if (invalide) {
+          message.className = 'alerte';
+          message.textContent = `Une activité cochée n'a pas de titre ou de date : complétez-la ou décochez-la.`;
+          return;
+        }
+        bouton.disabled = true;
+        message.className = 'meta';
+        message.textContent = 'Vérification du calendrier et enregistrement…';
+        try {
+          for (let essai = 1; ; essai++) {
+            // Calendrier relu juste avant d'écrire : une activité a pu être ajoutée depuis la lecture du PDF
+            const { existantes, dossiers, tete } = await lireCalendrier();
+            const nouveaux = choisies.filter((p) => !p.doublon && chercherDoublon(p, existantes));
+            if (nouveaux.length) {
+              for (const p of nouveaux) Object.assign(p, { doublon: chercherDoublon(p, existantes), ajouter: false });
+              afficherPropositions();
+              message.className = 'alerte';
+              message.textContent = `${nouveaux.length} activité(s) viennent d'être ajoutées au calendrier par ailleurs : elles sont maintenant signalées et décochées. Vérifiez, puis cliquez à nouveau sur « Créer ».`;
+              return;
+            }
+            // `prises` : dossiers existants, complétés au fur et à mesure (identifiants uniques)
+            const prises = new Set(dossiers);
+            const fiches = choisies.map((p) => ficheSortie(p, { titreProgramme: nomPdf.replace(/\.pdf$/i, ''), prises }));
+            try {
+              const d = await graphql(
+                'mutation($input:CreateCommitOnBranchInput!){createCommitOnBranch(input:$input){commit{url}}}',
+                {
+                  input: {
+                    branch: { repositoryNameWithOwner: depot, branchName: 'main' },
+                    message: { headline: `Import FSGT : ${fiches.length} activité${fiches.length > 1 ? 's' : ''} depuis « ${nomPdf} »` },
+                    fileChanges: { additions: fiches.map((f) => ({ path: f.chemin, contents: base64(f.contenu) })) },
+                    expectedHeadOid: tete,
+                  },
+                },
+              );
+              afficherFin(fiches, choisies, d.createCommitOnBranch.commit.url);
+              return;
+            } catch (e) {
+              // Quelqu'un a publié entre-temps (CMS…) : on relit et on recommence une fois
+              if (essai < 2 && /expected|head/i.test((e as Error).message)) continue;
+              throw e;
+            }
+          }
+        } catch (e) {
+          message.className = 'alerte';
+          message.textContent =
+            (e as Error).message === 'connexion'
+              ? 'Votre connexion GitHub a expiré : reconnectez-vous (en haut de la page), puis cliquez à nouveau sur « Créer ».'
+              : `L'enregistrement a échoué (${(e as Error).message}). Rien n'a été ajouté. Réessayez, ou prévenez le responsable du site.`;
+          if ((e as Error).message === 'connexion') $('connexion').hidden = false;
+        } finally {
+          majBouton();
+        }
+      }
+
+      function afficherFin(fiches: { id: string }[], choisies: Proposition[], urlCommit: string) {
+        $('etape-verif').hidden = true;
+        $('etape-pdf').hidden = true;
+        $('fin').innerHTML = `<p><strong>${fiches.length} activité${fiches.length > 1 ? 's ajoutées' : ' ajoutée'} au calendrier :</strong></p><ul>${choisies
+          .map((p) => `<li>${dateLisible(p.jour)} – ${echapper(p.titre)}</li>`)
+          .join('')}</ul><p class="meta"><a href="${echapper(urlCommit)}" target="_blank" rel="noopener">Détail de l'enregistrement sur GitHub</a></p>`;
+        $('etape-fin').hidden = false;
+      }
+
+      // ─── Démarrage ─────────────────────────────────────────────────────────────────
+
+      (async () => {
+        const config = await fetch('../config.yml', { cache: 'no-store' }).then((r) => r.text());
+        depot = config.match(/^\s*repo:\s*(\S+)/m)?.[1] ?? '';
+        relais = config.match(/^\s*base_url:\s*(\S+)/m)?.[1] ?? '';
+        try {
+          jeton = JSON.parse(localStorage.getItem('sveltia-cms.user') ?? '{}').token ?? '';
+        } catch {}
+        if (jeton) await verifierConnexion();
+        else $('connexion').hidden = false;
+      })();
+
+      $('se-connecter').addEventListener('click', seConnecter);
+      $<HTMLInputElement>('fichier').addEventListener('change', (e) => {
+        const f = (e.target as HTMLInputElement).files?.[0];
+        if (f) lirePdf(f);
+      });
+      const zone = $('depot');
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('survol');
+      });
+      zone.addEventListener('dragleave', () => zone.classList.remove('survol'));
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('survol');
+        const f = e.dataTransfer?.files?.[0];
+        if (f) lirePdf(f);
+      });
+      $('propositions').addEventListener('change', majBouton);
+      $('creer').addEventListener('click', creer);
+      $('autre').addEventListener('click', () => {
+        $<HTMLInputElement>('fichier').value = '';
+        $('etape-fin').hidden = true;
+        $('etape-pdf').hidden = false;
+        $('lecture').hidden = true;
+      });
+    </script>
+  </body>
+</html>
+
+<!-- Styles globaux : les activités proposées sont créées par le script (innerHTML), hors du périmètre des styles d'Astro -->
+<style is:global>
+  .entete { background: var(--surface); border-top: 4px solid var(--rouge-logo); border-bottom: 1px solid var(--bordure); }
+  .entete .conteneur { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 12px; padding-bottom: 12px; }
+  .entete a { font-weight: 600; text-decoration: none; }
+  main { padding-bottom: 48px; }
+  .encadre { background: var(--surface); border: 1px solid var(--bordure); border-left: 5px solid var(--texte-doux); border-radius: var(--rayon); padding: 12px 16px; margin: 16px 0; }
+  .encadre p { margin: .3em 0; }
+  .encadre.erreur { border-left-color: var(--alerte); }
+  .encadre.ok { border-left-color: var(--cat-entrainement); }
+  .encadre ul { margin: .4em 0 0; padding-left: 1.2em; }
+  .depot {
+    display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 20px 0; padding: 32px 16px;
+    border: 2px dashed var(--bordure); border-radius: var(--rayon); background: var(--surface); cursor: pointer; text-align: center;
+  }
+  .depot:hover, .depot.survol { border-color: var(--accent); }
+  .depot strong { font-size: 1.15rem; color: var(--accent); }
+  .depot input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .depot:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .propositions { list-style: none; padding: 0; margin: 16px 0; display: grid; gap: 12px; }
+  .proposition { background: var(--surface); border: 1px solid var(--bordure); border-left: 5px solid var(--cat-entrainement); border-radius: var(--rayon); padding: 12px 16px; }
+  .proposition:has([name='ajouter']:not(:checked)) { border-left-color: var(--bordure); opacity: .75; }
+  .proposition.doublon { border-left-color: var(--jaune); }
+  .cocher { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; margin-bottom: 8px; cursor: pointer; }
+  .cocher input { width: 20px; height: 20px; accent-color: var(--accent); }
+  .champs { display: grid; gap: 8px 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); }
+  .champs .large { grid-column: span 2; }
+  @media (max-width: 480px) { .champs .large { grid-column: auto; } }
+  .proposition label:not(.cocher) { display: flex; flex-direction: column; gap: 2px; font-size: .85rem; color: var(--texte-doux); }
+  .proposition input:not([type='checkbox']), .proposition select, .proposition textarea {
+    font: inherit; font-size: .95rem; color: var(--texte); background: var(--fond);
+    border: 1px solid var(--bordure); border-radius: 8px; padding: 6px 8px; width: 100%; box-sizing: border-box;
+  }
+  .proposition details { margin-top: 8px; }
+  .proposition summary { cursor: pointer; }
+  .alerte { color: var(--alerte); font-weight: 600; margin: 8px 0 0; }
+  .actions { position: sticky; bottom: 0; background: var(--fond); padding: 12px 0; border-top: 1px solid var(--bordure); }
+  .actions .bouton { font-size: 1.05rem; }
+  .actions .bouton:disabled { opacity: .5; cursor: not-allowed; }
+  .actions p { margin: 8px 0 0; }
+  .boutons { display: flex; gap: 12px; flex-wrap: wrap; }
+</style>

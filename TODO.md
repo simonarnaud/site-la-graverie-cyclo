@@ -56,9 +56,9 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [x] Statistiques sans cookie (GoatCounter) : intégration prête, désactivée
 - [x] Compte GoatCounter **de test** `lagraveriecyclostest` activé (créé avec une adresse perso)
 - [ ] Créer le compte GoatCounter **du club** (adresse du club) et remplacer le code dans le CMS (Le club → Coordonnées et bureau), voir `docs/GUIDE-TECHNIQUE.md`
-- [x] Import automatique des programmes FSGT (PDF) : activités proposées, validées par l'admin, doublons repérés
+- [x] Import des programmes FSGT (PDF) depuis le CMS : lecture immédiate, doublons signalés, création des activités cochées
 - [x] Sections dans la page Documents (Calendriers FSGT, Comptes rendus d'AG…)
-- [ ] Valider l'import FSGT avec d'autres PDF (les ajouter à `scripts/fsgt/exemples/` + tests)
+- [ ] Valider l'import FSGT avec d'autres PDF (`node scripts/essai-fsgt.mjs`, puis les ajouter à `scripts/fsgt/exemples/` + tests)
 
 ## Rappel : mises à jour Dependabot
 Une fois par mois, Dependabot propose des mises à jour sous forme de PR. **Ne fusionner que si la vérification de la PR est verte** : le build tourne désormais sur chaque PR.

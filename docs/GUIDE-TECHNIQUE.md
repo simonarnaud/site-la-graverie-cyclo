@@ -31,7 +31,6 @@ Une erreur **technique** (bug dans le code, dépendance cassée) fait toujours �
 | `src/content/albums/<id>/index.md` | Sélections de photos (≤ 12) + lien vers l'album complet |
 | `src/content/documents/<id>/index.md` | Documents + PDF dans le même dossier ; publié en `/documents/<id>.pdf` (10 Mo max) ; champ `section` (Calendriers FSGT, Comptes rendus d'AG…, liste dans `SECTIONS_DOCUMENTS` de `src/lib/categories.ts`, à reporter dans `config.yml`) |
 | `src/content/partenaires/<id>/index.md` | Partenaires (nom, logo dans le dossier, site, ordre) ; page `src/pages/partenaires.astro`, texte d'introduction dans `src/content/pages/partenaires.md` |
-| `src/content/imports-fsgt/<id>/index.md` | Programmes FSGT en PDF : activités proposées, validées par l'admin, puis créées dans le calendrier (voir « Import des programmes FSGT ») |
 | `src/content/pages/*.md` | Le club, mentions légales, confidentialité |
 | `src/data/club.json` | Nom, email, bureau, lien HelloAsso, code GoatCounter |
 | `src/lib/chargeur.ts` | Chargement tolérant des collections et rapport des fiches écartées (`/etat-publication.json`) |
@@ -40,6 +39,7 @@ Une erreur **technique** (bug dans le code, dépendance cassée) fait toujours �
 | `src/pages/gpx/[id].gpx.ts`, `src/pages/gpx/evenements/[id].gpx.ts`, `src/pages/documents/[id].pdf.ts` | Publication des GPX et PDF |
 | `src/components/FicheTrace.astro` | Carte + profil + téléchargement + impression d'un GPX (parcours et événements) |
 | `src/pages/sorties.ics.ts` | Flux calendrier |
+| `src/pages/admin/import-fsgt.astro`, `src/lib/fsgt/` | Import d'un programme FSGT (PDF) dans le calendrier, depuis le CMS |
 | `src/components/Carte.astro` | Carte Leaflet (tuiles OpenStreetMap) |
 
 **Règle : chaque fiche a son dossier, et ses fichiers (images, GPX, PDF) sont dedans.** Supprimer une fiche dans le CMS supprime donc aussi ses fichiers : rien ne reste orphelin.
@@ -159,31 +159,26 @@ Le workflow peut aussi être lancé à la main : onglet **Actions → Archivage 
 
 ## Import des programmes FSGT
 
-Menu CMS **Import FSGT** → `src/content/imports-fsgt/<id>/index.md` + PDF. Le workflow `.github/workflows/importer-fsgt.yml` (à chaque push touchant ce dossier) lance `scripts/importer-fsgt.mjs`. **Deux temps, l'admin valide avant tout ajout au calendrier** :
+Page `src/pages/admin/import-fsgt.astro` (`/admin/import-fsgt/`), ouverte par le bouton « 📄 Importer un programme FSGT » ajouté au CMS (`public/admin/index.html`). **Tout se passe dans le navigateur de l'admin**, sans serveur ni GitHub Action :
 
-| `statut` | Qui | Ce qui se passe |
-|---|---|---|
-| `a-traiter` | rédacteur (dépôt du PDF) | le script lit le PDF et écrit les activités **proposées** dans la liste `activites` de l'import (rien dans `sorties`) → `a-valider` (ou `termine` s'il n'y a rien à proposer, `echec` si le PDF est illisible) |
-| `a-valider` | rédacteur | vérifie, corrige, coche `ajouter`, puis choisit `valide` |
-| `valide` | script | crée dans `src/content/sorties/` les activités cochées → `termine` ; si certaines n'ont pas pu être créées (doublon apparu entre-temps, champ invalide) → retour à `a-valider` |
-
-1. **Lecture** — `scripts/fsgt/lire-programme.mjs` lit le texte du PDF **avec ses positions** (`unpdf`, basé sur pdf.js), trouve la ligne d'en-tête (cellule « DATE ») et reconstitue le tableau. Deux mises en page sont reconnues :
+1. **Lecture** — `src/lib/fsgt/lire-programme.mjs` lit le texte du PDF **avec ses positions** (`unpdf`, basé sur pdf.js, chargé seulement sur cette page), trouve la ligne d'en-tête (cellule « DATE ») et reconstitue le tableau. Deux mises en page sont reconnues :
    - **tableau** : une ligne par activité ; rôle des colonnes deviné d'après l'intitulé (club/organisateur, lieu/rendez-vous, heure, discipline, le reste en « détails ») ; une cellule « Route »/« VTT »/« Gravel » donne la discipline, sinon « VTT » ou « Gravel » écrit ailleurs dans la ligne ;
    - **grille** : une ligne par jour, une colonne par discipline (CYCLO → rando cyclo, CYCLOSPORT → course cyclo, VTT → rando VTT, GRAVEL → rando gravel, CYCLO CROSS → course VTT ; « championnat », « national », « CLM »… → course) ; les mois sont déduits des remises à zéro des numéros de jour et des noms de mois de la colonne MOIS.
-2. **Année** : champ « Année » de l'import, sinon écrite au-dessus du tableau (« SAISON 2022 »), sinon déduite des jours de la semaine (« Sam 19 Sept » → 2026). Chaque date est contrôlée (jour de la semaine, date impossible) : une ligne douteuse est **rejetée et listée** dans le compte rendu, jamais ignorée en silence.
-3. **Proposition** : activités à venir uniquement ; titre = club, `lieuRdv: À préciser` si absent, heure 00:00 = « horaire à préciser », détails dans `informations` (corps de la fiche). Téléphones et emails retirés.
-4. **Doublons** (`chercherDoublon`) : même jour (Paris) et au moins un mot-clé commun (≥ 4 lettres, hors mots courants : rando, club, mairie…) entre titre/organisateur/lieu de la proposition et ceux d'une activité existante. Vérifié à la lecture (proposition décochée + champ `doublon`) **et** à la validation (doublon apparu entre-temps → non créée, signalée et décochée ; recochée par l'admin = créée quand même). Une activité créée a `ajouter: false` et `resultat: Créée…` : revalider ne la recrée pas.
-5. **Compte rendu** (`resume`, `rapport`, `traiteLe`, `resultat` de chaque activité) écrit dans la fiche ; le robot commite puis relance la mise en ligne. Les imports en cours ou à valider (et les terminés depuis moins de 7 jours) sont publiés dans `/etat-publication.json` et résumés dans le bandeau du CMS. Plantage du script → workflow en échec, signalé aussi dans le bandeau.
+   **Année** : écrite au-dessus du tableau (« SAISON 2022 »), sinon déduite des jours de la semaine (« Sam 19 Sept » → 2026). Chaque date est contrôlée : une ligne douteuse est **rejetée et affichée** avec la raison, jamais ignorée en silence.
+2. **Propositions** — `src/lib/fsgt/preparer.mjs` : activités à venir uniquement ; titre = club ; téléphones et emails retirés ; heure vide = 00:00 = « horaire à préciser ».
+3. **Doublons** — le calendrier est relu **directement dans le dépôt** (API GraphQL de GitHub : un seul appel, à jour même avant la mise en ligne). Même jour (Paris) + au moins un mot-clé commun (≥ 4 lettres, hors mots courants : rando, club, mairie…) entre titre/organisateur/lieu = doublon probable, proposé décoché. Revérifié juste avant l'enregistrement.
+4. **Création** — les fiches cochées sont écrites dans `src/content/sorties/<date>-<club>/index.md` en **un seul commit** (mutation `createCommitOnBranch`, `expectedHeadOid` : si quelqu'un a publié entre-temps, on relit et on réessaie une fois). Ce commit déclenche la mise en ligne habituelle.
+5. **Connexion** — le jeton GitHub de Sveltia (`localStorage['sveltia-cms.user'].token`, même origine) est réutilisé ; à défaut, le bouton « Se connecter avec GitHub » passe par le même relais `sveltia-cms-auth` (`base_url` de `config.yml`, popup + `postMessage`). Droits d'écriture vérifiés (`viewerPermission`). Le jeton reste dans le navigateur.
 
 **Nouveau modèle de PDF** : l'essayer sans rien modifier, puis l'ajouter aux tests.
 
 ```bash
-node scripts/importer-fsgt.mjs --essai chemin/programme.pdf            # activités à venir qui seraient proposées
-node scripts/importer-fsgt.mjs --essai chemin/programme.pdf --toutes   # y compris les dates passées
-npm run test:fsgt                                                      # tests sur scripts/fsgt/exemples/*.pdf
+node scripts/essai-fsgt.mjs chemin/programme.pdf            # activités à venir qui seraient proposées (+ doublons avec le calendrier local)
+node scripts/essai-fsgt.mjs chemin/programme.pdf --toutes   # y compris les dates passées
+npm run test:fsgt                                           # tests sur scripts/fsgt/exemples/*.pdf
 ```
 
-Si le format n'est pas reconnu, adapter `lire-programme.mjs` (détection d'en-tête, rôle des colonnes), copier le PDF dans `scripts/fsgt/exemples/` et ajouter un test dans `lire-programme.test.mjs`. Les tests tournent aussi à chaque mise en ligne.
+Si le format n'est pas reconnu, adapter `src/lib/fsgt/lire-programme.mjs` (détection d'en-tête, rôle des colonnes), copier le PDF dans `scripts/fsgt/exemples/` et ajouter un test dans `lire-programme.test.mjs`. Les tests tournent aussi à chaque mise en ligne.
 
 ## Page Photos
 

@@ -117,22 +117,4 @@ const partenaires = defineCollection({
     }),
 });
 
-// Programmes FSGT en PDF, lus par scripts/importer-fsgt.mjs (GitHub Action) : les activités sont d'abord
-// proposées (liste `activites`), puis créées dans le calendrier quand l'admin passe le statut à « valide ».
-// resume, rapport et traiteLe sont remplis par le script, pas par le rédacteur.
-const importsFsgt = defineCollection({
-  loader: globTolerant({ pattern: '**/index.md', base: './src/content/imports-fsgt' }),
-  schema: z.object({
-    titre: z.string(),
-    fichier: z.string().regex(/^(\.\/)?[^/]+\.pdf$/i, "Le PDF doit être rangé dans le dossier de l'import"),
-    annee: facultatif(z.number().int()),
-    statut: z.preprocess(vide, z.enum(['a-traiter', 'a-valider', 'valide', 'termine', 'echec']).default('a-traiter')),
-    resume: facultatif(z.string()),
-    rapport: facultatif(z.string()),
-    traiteLe: facultatif(z.coerce.date()),
-    // Activités proposées (relues par le script, pas par le site)
-    activites: facultatif(z.array(z.record(z.string(), z.unknown()))),
-  }),
-});
-
-export const collections = { parcours, sorties, actualites, albums, pages, documents, partenaires, importsFsgt };
+export const collections = { parcours, sorties, actualites, albums, pages, documents, partenaires };

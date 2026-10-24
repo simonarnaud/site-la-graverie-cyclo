@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { disciplineDe, ErreurImport, lireProgramme } from './lire-programme.mjs';
+import { disciplineDe, ErreurImport, lireProgramme } from '../../src/lib/fsgt/lire-programme.mjs';
 
 const exemple = (nom) => readFileSync(new URL(`exemples/${nom}`, import.meta.url));
 const trouver = (r, date, organisateur) => r.activites.find((a) => a.date === date && a.organisateur === organisateur);

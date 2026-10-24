@@ -7,7 +7,8 @@
 //                      les mois étant écrits dans une colonne « MOIS » ;
 //   3. l'année, souvent absente, est déduite des jours de la semaine (« Sam 19 Sept » → 2026).
 // Toute ligne incomprise est signalée (jamais ignorée en silence) pour que l'admin sache quoi saisir à la main.
-// Tests : scripts/fsgt/lire-programme.test.mjs ; essai sur un PDF : node scripts/importer-fsgt.mjs --essai fichier.pdf
+// Utilisé par la page d'import du CMS (src/pages/admin/import-fsgt.astro), dans le navigateur.
+// Tests : scripts/fsgt/lire-programme.test.mjs ; essai sur un PDF : node scripts/essai-fsgt.mjs fichier.pdf
 import { getDocumentProxy } from 'unpdf';
 
 export class ErreurImport extends Error {}
@@ -164,7 +165,7 @@ function roleColonne(intitule) {
   return 'detail';
 }
 
-function lireTableau(page, entete, avertir) {
+function lireTableau(page, entete) {
   const colonnes = entete.colonnes.map((c) => ({ ...c, role: roleColonne(c.intitule) }));
   const colDate = colonnes.find((c) => c.role === 'date');
   const donnees = page.filter((el) => el.y < entete.bas - 2);
@@ -223,7 +224,7 @@ function lireHeure(texte) {
 
 // ─── 4. Mise en page « grille » : un jour par ligne, une colonne par discipline ───────
 
-function lireGrille(page, entete, avertir) {
+function lireGrille(page, entete) {
   const colonnes = entete.colonnes.map((c) => {
     const t = normaliser(c.intitule);
     if (/^dates?$/.test(t)) return { ...c, role: 'date' };
@@ -370,7 +371,7 @@ export async function lireProgramme(octets, { anneeImposee, reference = new Date
     const etiquettes = [];
     pages.forEach((p, i) => {
       if (!entetes[i]) return;
-      const { lignes: l, mois } = lireGrille(p, entetes[i], avertir);
+      const { lignes: l, mois } = lireGrille(p, entetes[i]);
       lignes.push(...l);
       etiquettes.push(...mois.map((m) => ({ ...m, page: i + 1 })));
     });
@@ -399,7 +400,7 @@ export async function lireProgramme(octets, { anneeImposee, reference = new Date
     }
   } else {
     pages.forEach((p, i) => {
-      if (entetes[i]) brutes.push(...lireTableau(p, entetes[i], avertir));
+      if (entetes[i]) brutes.push(...lireTableau(p, entetes[i]));
     });
     if (!brutes.length) {
       throw new ErreurImport("Tableau reconnu, mais aucune date n'a été comprise dans la colonne DATE (formats attendus : « Sam 19 Sept », « 19/09/2026 »).");
