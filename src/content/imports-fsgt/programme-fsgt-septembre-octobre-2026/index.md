@@ -1,7 +1,7 @@
 ---
 titre: Programme FSGT septembre-octobre 2026
 fichier: 008-maj-periode-sept-octobre-2026-brevet.pdf
-statut: a-valider
+statut: valide
 resume: 2 activités proposées, 6 passées ignorées
 rapport: |-
   Lecture du PDF : 2 activités proposées, 6 passées ignorées.
@@ -25,7 +25,7 @@ activites:
     doublon: ""
     source: page 1, ligne « Dim 25 Octobre »
     resultat: ""
-  - ajouter: true
+  - ajouter: false
     titre: VCS Normande
     categorie: rando
     discipline: vtt
