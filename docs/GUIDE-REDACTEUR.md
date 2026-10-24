@@ -37,6 +37,8 @@ Supprimer un événement, un parcours, un album ou un document supprime aussi se
 
 L'événement apparaît dans le calendrier, au mois de sa date ; les visiteurs passent d'un mois à l'autre avec les flèches. Pour annuler un événement, ouvrez-le et cochez **Événement annulé** plutôt que de le supprimer : les membres abonnés au calendrier seront prévenus.
 
+Chaque activité affiche **« Trace GPX »** (trace jointe, ou parcours d'entraînement choisi) ou **« Sans trace GPX »**, sur le site comme dans la liste du menu Calendrier du CMS : pratique pour repérer celles à compléter.
+
 ## Ajouter un partenaire
 
 1. Menu **Partenaires** → **Nouveau**.

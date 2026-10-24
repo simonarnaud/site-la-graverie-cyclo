@@ -11,6 +11,8 @@ interface Props {
 
 const { sortie } = Astro.props;
 const { titre, categorie, discipline, date, lieuRdv, organisateur, annulee, couverture, couvertureAlt } = sortie.data;
+// Trace GPX : jointe à l'activité (rando, course) ou venant du parcours d'entraînement choisi
+const avecGpx = Boolean(sortie.data.gpx || sortie.data.parcours);
 ---
 
 <article class="carte" data-categorie={categorie}>
@@ -23,6 +25,16 @@ const { titre, categorie, discipline, date, lieuRdv, organisateur, annulee, couv
     <ul class="etiquettes">
       <li class="categorie" data-categorie={categorie}>{CATEGORIES[categorie].label}</li>
       {discipline && <li class="discipline"><IconeDiscipline discipline={discipline} taille={14} />{DISCIPLINES[discipline]}</li>}
+      {avecGpx ? (
+        <li class="gpx" title="Carte et trace GPX à télécharger sur la page de l'activité">
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="6" cy="19" r="2" /><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16" /><circle cx="18" cy="5" r="2" />
+          </svg>
+          Trace GPX
+        </li>
+      ) : (
+        <li class="gpx absent">Sans trace GPX</li>
+      )}
     </ul>
   </div>
 </article>
@@ -30,4 +42,7 @@ const { titre, categorie, discipline, date, lieuRdv, organisateur, annulee, couv
 <style>
   /* Bandeau fin : l'image illustre sans écraser les autres cartes de la liste */
   .illustration { width: 100%; aspect-ratio: 4 / 1; object-fit: cover; }
+  /* Indicateur de trace GPX : présent = mis en avant, absent = discret */
+  .etiquettes li.gpx { display: inline-flex; align-items: center; gap: 5px; background: color-mix(in srgb, var(--cat-entrainement) 13%, transparent); color: var(--cat-entrainement); }
+  .etiquettes li.gpx.absent { background: transparent; color: var(--texte-doux); font-weight: 500; border: 1px dashed var(--bordure); padding: 1px 9px; }
 </style>

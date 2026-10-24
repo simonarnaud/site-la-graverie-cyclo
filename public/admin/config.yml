@@ -46,7 +46,7 @@ collections:
     create: true
     identifier_field: titre
     slug: "{{fields.date | date('YYYY-MM-DD')}}-{{slug}}"
-    summary: "{{date | date('DD/MM/YYYY')}} – {{categorie}} – {{titre}}"
+    summary: "{{date | date('DD/MM/YYYY')}} – {{categorie}} – {{titre}}{{gpx | default('{{parcours}}') | ternary(' – 🗺️ GPX', ' – sans GPX')}}"
     sortable_fields: [date, titre, categorie]
     fields:
       - { name: titre, label: Titre, widget: string }
