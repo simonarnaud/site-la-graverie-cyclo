@@ -3,6 +3,8 @@ import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import LienRetour from '../../components/LienRetour.astro';
 import FicheTrace from '../../components/FicheTrace.astro';
+import IconeDiscipline from '../../components/IconeDiscipline.astro';
+import { DISCIPLINES } from '../../lib/categories';
 import club from '../../data/club.json';
 import { cheminFichier } from '../../lib/fichiers';
 import { lireGpx } from '../../lib/gpx';
@@ -14,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 const { parcours } = Astro.props;
-const { titre, type, gpx } = parcours.data;
+const { titre, discipline, gpx } = parcours.data;
 const trace = lireGpx(cheminFichier(parcours, gpx));
 const distanceKm = parcours.data.distanceKm ?? trace.distanceKm;
 const deniveleM = parcours.data.deniveleM ?? trace.deniveleM;
@@ -25,7 +27,7 @@ const { Content } = await render(parcours);
   <LienRetour href={lien('parcours/')} libelle="Tous les parcours" />
   <p class="meta impression-seulement">{club.nom}</p>
   <h1>{titre}</h1>
-  <p class="meta">{distanceKm} km · {deniveleM} m D+ · {type}</p>
+  <p class="meta">{distanceKm} km · {deniveleM} m D+ · <IconeDiscipline discipline={discipline} /> {DISCIPLINES[discipline]}</p>
 
   <FicheTrace trace={trace} titre={titre} lienGpx={lien(`gpx/${parcours.id}.gpx`)} />
 

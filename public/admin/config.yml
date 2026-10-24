@@ -37,7 +37,7 @@ collections:
   - name: sorties
     label: Calendrier
     label_singular: Événement
-    description: Entraînements (sorties du club), randos, courses… Les événements passés restent consultables en remontant les mois du calendrier.
+    description: Entraînements (sorties du club), randos FSGT, courses… Les événements passés restent consultables en remontant les mois du calendrier.
     folder: src/content/sorties
     # Un dossier par événement : son image est supprimée avec lui
     path: '{{slug}}/index'
@@ -57,7 +57,7 @@ collections:
         default: entrainement
         options:
           - { label: Entraînement, value: entrainement }
-          - { label: Rando, value: rando }
+          - { label: Rando FSGT, value: rando }
           - { label: Course, value: course }
           - { label: Autre, value: autre }
       # Valeurs à garder synchronisées avec src/lib/categories.ts
@@ -67,9 +67,8 @@ collections:
         required: false
         options:
           - { label: Cyclo, value: cyclo }
-          - { label: Cyclosport, value: cyclosport }
           - { label: VTT, value: vtt }
-          - { label: Cyclo-cross, value: cyclo-cross }
+          - { label: Gravel, value: gravel }
       - { name: date, label: Date et heure de départ, widget: datetime, input_timezone: Europe/Paris }
       - { name: lieuRdv, label: Lieu / rendez-vous, widget: string }
       - name: organisateur
@@ -140,7 +139,14 @@ collections:
     identifier_field: titre
     fields:
       - { name: titre, label: Titre, widget: string }
-      - { name: type, label: Type, widget: select, options: [route, gravel, vtt] }
+      # Valeurs à garder synchronisées avec src/lib/categories.ts
+      - name: discipline
+        label: Discipline
+        widget: select
+        options:
+          - { label: Cyclo, value: cyclo }
+          - { label: VTT, value: vtt }
+          - { label: Gravel, value: gravel }
       - name: gpx
         label: Trace GPX
         hint: Coupez le début et la fin de la trace pour ne pas révéler le domicile de quelqu'un.
@@ -206,6 +212,27 @@ collections:
               max_file_size: 10485760 # 10 Mo
       - { name: description, label: Description courte, widget: string, required: false }
 
+  - name: partenaires
+    label: Partenaires
+    label_singular: Partenaire
+    description: "Les partenaires du club : leur logo s'affiche sur la page Partenaires et renvoie vers leur site. Le texte d'introduction se modifie dans « Le club › Page Partenaires »."
+    folder: src/content/partenaires
+    path: '{{slug}}/index'
+    media_folder: ''
+    public_folder: ''
+    create: true
+    identifier_field: nom
+    summary: '{{nom}}'
+    sortable_fields: [nom, ordre]
+    fields:
+      - { name: nom, label: Nom du partenaire, widget: string }
+      - name: logo
+        label: Logo
+        hint: De préférence un logo sur fond transparent ou blanc (PNG, SVG converti, JPG…).
+        widget: image
+      - { name: site, label: Site internet du partenaire, hint: "Adresse complète, par exemple https://www.exemple.fr", widget: string }
+      - { name: ordre, label: Ordre d'affichage (facultatif), hint: Le plus petit numéro s'affiche en premier. Laisser vide pour l'ordre alphabétique., widget: number, value_type: int, required: false }
+
   - name: club
     label: Le club
     files:
@@ -244,6 +271,13 @@ collections:
             fields:
               - { name: role, label: Rôle, widget: string }
               - { name: nom, label: Nom, widget: string }
+      - name: partenaires
+        label: Page Partenaires (texte d'introduction)
+        file: src/content/pages/partenaires.md
+        fields:
+          - { name: titre, label: Titre, widget: string }
+          - { name: description, label: Description courte (moteurs de recherche), widget: string, required: false }
+          - { name: body, label: Texte de soutien, widget: markdown }
       - name: mentions-legales
         label: Mentions légales
         file: src/content/pages/mentions-legales.md

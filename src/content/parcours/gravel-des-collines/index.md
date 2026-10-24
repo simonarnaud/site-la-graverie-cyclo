@@ -1,6 +1,6 @@
 ---
 titre: Gravel des collines
-type: gravel
+discipline: gravel
 gpx: trace.gpx
 ---
 

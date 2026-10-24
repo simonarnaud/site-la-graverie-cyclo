@@ -51,13 +51,14 @@ function semaines(mois: string, evts: typeof evenements) {
 }
 
 const categoriesPresentes = (Object.keys(CATEGORIES) as Categorie[]).filter((c) => evenements.some((s) => s.data.categorie === c));
-const disciplinesPresentes = (Object.keys(DISCIPLINES) as Discipline[]).filter((d) => evenements.some((s) => s.data.discipline === d));
+// Les trois disciplines sont toujours proposées dans le filtre
+const disciplinesPresentes = Object.keys(DISCIPLINES) as Discipline[];
 ---
 
-<Base titre="Calendrier" description="Entraînements, randos et courses">
+<Base titre="Calendrier" description="Entraînements, randos FSGT et courses">
   <h1>Calendrier</h1>
   <p>
-    Entraînements, randos et courses.
+    Entraînements, randos FSGT et courses.
     Ajoutez tout le calendrier à l'agenda de votre téléphone : <a href={lien('sorties.ics')}>s'abonner</a>.
   </p>
 

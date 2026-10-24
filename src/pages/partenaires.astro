@@ -1,0 +1,53 @@
+---
+// Partenaires : texte de soutien (page « partenaires », modifiable dans le CMS) puis logos cliquables.
+import { Image } from 'astro:assets';
+import { getCollection, getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import club from '../data/club.json';
+
+const intro = await getEntry('pages', 'partenaires');
+const { Content } = intro ? await render(intro) : { Content: undefined };
+const partenaires = (await getCollection('partenaires')).sort(
+  (a, b) => (a.data.ordre ?? Infinity) - (b.data.ordre ?? Infinity) || a.data.nom.localeCompare(b.data.nom, 'fr'),
+);
+---
+
+<Base titre={intro?.data.titre ?? 'Partenaires'} description={intro?.data.description ?? `Les partenaires de ${club.nom}`}>
+  <h1>{intro?.data.titre ?? 'Nos partenaires'}</h1>
+  {Content && <div class="prose"><Content /></div>}
+
+  {partenaires.length > 0 ? (
+    <ul class="logos">
+      {partenaires.map((p) => (
+        <li>
+          <a href={p.data.site} target="_blank" rel="noopener" title={`Site de ${p.data.nom}`}>
+            <span class="cadre">
+              <Image src={p.data.logo} alt={`Logo de ${p.data.nom}`} width={320} class="logo" />
+            </span>
+            <span class="nom">{p.data.nom} ↗</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="vide">Pas encore de partenaire.</p>
+  )}
+</Base>
+
+<style>
+  .logos {
+    list-style: none; padding: 0; margin: 32px 0 0;
+    display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+  .logos a { display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: var(--texte-doux); }
+  /* Fond blanc : les logos restent lisibles en mode sombre */
+  .cadre {
+    display: grid; place-items: center; aspect-ratio: 3 / 2; padding: 18px;
+    background: #fff; border: 1px solid var(--bordure); border-radius: var(--rayon); box-shadow: var(--ombre);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .logo { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+  .logos a:hover .cadre, .logos a:focus-visible .cadre { transform: translateY(-3px); box-shadow: 0 6px 18px rgb(0 0 0 / 15%); }
+  .nom { text-align: center; font-size: .9rem; font-weight: 600; }
+  .logos a:hover .nom { color: var(--accent); }
+</style>

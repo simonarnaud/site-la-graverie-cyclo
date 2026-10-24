@@ -22,6 +22,14 @@
       #etat-publication li { margin: 4px 0; }
       #etat-publication .detail { color: #6b625b; }
       #etat-publication a { color: #b5121b; }
+      /* Lien permanent vers le site, en bas à gauche */
+      #voir-le-site {
+        position: fixed; left: 16px; bottom: 16px; z-index: 100000;
+        font: 600 14px/1 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        padding: 10px 16px; border-radius: 999px; text-decoration: none;
+        background: #b5121b; color: #fff; box-shadow: 0 4px 14px rgb(0 0 0 / 25%);
+      }
+      #voir-le-site:hover { background: #8f0e15; }
       #etat-publication button {
         position: absolute; top: 6px; right: 8px; border: 0; background: none; cursor: pointer;
         font-size: 20px; line-height: 1; color: #6b625b;
@@ -29,6 +37,7 @@
     </style>
   </head>
   <body>
+    <a id="voir-le-site" href="../">← Voir le site</a>
     <div id="etat-publication" role="status" aria-live="polite" hidden></div>
 
     <script>

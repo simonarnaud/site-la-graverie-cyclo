@@ -1,9 +1,11 @@
 ---
-// Liste des parcours : recherche par mot-clé, filtres (type, distance) et tri, côté navigateur.
+// Liste des parcours d'entraînement : recherche par mot-clé, filtres (discipline, distance) et tri, côté navigateur.
 // Sans JavaScript, la liste complète s'affiche, triée par distance.
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import IconeDiscipline from '../../components/IconeDiscipline.astro';
+import { DISCIPLINES, IDS_DISCIPLINES } from '../../lib/categories';
 import { cheminFichier } from '../../lib/fichiers';
 import { lireGpx } from '../../lib/gpx';
 import { lien } from '../../lib/format';
@@ -19,12 +21,11 @@ const parcours = (await getCollection('parcours'))
       ...p,
       distanceKm: p.data.distanceKm ?? trace.distanceKm,
       deniveleM: p.data.deniveleM ?? trace.deniveleM,
-      texte: normaliser([p.data.titre, p.data.type, description].join(' ')),
+      texte: normaliser([p.data.titre, DISCIPLINES[p.data.discipline], description].join(' ')),
     };
   })
   .sort((a, b) => a.distanceKm - b.distanceKm);
 
-const types = [...new Set(parcours.map((p) => p.data.type))];
 const DISTANCES = [
   { id: 'courte', label: 'Moins de 50 km', min: 0, max: 50 },
   { id: 'moyenne', label: '50 à 100 km', min: 50, max: 100 },
@@ -40,9 +41,11 @@ const distanceDe = (km: number) => DISTANCES.find((d) => km >= d.min && km < d.m
     <div class="recherche" hidden>
       <input type="search" placeholder="Rechercher un parcours (nom, lieu, description…)" aria-label="Rechercher un parcours" />
       <div class="options">
-        <div class="groupe" role="group" aria-label="Type de parcours" data-groupe="type">
-          <button type="button" aria-pressed="true" data-valeur="">Tous</button>
-          {types.map((t) => <button type="button" aria-pressed="false" data-valeur={t}>{t}</button>)}
+        <div class="groupe" role="group" aria-label="Discipline" data-groupe="discipline">
+          <button type="button" aria-pressed="true" data-valeur="">Toutes</button>
+          {IDS_DISCIPLINES.map((d) => (
+            <button type="button" aria-pressed="false" data-valeur={d}><IconeDiscipline discipline={d} />{DISCIPLINES[d]}</button>
+          ))}
         </div>
         <div class="groupe" role="group" aria-label="Distance" data-groupe="distance">
           <button type="button" aria-pressed="true" data-valeur="">Toutes distances</button>
@@ -68,7 +71,7 @@ const distanceDe = (km: number) => DISTANCES.find((d) => km >= d.min && km < d.m
         <article
           class="carte parcours"
           data-texte={p.texte}
-          data-type={p.data.type}
+          data-discipline={p.data.discipline}
           data-distance={distanceDe(p.distanceKm)}
           data-km={p.distanceKm}
           data-denivele={p.deniveleM}
@@ -78,7 +81,9 @@ const distanceDe = (km: number) => DISTANCES.find((d) => km >= d.min && km < d.m
           <div class="corps">
             <h3><a href={lien(`parcours/${p.id}/`)}>{p.data.titre}</a></h3>
             <p class="meta">{p.distanceKm} km · {p.deniveleM} m D+</p>
-            <ul class="etiquettes"><li>{p.data.type}</li></ul>
+            <ul class="etiquettes">
+              <li class="discipline"><IconeDiscipline discipline={p.data.discipline} taille={14} />{DISCIPLINES[p.data.discipline]}</li>
+            </ul>
           </div>
         </article>
       ))}
@@ -97,7 +102,7 @@ const distanceDe = (km: number) => DISTANCES.find((d) => km >= d.min && km < d.m
     const champ = recherche.querySelector('input')!;
     const tri = recherche.querySelector('select')!;
     const cartes = [...liste.querySelectorAll<HTMLElement>('.parcours')];
-    const choix: Record<string, string> = { type: '', distance: '' };
+    const choix: Record<string, string> = { discipline: '', distance: '' };
     const normaliser = (t: string) => t.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
 
     function appliquer() {
@@ -107,7 +112,7 @@ const distanceDe = (km: number) => DISTANCES.find((d) => km >= d.min && km < d.m
       for (const carte of cartes) {
         const ok =
           mots.every((m) => carte.dataset.texte!.includes(m)) &&
-          (!choix.type || carte.dataset.type === choix.type) &&
+          (!choix.discipline || carte.dataset.discipline === choix.discipline) &&
           (!choix.distance || carte.dataset.distance === choix.distance);
         carte.hidden = !ok;
         if (ok) visibles++;
@@ -149,9 +154,9 @@ const distanceDe = (km: number) => DISTANCES.find((d) => km >= d.min && km < d.m
     font: inherit; font-size: .88rem; font-weight: 600; cursor: pointer;
     padding: 5px 12px; border-radius: 999px;
     border: 1px solid var(--bordure); background: var(--surface); color: var(--texte-doux);
+    display: inline-flex; align-items: center; gap: 6px;
   }
   .groupe button[aria-pressed='true'] { background: var(--texte); border-color: var(--texte); color: var(--fond); }
-  [data-groupe='type'] button { text-transform: capitalize; } /* route → Route */
   .tri { display: flex; align-items: center; gap: 8px; font-size: .88rem; color: var(--texte-doux); }
   .tri select {
     font: inherit; color: var(--texte); cursor: pointer;

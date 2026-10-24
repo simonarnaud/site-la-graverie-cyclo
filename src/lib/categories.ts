@@ -2,7 +2,7 @@
 // Les couleurs sont définies dans src/styles/global.css (--cat-<id>).
 export const CATEGORIES = {
   entrainement: { label: 'Entraînement', pluriel: 'Entraînements' },
-  rando: { label: 'Rando', pluriel: 'Randos' },
+  rando: { label: 'Rando FSGT', pluriel: 'Randos FSGT' },
   course: { label: 'Course', pluriel: 'Courses' },
   autre: { label: 'Autre', pluriel: 'Autres' },
 } as const;
@@ -11,12 +11,11 @@ export type Categorie = keyof typeof CATEGORIES;
 
 export const IDS_CATEGORIES = Object.keys(CATEGORIES) as [Categorie, ...Categorie[]];
 
-// Disciplines, comme dans les programmes de la FSGT. Champ facultatif.
+// Les trois disciplines du club : discipline d'un événement (facultative) et d'un parcours d'entraînement.
 export const DISCIPLINES = {
   cyclo: 'Cyclo',
-  cyclosport: 'Cyclosport',
   vtt: 'VTT',
-  'cyclo-cross': 'Cyclo-cross',
+  gravel: 'Gravel',
 } as const;
 
 export type Discipline = keyof typeof DISCIPLINES;

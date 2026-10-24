@@ -1,6 +1,6 @@
 ---
 titre: Parcours test
-type: route
+discipline: cyclo
 gpx: rdd-73km-mesnil-patry-g1.gpx
 distanceKm: null
 deniveleM: null

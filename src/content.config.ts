@@ -15,7 +15,7 @@ const parcours = defineCollection({
   schema: ({ image }) =>
     z.object({
       titre: z.string(),
-      type: z.enum(['route', 'gravel', 'vtt']),
+      discipline: z.enum(IDS_DISCIPLINES),
       // Fichier GPX rangé dans le dossier du parcours, ex. trace.gpx (publié en /gpx/<parcours>.gpx)
       gpx: z.string().regex(/^(\.\/)?[^/]+\.gpx$/i, 'Le GPX doit être rangé dans le dossier du parcours'),
       // Facultatifs : sinon calculés depuis le GPX
@@ -103,4 +103,17 @@ const documents = defineCollection({
   }),
 });
 
-export const collections = { parcours, sorties, actualites, albums, pages, documents };
+// Partenaires du club : logo cliquable vers leur site. Le texte d'introduction est la page « partenaires » de la collection pages.
+const partenaires = defineCollection({
+  loader: globTolerant({ pattern: '**/index.md', base: './src/content/partenaires' }),
+  schema: ({ image }) =>
+    z.object({
+      nom: z.string(),
+      logo: image(),
+      site: z.url(),
+      // Ordre d'affichage : le plus petit en premier ; à égalité, ordre alphabétique
+      ordre: facultatif(z.number()),
+    }),
+});
+
+export const collections = { parcours, sorties, actualites, albums, pages, documents, partenaires };

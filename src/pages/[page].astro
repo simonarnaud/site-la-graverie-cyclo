@@ -5,7 +5,8 @@ import Base from '../layouts/Base.astro';
 import club from '../data/club.json';
 
 export async function getStaticPaths() {
-  const pages = await getCollection('pages');
+  // La page « partenaires » a sa propre mise en page (src/pages/partenaires.astro)
+  const pages = await getCollection('pages', (p) => p.id !== 'partenaires');
   return pages.map((page) => ({ params: { page: page.id }, props: { page } }));
 }
 

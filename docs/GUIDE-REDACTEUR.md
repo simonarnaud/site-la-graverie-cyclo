@@ -19,8 +19,8 @@ Ne cliquez pas sur « Travailler avec un dépôt local » ni sur « Se connecter
 ## Ajouter un événement au calendrier
 
 1. Menu **Calendrier** → **Nouveau**.
-2. Choisissez le **type** : entraînement (sorties du club), rando, course ou autre. Chaque type a sa couleur sur le site.
-   Indiquez aussi la **discipline** si elle est utile : cyclo, cyclosport, VTT ou cyclo-cross.
+2. Choisissez le **type** : entraînement (sorties du club), rando FSGT, course ou autre. Chaque type a sa couleur sur le site.
+   Indiquez aussi la **discipline** si elle est utile : cyclo, VTT ou gravel.
 3. Remplissez le titre, la date et l'heure de départ et le lieu.
 4. Pour une rando ou une course organisée par un autre club, indiquez l'**organisateur**.
 5. **Le parcours** :
@@ -36,6 +36,19 @@ Ne cliquez pas sur « Travailler avec un dépôt local » ni sur « Se connecter
 Supprimer un événement, un parcours, un album ou un document supprime aussi ses photos et fichiers.
 
 L'événement apparaît dans le calendrier, au mois de sa date ; les visiteurs passent d'un mois à l'autre avec les flèches. Pour annuler un événement, ouvrez-le et cochez **Événement annulé** plutôt que de le supprimer : les membres abonnés au calendrier seront prévenus.
+
+## Ajouter un partenaire
+
+1. Menu **Partenaires** → **Nouveau**.
+2. Indiquez le nom du partenaire, son logo et l'adresse de son site (par exemple `https://www.exemple.fr`).
+3. Facultatif : un **ordre d'affichage** (le plus petit numéro s'affiche en premier ; sinon, ordre alphabétique).
+4. Cliquez sur **Enregistrer**.
+
+Le logo apparaît sur la page **Partenaires** du site ; un clic dessus ouvre le site du partenaire. Le texte de remerciement en haut de la page se modifie dans **Le club › Page Partenaires**.
+
+## Revenir sur le site depuis le CMS
+
+Le bouton rouge **« ← Voir le site »**, en bas à gauche du CMS, ramène à la page d'accueil du site.
 
 ## Publier un document PDF
 

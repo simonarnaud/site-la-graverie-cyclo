@@ -1,6 +1,7 @@
 ---
 titre: Gravel des collines
 categorie: entrainement
+discipline: gravel
 date: 2026-11-08T08:30:00+01:00
 lieuRdv: Parking de l'église, La Graverie
 parcours: gravel-des-collines
