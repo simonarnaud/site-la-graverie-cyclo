@@ -48,6 +48,18 @@
     <a id="voir-le-site" href="../">← Voir le site</a>
     <!-- Lecture d'un programme FSGT en PDF → activités du calendrier (src/pages/admin/import-fsgt.astro) -->
     <a id="importer-fsgt" href="import-fsgt/">📄 Importer un programme FSGT</a>
+    <script>
+      // Sveltia force l'ouverture dans un nouvel onglet de tout lien sortant du CMS (target="_blank" posé
+      // au mousedown) : ces deux boutons s'ouvrent dans le même onglet, pour revenir au CMS avec « Précédent ».
+      // Ctrl/Cmd + clic ou clic molette ouvrent toujours un nouvel onglet.
+      for (const lien of document.querySelectorAll('#voir-le-site, #importer-fsgt')) {
+        lien.addEventListener('click', (e) => {
+          if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+          e.preventDefault();
+          window.location.assign(lien.href);
+        });
+      }
+    </script>
     <div id="etat-publication" role="status" aria-live="polite" hidden></div>
 
     <script>
