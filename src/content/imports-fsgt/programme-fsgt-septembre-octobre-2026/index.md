@@ -1,9 +1,15 @@
 ---
 titre: Programme FSGT septembre-octobre 2026
 fichier: 008-maj-periode-sept-octobre-2026-brevet.pdf
-statut: valide
-resume: 2 activités proposées, 6 passées ignorées
+statut: termine
+resume: 1 activité créée
 rapport: |-
+  Validation : 1 activité créée.
+
+  Ajoutées au Calendrier (à compléter si besoin : horaire, lieu, trace GPX, lien Strava…) :
+  - dim. 25 oct. 2026 – JC Audrieu
+
+  — Lecture du PDF —
   Lecture du PDF : 2 activités proposées, 6 passées ignorées.
 
   Rien n'est encore ajouté au calendrier. Vérifiez la liste « Activités proposées » ci-dessous (dépliez une activité pour la corriger), cochez ou décochez « Ajouter au calendrier », puis mettez l'État sur « 3. Validé » et enregistrez.
@@ -14,7 +20,7 @@ rapport: |-
 
   6 activités antérieures au sam. 24 oct. 2026 ignorées.
 activites:
-  - ajouter: true
+  - ajouter: false
     titre: JC Audrieu
     categorie: rando
     discipline: vtt
@@ -24,7 +30,7 @@ activites:
     informations: ""
     doublon: ""
     source: page 1, ligne « Dim 25 Octobre »
-    resultat: ""
+    resultat: Créée dans le Calendrier (2026-10-25-jc-audrieu)
   - ajouter: false
     titre: VCS Normande
     categorie: rando
@@ -35,6 +41,6 @@ activites:
     informations: ""
     doublon: ""
     source: page 1, ligne « Dim 25 Octobre »
-    resultat: ""
-traiteLe: 2026-10-24T08:32:58.244Z
+    resultat: Non ajoutée (décochée)
+traiteLe: 2026-10-24T08:34:36.955Z
 ---
