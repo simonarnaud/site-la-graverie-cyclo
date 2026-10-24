@@ -40,7 +40,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A src/content/sorties src/content/imports-fsgt
-          git commit -m "Import FSGT : activités créées depuis le programme PDF"
+          git commit -m "Import FSGT : lecture du programme ou création des activités validées"
           # Un rédacteur a pu publier entre-temps : on se met à jour avant d'envoyer
           for essai in 1 2 3; do
             git pull --rebase origin main && git push && break
