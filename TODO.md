@@ -54,7 +54,8 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [x] Menu repliable sur mobile
 - [x] Profil d'altitude des parcours
 - [x] Statistiques sans cookie (GoatCounter) : intégration prête, désactivée
-- [ ] Créer le compte GoatCounter du club et saisir son code dans le CMS (voir `docs/GUIDE-TECHNIQUE.md`)
+- [x] Compte GoatCounter **de test** `lagraveriecyclostest` activé (créé avec une adresse perso)
+- [ ] Créer le compte GoatCounter **du club** (adresse du club) et remplacer le code dans le CMS (Le club → Coordonnées et bureau), voir `docs/GUIDE-TECHNIQUE.md`
 
 ## Rappel : mises à jour Dependabot
 Une fois par mois, Dependabot propose des mises à jour sous forme de PR. **Ne fusionner que si la vérification de la PR est verte** : le build tourne désormais sur chaque PR.
