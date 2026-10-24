@@ -36,7 +36,7 @@ docs/{ARCHITECTURE.md, GUIDE-REDACTEUR.md, GUIDE-TECHNIQUE.md}
 ```
 
 ### Schémas prévus
-- **sorties** (`AAAA-MM-JJ-slug/index.md` + image facultative) : `titre`, `date` (date+heure), `lieuRdv`, `niveau` (découverte | intermédiaire | sportif), `parcours` (référence, optionnel), `lienStrava` (URL Strava, optionnel), `lienInscription` (URL organisateur, optionnel), `annulee` (bool), corps = description.
+- **sorties** (`AAAA-MM-JJ-slug/index.md` + image facultative) : `titre`, `date` (date+heure), `lieuRdv`, `parcours` (référence, optionnel), `lienStrava` (URL Strava, optionnel), `lienInscription` (URL organisateur, optionnel), `annulee` (bool), corps = description.
 - **parcours** (`slug/index.md` + couverture) : `titre`, `type` (route | gravel | vtt), `gpx` (`trace.gpx` dans le dossier, publié en `/gpx/<id>.gpx`), `distanceKm`/`deniveleM` (optionnels, sinon calculés), `couverture`.
 - **actualites** (`slug/index.md` + images colocalisées, `media_folder: ''`) : `titre`, `date`, `auteur`, `couverture`, `couvertureAlt`, `brouillon`.
 - **albums** : `titre`, `date`, `photos` (≤ 12 × {src, alt}), `lienAlbumComplet`.

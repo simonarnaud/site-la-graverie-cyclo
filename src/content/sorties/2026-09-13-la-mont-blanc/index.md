@@ -5,7 +5,6 @@ discipline: cyclo
 date: 2026-09-13T09:00:00+02:00
 lieuRdv: Sainte-Mere-Eglise
 organisateur: Mont-Blanc
-niveau: ''
 gpx: trace.gpx
 lienStrava: ''
 lienInscription: ''

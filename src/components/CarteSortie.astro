@@ -10,7 +10,7 @@ interface Props {
 }
 
 const { sortie } = Astro.props;
-const { titre, categorie, discipline, date, lieuRdv, organisateur, niveau, annulee, couverture, couvertureAlt } = sortie.data;
+const { titre, categorie, discipline, date, lieuRdv, organisateur, annulee, couverture, couvertureAlt } = sortie.data;
 ---
 
 <article class="carte" data-categorie={categorie}>
@@ -23,7 +23,6 @@ const { titre, categorie, discipline, date, lieuRdv, organisateur, niveau, annul
     <ul class="etiquettes">
       <li class="categorie" data-categorie={categorie}>{CATEGORIES[categorie].label}</li>
       {discipline && <li class="discipline"><IconeDiscipline discipline={discipline} taille={14} />{DISCIPLINES[discipline]}</li>}
-      {niveau && <li>{niveau}</li>}
     </ul>
   </div>
 </article>

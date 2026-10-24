@@ -4,7 +4,6 @@ categorie: entrainement
 discipline: cyclo
 date: 2026-10-25T09:00:00+01:00
 lieuRdv: Place de la mairie, La Graverie
-niveau: intermédiaire
 parcours: boucle-du-bocage
 lienStrava: https://www.strava.com/clubs/exemple/group_events/1
 ---

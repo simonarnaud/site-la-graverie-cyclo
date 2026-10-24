@@ -77,11 +77,6 @@ collections:
         hint: À remplir si ce n'est pas le club (club voisin, FSGT…).
         widget: string
         required: false
-      - name: niveau
-        label: Niveau
-        widget: select
-        required: false
-        options: [découverte, intermédiaire, sportif]
       - name: parcours
         label: Parcours d'entraînement (entraînements)
         hint: Pour un entraînement, choisissez l'un des parcours habituels du club.

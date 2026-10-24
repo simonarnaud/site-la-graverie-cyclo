@@ -37,7 +37,6 @@ const sorties = defineCollection({
     lieuRdv: z.string(),
     // Club ou fédération organisatrice, si ce n'est pas le club
     organisateur: facultatif(z.string()),
-    niveau: facultatif(z.enum(['découverte', 'intermédiaire', 'sportif'])),
     // Entraînement : parcours du club, réutilisable. Rando, course… : GPX déposé directement dans l'événement
     parcours: facultatif(reference('parcours')),
     gpx: facultatif(z.string().regex(/^(\.\/)?[^/]+\.gpx$/i, "Le GPX doit être rangé dans le dossier de l'événement")),

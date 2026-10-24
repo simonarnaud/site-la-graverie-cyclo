@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 const { sortie } = Astro.props;
-const { titre, categorie, discipline, date, lieuRdv, organisateur, niveau, lienStrava, lienInscription, annulee, couverture, couvertureAlt } = sortie.data;
+const { titre, categorie, discipline, date, lieuRdv, organisateur, lienStrava, lienInscription, annulee, couverture, couvertureAlt } = sortie.data;
 const libelle = CATEGORIES[categorie].label;
 const parcours = sortie.data.parcours ? await getEntry(sortie.data.parcours) : undefined;
 // GPX propre à l'événement (rando, course…), publié en /gpx/evenements/<id>.gpx
@@ -36,7 +36,6 @@ const aVenir = date.getTime() > Date.now();
     <div><dt>Date</dt><dd>{dateLongue(date)}</dd></div>
     <div><dt>Départ</dt><dd>{heure(date)} · {lieuRdv}</dd></div>
     {discipline && <div><dt>Discipline</dt><dd class="avec-icone"><IconeDiscipline discipline={discipline} taille={18} />{DISCIPLINES[discipline]}</dd></div>}
-    {niveau && <div><dt>Niveau</dt><dd>{niveau}</dd></div>}
     {organisateur && <div><dt>Organisateur</dt><dd>{organisateur}</dd></div>}
     {parcours && (
       <div><dt>Parcours</dt><dd><a href={lien(`parcours/${parcours.id}/`)}>{parcours.data.titre}</a></dd></div>
