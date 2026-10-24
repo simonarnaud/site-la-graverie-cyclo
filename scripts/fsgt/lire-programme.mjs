@@ -99,7 +99,7 @@ function colonneDe(el, colonnes) {
 }
 
 // Discipline et type d'activité d'après un intitulé de colonne ou un texte
-function disciplineDe(texte) {
+export function disciplineDe(texte) {
   const t = normaliser(texte);
   if (/cyclo\s*-?\s*cross/.test(t)) return { discipline: 'vtt', categorie: 'course' };
   if (/cyclosport/.test(t)) return { discipline: 'cyclo', categorie: 'course' };
@@ -205,6 +205,13 @@ function lireTableau(page, entete, avertir) {
       else activite.details.push([col.intitule, texte]);
     }
     if (!activite.heure && activite.lieu) activite.heure = lireHeure(activite.lieu);
+    // Pas de colonne « discipline » : « VTT » ou « Gravel » écrit ailleurs dans la ligne suffit
+    // (pas « route » ni « cyclo », trop fréquents dans les adresses et les noms de clubs)
+    if (!activite.discipline) {
+      const texte = normaliser([activite.organisateur, activite.lieu, ...activite.details.map((d) => d[1])].join(' '));
+      if (/\bvtt\b/.test(texte)) activite.discipline = 'vtt';
+      else if (/\bgravel/.test(texte)) activite.discipline = 'gravel';
+    }
     return activite;
   });
 }

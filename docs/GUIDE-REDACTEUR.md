@@ -52,36 +52,44 @@ Le bouton rouge **« ← Voir le site »**, en bas à gauche du CMS, ramène à 
 
 ## Publier un document PDF
 
-Par exemple, le programme de la saison envoyé par la FSGT.
+Par exemple, le programme de la saison envoyé par la FSGT ou le compte rendu de l'assemblée générale.
 
 1. Menu **Documents** → **Nouveau**.
-2. Ajoutez un titre, la date et le type, puis choisissez le fichier PDF (10 Mo maximum).
+2. Ajoutez un titre, la date et la **section** (Calendriers FSGT, Comptes rendus d'AG, Règlements et statuts, Adhésion et licences, Autres documents), puis choisissez le fichier PDF (10 Mo maximum).
 3. Cliquez sur **Enregistrer**.
 
-Le document apparaît dans la page **Documents** du site, à consulter ou à télécharger. Si le fichier est trop lourd, réduisez-le d'abord, par exemple avec le site gratuit [iLovePDF](https://www.ilovepdf.com/fr/compresser_pdf).
+Le document apparaît dans sa section de la page **Documents** du site, à consulter ou à télécharger. Dans le CMS, le bouton de regroupement de la liste permet d'afficher les documents par section. Si le fichier est trop lourd, réduisez-le d'abord, par exemple avec le site gratuit [iLovePDF](https://www.ilovepdf.com/fr/compresser_pdf).
 
 ## Importer un programme FSGT dans le calendrier
 
-Quand la FSGT envoie un programme en PDF (période ou saison), ses activités peuvent être créées **automatiquement** dans le calendrier.
+Quand la FSGT envoie un programme en PDF (période ou saison), ses activités peuvent être lues **automatiquement**. Rien n'est ajouté au calendrier avant que vous l'ayez **validé**.
+
+**1. Déposer le PDF**
 
 1. Menu **Import FSGT** → **Nouveau**.
-2. Donnez un titre (ex. « Programme FSGT septembre-octobre 2026 ») et choisissez le PDF. Laissez « Année » vide.
-3. Cliquez sur **Enregistrer**.
+2. Donnez un titre (ex. « Programme FSGT septembre-octobre 2026 ») et choisissez le PDF. Laissez « Année » vide et l'État sur « 1. À lire ».
+3. Cliquez sur **Enregistrer**. Le bandeau en bas à droite indique « Lecture du programme FSGT en cours… ».
 
-Le bandeau en bas à droite indique « Lecture du programme FSGT en cours… ». Une à deux minutes plus tard :
+**2. Vérifier les activités proposées** (une à deux minutes plus tard, le bandeau affiche 📝 « à vérifier puis valider »)
 
-- les activités **à venir** du PDF sont dans le **Calendrier** (type « Rando FSGT » ou « Course », discipline Cyclo/VTT, club organisateur, lieu, horaire et distances quand le PDF les donne) ;
-- le bandeau résume l'import (✅ tout est compris, ⚠️ des points à vérifier, ❌ échec) ;
-- **faites F5**, puis rouvrez l'import : le **Compte rendu** liste les activités créées et, surtout, **les lignes non comprises et pourquoi** (date impossible, mise en page inconnue, PDF scanné…). Saisissez celles-ci à la main dans le Calendrier.
+1. Faites **F5**, puis rouvrez l'import. Le **Compte rendu** résume la lecture, et liste les **lignes non comprises et pourquoi** (date impossible, mise en page inconnue, PDF scanné…) : celles-là sont à saisir à la main dans le Calendrier.
+2. La liste **Activités proposées** montre une ligne par activité à venir : ☑ = sera ajoutée, ☐ = ne sera pas ajoutée, **⚠ DÉJÀ AU CALENDRIER** = une activité du même jour et du même club existe déjà (proposée décochée pour éviter un doublon).
+3. Dépliez une activité pour la corriger : titre, type, discipline (Cyclo, VTT, Gravel), date et heure (00:00 = horaire à préciser), lieu, informations. Cochez ou décochez **Ajouter au calendrier**.
+
+**3. Valider**
+
+1. Mettez l'**État** sur « 3. Validé : ajouter au Calendrier les activités cochées », puis **Enregistrez**.
+2. Une à deux minutes plus tard, les activités cochées sont dans le **Calendrier** et en ligne. Chaque activité de l'import indique son **Résultat** (« Créée dans le Calendrier », « Non ajoutée »…).
 
 Bon à savoir :
 
-- les activités passées et celles **déjà au calendrier** (même jour, même club) ne sont pas recréées : réimporter un programme mis à jour ne fait **pas de doublon** ;
-- une activité sans horaire s'affiche « horaire à préciser » : complétez-la ensuite dans le Calendrier (horaire, lieu, trace GPX, lien Strava…) ;
+- si une activité identique a été ajoutée au calendrier entre la lecture et la validation, elle n'est **pas** créée : elle est marquée « déjà au calendrier » et l'import repasse à « 2. À vérifier ». Pour la créer quand même, recochez-la et revalidez ;
+- revalider un import ne recrée jamais une activité déjà créée ;
+- les activités passées ne sont pas proposées ; une activité sans horaire s'affiche « horaire à préciser » : complétez-la ensuite dans le Calendrier (horaire, lieu, trace GPX, lien Strava…) ;
 - les numéros de téléphone et emails du PDF ne sont **pas** recopiés sur le site ;
-- pour relire un PDF (remplacé ou corrigé), mettez **État** sur « À traiter » et enregistrez ;
-- si le compte rendu dit que l'année n'a pas pu être devinée, remplissez **Année** et remettez « À traiter » ;
-- l'import ne publie pas le PDF dans la page Documents : si vous voulez le proposer au téléchargement, ajoutez-le aussi dans **Documents**.
+- pour relire un PDF (remplacé ou corrigé), remettez l'État sur « 1. À lire » et enregistrez : la liste est recalculée ;
+- si le compte rendu dit que l'année n'a pas pu être devinée, remplissez **Année** et remettez « 1. À lire » ;
+- l'import ne publie pas le PDF dans la page Documents : pour le proposer au téléchargement, ajoutez-le aussi dans **Documents** (section « Calendriers FSGT »).
 
 ## Publier une actualité
 

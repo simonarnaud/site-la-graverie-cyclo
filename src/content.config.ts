@@ -3,7 +3,7 @@
 import { defineCollection, reference } from 'astro:content';
 import { globTolerant } from './lib/chargeur';
 import { z } from 'astro/zod';
-import { IDS_CATEGORIES, IDS_DISCIPLINES } from './lib/categories';
+import { IDS_CATEGORIES, IDS_DISCIPLINES, IDS_SECTIONS_DOCUMENTS } from './lib/categories';
 
 // Le CMS enregistre un champ facultatif laissé vide sous la forme '' ou null :
 // on le traite comme « non renseigné ».
@@ -96,7 +96,8 @@ const documents = defineCollection({
   schema: z.object({
     titre: z.string(),
     date: z.coerce.date(),
-    type: z.enum(['calendrier', 'règlement', 'compte rendu', 'autre']).default('autre'),
+    // Section de la page Documents (src/lib/categories.ts)
+    section: z.preprocess(vide, z.enum(IDS_SECTIONS_DOCUMENTS).default('autre')),
     // PDF rangé dans le dossier du document (publié en /documents/<document>.pdf)
     fichier: z.string().regex(/^(\.\/)?[^/]+\.pdf$/i, 'Le PDF doit être rangé dans le dossier du document'),
     description: facultatif(z.string()),
@@ -116,18 +117,21 @@ const partenaires = defineCollection({
     }),
 });
 
-// Programmes FSGT en PDF : leurs activités sont créées dans le calendrier par scripts/importer-fsgt.mjs
-// (GitHub Action). statut, resume, rapport et traiteLe sont remplis par le script, pas par le rédacteur.
+// Programmes FSGT en PDF, lus par scripts/importer-fsgt.mjs (GitHub Action) : les activités sont d'abord
+// proposées (liste `activites`), puis créées dans le calendrier quand l'admin passe le statut à « valide ».
+// resume, rapport et traiteLe sont remplis par le script, pas par le rédacteur.
 const importsFsgt = defineCollection({
   loader: globTolerant({ pattern: '**/index.md', base: './src/content/imports-fsgt' }),
   schema: z.object({
     titre: z.string(),
     fichier: z.string().regex(/^(\.\/)?[^/]+\.pdf$/i, "Le PDF doit être rangé dans le dossier de l'import"),
     annee: facultatif(z.number().int()),
-    statut: z.preprocess(vide, z.enum(['a-traiter', 'termine', 'partiel', 'echec']).default('a-traiter')),
+    statut: z.preprocess(vide, z.enum(['a-traiter', 'a-valider', 'valide', 'termine', 'echec']).default('a-traiter')),
     resume: facultatif(z.string()),
     rapport: facultatif(z.string()),
     traiteLe: facultatif(z.coerce.date()),
+    // Activités proposées (relues par le script, pas par le site)
+    activites: facultatif(z.array(z.record(z.string(), z.unknown()))),
   }),
 });
 

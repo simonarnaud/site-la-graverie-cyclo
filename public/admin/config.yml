@@ -198,10 +198,22 @@ collections:
     identifier_field: titre
     summary: "{{date | date('DD/MM/YYYY')}} – {{titre}}"
     sortable_fields: [date, titre]
+    view_groups:
+      - { label: Section, field: section }
     fields:
       - { name: titre, label: Titre, widget: string }
       - { name: date, label: Date de publication, widget: datetime, type: date }
-      - { name: type, label: Type, widget: select, default: autre, options: [calendrier, règlement, compte rendu, autre] }
+      # Valeurs à garder synchronisées avec SECTIONS_DOCUMENTS (src/lib/categories.ts)
+      - name: section
+        label: Section
+        widget: select
+        default: autre
+        options:
+          - { label: Calendriers FSGT, value: calendrier-fsgt }
+          - { label: Comptes rendus d'AG, value: compte-rendu-ag }
+          - { label: Règlements et statuts, value: reglement }
+          - { label: Adhésion et licences, value: adhesion }
+          - { label: Autres documents, value: autre }
       - name: fichier
         label: Fichier PDF
         widget: file
@@ -212,20 +224,32 @@ collections:
               max_file_size: 10485760 # 10 Mo
       - { name: description, label: Description courte, widget: string, required: false }
 
-  # Lu automatiquement par scripts/importer-fsgt.mjs (GitHub Action) : les activités du PDF sont créées dans le Calendrier
+  # Lu automatiquement par scripts/importer-fsgt.mjs (GitHub Action), en deux temps :
+  # 1. lecture du PDF → activités proposées ci-dessous ; 2. après validation de l'admin → création dans le Calendrier
   - name: imports-fsgt
     label: Import FSGT
     label_singular: Import de programme FSGT
-    description: "Déposez ici un programme FSGT en PDF : ses activités sont créées automatiquement dans le Calendrier (1 à 2 minutes), sans doublon. Rouvrez ensuite l'import (après F5) pour lire le compte rendu : activités créées, lignes non comprises et pourquoi."
+    description: "Déposez un programme FSGT en PDF : ses activités sont lues (1 à 2 minutes) et proposées dans l'import. Rien n'est ajouté au Calendrier avant votre validation. Faites F5 pour voir l'avancement."
     folder: src/content/imports-fsgt
     path: '{{slug}}/index'
     media_folder: ''
     public_folder: ''
     create: true
     identifier_field: titre
-    summary: "{{titre}} – {{statut}}"
+    summary: "{{titre}} – {{resume | default('en attente de lecture')}}"
     sortable_fields: [titre]
     fields:
+      - name: statut
+        label: État
+        widget: select
+        default: a-traiter
+        options:
+          - { label: "1. À lire : le PDF sera lu après l'enregistrement", value: a-traiter }
+          - { label: "2. À vérifier : contrôlez les activités proposées, puis choisissez « 3. Validé »", value: a-valider }
+          - { label: "3. Validé : ajouter au Calendrier les activités cochées", value: valide }
+          - { label: "Terminé", value: termine }
+          - { label: "Échec : voir le compte rendu", value: echec }
+        hint: "Pour relire le PDF (remplacé ou corrigé), choisissez « 1. À lire » et enregistrez : les activités proposées sont recalculées."
       - { name: titre, label: Titre, widget: string, hint: "Ex. : Programme FSGT septembre-octobre 2026" }
       - name: fichier
         label: Programme FSGT (PDF)
@@ -241,19 +265,43 @@ collections:
         value_type: int
         required: false
         hint: "À remplir seulement si le compte rendu indique que l'année n'a pas pu être devinée."
-      - name: statut
-        label: État
-        widget: select
-        default: a-traiter
-        options:
-          - { label: "À traiter (lecture automatique au prochain enregistrement)", value: a-traiter }
-          - { label: "Terminé", value: termine }
-          - { label: "Terminé, avec des points à vérifier", value: partiel }
-          - { label: "Échec : voir le compte rendu", value: echec }
-        hint: "Rempli automatiquement. Pour relire le PDF (après l'avoir remplacé, par exemple), remettez « À traiter » et enregistrez : les activités déjà créées ne sont pas dupliquées."
-      - { name: resume, label: Résumé, widget: string, required: false, readonly: true, hint: Rempli automatiquement. }
-      - { name: rapport, label: Compte rendu, widget: text, required: false, readonly: true, hint: Rempli automatiquement. }
-      - { name: traiteLe, label: Lu le, widget: datetime, required: false, readonly: true, hint: Rempli automatiquement. }
+      - { name: resume, label: Résumé, widget: string, required: false, readonly: true }
+      - { name: rapport, label: Compte rendu (rempli automatiquement), widget: text, required: false, readonly: true }
+      - name: activites
+        label: Activités proposées
+        label_singular: activité
+        hint: "Dépliez une activité pour la corriger. Seules les activités cochées « Ajouter au calendrier » seront créées quand l'État passera à « 3. Validé »."
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{ajouter | ternary('☑', '☐')}} {{date | date('DD/MM/YYYY')}} – {{titre}}{{doublon | ternary(' ⚠ DÉJÀ AU CALENDRIER', '')}}{{resultat | ternary(' → {{resultat}}', '')}}"
+        fields:
+          - { name: ajouter, label: Ajouter au calendrier, widget: boolean, default: true }
+          - { name: doublon, label: Déjà au calendrier ?, widget: string, required: false, readonly: true }
+          - { name: titre, label: Titre, widget: string }
+          - name: categorie
+            label: Type
+            widget: select
+            options:
+              - { label: Rando FSGT, value: rando }
+              - { label: Course, value: course }
+              - { label: Autre, value: autre }
+              - { label: Entraînement, value: entrainement }
+          - name: discipline
+            label: Discipline
+            widget: select
+            required: false
+            options:
+              - { label: Cyclo, value: cyclo }
+              - { label: VTT, value: vtt }
+              - { label: Gravel, value: gravel }
+          - { name: date, label: "Date et heure (00:00 = horaire à préciser)", widget: datetime, input_timezone: Europe/Paris }
+          - { name: lieuRdv, label: Lieu / rendez-vous, widget: string }
+          - { name: organisateur, label: Organisateur, widget: string, required: false }
+          - { name: informations, label: Informations (texte de la fiche), widget: text, required: false }
+          - { name: source, label: Ligne du PDF, widget: string, required: false, readonly: true }
+          - { name: resultat, label: Résultat, widget: string, required: false, readonly: true }
+      - { name: traiteLe, label: Dernier traitement, widget: datetime, required: false, readonly: true }
 
   - name: partenaires
     label: Partenaires

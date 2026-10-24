@@ -129,23 +129,32 @@
           const cle = (i) => `${i.id}|${i.traiteLe}`;
           const imports = (rapport?.imports ?? []).filter((i) => !importsVus().includes(cle(i)));
           if (imports.length) {
-            const icones = { 'a-traiter': '⏳', termine: '✅', partiel: '⚠️', echec: '❌' };
+            const etats = {
+              'a-traiter': ['⏳', () => 'en attente de lecture'],
+              'a-valider': ['📝', (i) => `<b>à vérifier puis valider</b> (${echapper(i.resume)})`],
+              valide: ['⏳', () => 'création des activités en attente'],
+              termine: ['✅', (i) => echapper(i.resume)],
+              echec: ['❌', (i) => echapper(i.resume)],
+            };
             if (classe !== 'erreur') {
               classe = imports.some((i) => i.statut === 'echec') ? 'erreur' : imports.some((i) => i.statut !== 'termine') ? 'attention' : 'ok';
             }
             const liste = imports
-              .map((i) => `<li>${icones[i.statut] ?? ''} <b>${echapper(i.titre)}</b> : ${i.statut === 'a-traiter' ? 'en attente de lecture' : echapper(i.resume)}</li>`)
+              .map((i) => {
+                const [icone, texte] = etats[i.statut] ?? ['', () => ''];
+                return `<li>${icone} <b>${echapper(i.titre)}</b> : ${texte(i)}</li>`;
+              })
               .join('');
             blocs.push(
               `<strong>📄 Import FSGT</strong><ul>${liste}</ul>
-               <span class="detail">Compte rendu détaillé : menu <b>Import FSGT</b>, ouvrez l'import (faites d'abord F5 pour voir les activités créées).</span>`,
+               <span class="detail">Détail et validation : menu <b>Import FSGT</b>, ouvrez l'import (faites d'abord F5 pour voir sa dernière version).</span>`,
             );
           }
           if (blocs.length) {
             // Fermer le bandeau = comptes rendus d'import lus
             const marquerLus = () => {
               try {
-                const lus = imports.filter((i) => i.statut !== 'a-traiter').map(cle);
+                const lus = imports.filter((i) => i.statut === 'termine' || i.statut === 'echec').map(cle);
                 localStorage.setItem('imports-vus', JSON.stringify([...importsVus(), ...lus].slice(-50)));
               } catch {}
             };

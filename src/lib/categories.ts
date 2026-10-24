@@ -21,3 +21,16 @@ export const DISCIPLINES = {
 export type Discipline = keyof typeof DISCIPLINES;
 
 export const IDS_DISCIPLINES = Object.keys(DISCIPLINES) as [Discipline, ...Discipline[]];
+
+// Sections de la page Documents, dans l'ordre d'affichage (valeurs du champ `section`, cf. public/admin/config.yml)
+export const SECTIONS_DOCUMENTS = {
+  'calendrier-fsgt': 'Calendriers FSGT',
+  'compte-rendu-ag': "Comptes rendus d'AG",
+  reglement: 'Règlements et statuts',
+  adhesion: 'Adhésion et licences',
+  autre: 'Autres documents',
+} as const;
+
+export type SectionDocument = keyof typeof SECTIONS_DOCUMENTS;
+
+export const IDS_SECTIONS_DOCUMENTS = Object.keys(SECTIONS_DOCUMENTS) as [SectionDocument, ...SectionDocument[]];

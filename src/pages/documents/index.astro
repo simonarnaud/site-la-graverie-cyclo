@@ -1,7 +1,8 @@
 ---
-// Documents PDF : programme FSGT, règlements, comptes rendus…
+// Documents PDF regroupés par section (calendriers FSGT, comptes rendus d'AG…), du plus récent au plus ancien
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { IDS_SECTIONS_DOCUMENTS, SECTIONS_DOCUMENTS } from '../../lib/categories';
 import { cheminFichier, tailleLisible } from '../../lib/fichiers';
 import { dateCourte, lien } from '../../lib/format';
 
@@ -9,35 +10,61 @@ import { dateCourte, lien } from '../../lib/format';
 const documents = (await getCollection('documents'))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .map((d) => ({ ...d, url: lien(`documents/${d.id}.pdf`), taille: tailleLisible(cheminFichier(d, d.data.fichier)) }));
+// Sections non vides, dans l'ordre de SECTIONS_DOCUMENTS
+const sections = IDS_SECTIONS_DOCUMENTS.map((id) => ({
+  id,
+  titre: SECTIONS_DOCUMENTS[id],
+  documents: documents.filter((d) => d.data.section === id),
+})).filter((s) => s.documents.length);
 ---
 
-<Base titre="Documents" description="Calendriers, règlements et comptes rendus à télécharger">
+<Base titre="Documents" description="Calendriers FSGT, comptes rendus d'assemblée générale, règlements à télécharger">
   <h1>Documents</h1>
-  <p>Calendriers de la fédération, règlements, comptes rendus d'assemblée générale…</p>
+  <p>Calendriers de la fédération, comptes rendus d'assemblée générale, règlements…</p>
 
-  {documents.length > 0 ? (
-    <ul class="documents">
-      {documents.map((d) => (
-        <li class="carte">
-          <div class="corps">
-            <span class="icone" aria-hidden="true">PDF</span>
-            <div class="texte">
-              <p class="meta">{dateCourte(d.data.date)} · {d.data.type}</p>
-              <h3><a href={d.url} target="_blank" rel="noopener">{d.data.titre}</a></h3>
-              {d.data.description && <p>{d.data.description}</p>}
-            </div>
-            <a class="bouton secondaire" href={d.url} download>Télécharger ({d.taille})</a>
-          </div>
-        </li>
-      ))}
-    </ul>
+  {sections.length > 1 && (
+    <nav class="sommaire" aria-label="Sections">
+      {sections.map((s) => <a href={`#${s.id}`}>{s.titre} <span>{s.documents.length}</span></a>)}
+    </nav>
+  )}
+
+  {sections.length > 0 ? (
+    sections.map((s) => (
+      <section id={s.id}>
+        <h2>{s.titre}</h2>
+        <ul class="documents">
+          {s.documents.map((d) => (
+            <li class="carte">
+              <div class="corps">
+                <span class="icone" aria-hidden="true">PDF</span>
+                <div class="texte">
+                  <p class="meta">{dateCourte(d.data.date)}</p>
+                  <h3><a href={d.url} target="_blank" rel="noopener">{d.data.titre}</a></h3>
+                  {d.data.description && <p>{d.data.description}</p>}
+                </div>
+                <a class="bouton secondaire" href={d.url} download>Télécharger ({d.taille})</a>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
   ) : (
     <p class="vide">Aucun document pour le moment.</p>
   )}
 </Base>
 
 <style>
-  .documents { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 14px; }
+  .sommaire { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 8px; }
+  .sommaire a {
+    padding: 6px 14px; border-radius: 999px; border: 1px solid var(--bordure);
+    color: var(--texte); text-decoration: none; font-weight: 600; font-size: .9rem;
+  }
+  .sommaire a:hover { border-color: var(--accent); color: var(--accent); }
+  .sommaire span { color: var(--texte-doux); font-weight: 500; }
+  section { scroll-margin-top: 16px; }
+  section h2 { margin-top: 32px; }
+  .documents { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 14px; }
   .documents .corps { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
   .texte { flex: 1; min-width: 200px; }
   .texte p { margin: 0; }

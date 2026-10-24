@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { ErreurImport, lireProgramme } from './lire-programme.mjs';
+import { disciplineDe, ErreurImport, lireProgramme } from './lire-programme.mjs';
 
 const exemple = (nom) => readFileSync(new URL(`exemples/${nom}`, import.meta.url));
 const trouver = (r, date, organisateur) => r.activites.find((a) => a.date === date && a.organisateur === organisateur);
@@ -57,4 +57,22 @@ test('grille annuelle à une colonne par discipline (saison 2022)', async () => 
 
 test('un fichier qui n’est pas un PDF donne une erreur compréhensible', async () => {
   await assert.rejects(lireProgramme(Buffer.from('pas un pdf')), (e) => e instanceof ErreurImport && /pas un PDF lisible/.test(e.message));
+});
+
+test('disciplines reconnues : Cyclo, VTT et Gravel (intitulés de colonnes ou cellules)', () => {
+  const cas = {
+    Route: 'cyclo',
+    CYCLO: 'cyclo',
+    'CYCLO (club organisateur)': 'cyclo',
+    CYCLOSPORT: 'cyclo',
+    VTT: 'vtt',
+    'VTT ( club organisateur)': 'vtt',
+    'CYCLO CROSS (club organi.)': 'vtt',
+    Gravel: 'gravel',
+    GRAVEL: 'gravel',
+    Gravelle: 'gravel',
+  };
+  for (const [texte, attendu] of Object.entries(cas)) assert.equal(disciplineDe(texte)?.discipline, attendu, texte);
+  assert.equal(disciplineDe('CYCLOSPORT').categorie, 'course');
+  assert.equal(disciplineDe('Pédestre / Distance'), undefined);
 });

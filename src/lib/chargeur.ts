@@ -21,7 +21,7 @@ const LIBELLES: Record<string, string> = {
   titre: 'Titre', date: 'Date', lieuRdv: 'Lieu / rendez-vous', categorie: 'Type', discipline: 'Discipline',
   parcours: "Parcours d'entraînement", gpx: 'Trace GPX', lienStrava: "Lien de l'événement Strava",
   lienInscription: "Lien d'inscription", couverture: 'Image', photos: 'Photos', lienAlbumComplet: "Lien vers l'album complet",
-  fichier: 'Fichier PDF', auteur: 'Auteur', type: 'Type',
+  fichier: 'Fichier PDF', auteur: 'Auteur', type: 'Type', section: 'Section',
 };
 
 export function lireRapport(): ProblemeContenu[] {
