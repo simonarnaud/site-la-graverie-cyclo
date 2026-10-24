@@ -1,6 +1,7 @@
 // Schémas des contenus. Toute modification doit être répercutée dans public/admin/config.yml.
+// globTolerant : une fiche invalide est écartée et signalée dans le CMS, sans bloquer la publication.
 import { defineCollection, reference } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { globTolerant } from './lib/chargeur';
 import { z } from 'astro/zod';
 import { IDS_CATEGORIES, IDS_DISCIPLINES } from './lib/categories';
 
@@ -10,7 +11,7 @@ const vide = (v: unknown) => (v === '' || v === null ? undefined : v);
 const facultatif = <T extends z.ZodType>(schema: T) => z.preprocess(vide, schema.optional());
 
 const parcours = defineCollection({
-  loader: glob({ pattern: '**/index.md', base: './src/content/parcours' }),
+  loader: globTolerant({ pattern: '**/index.md', base: './src/content/parcours' }),
   schema: ({ image }) =>
     z.object({
       titre: z.string(),
@@ -27,7 +28,7 @@ const parcours = defineCollection({
 
 // Événements du calendrier : entraînements, randos, courses…
 const sorties = defineCollection({
-  loader: glob({ pattern: '**/index.md', base: './src/content/sorties' }),
+  loader: globTolerant({ pattern: '**/index.md', base: './src/content/sorties' }),
   schema: ({ image }) => z.object({
     titre: z.string(),
     categorie: z.enum(IDS_CATEGORIES).default('entrainement'),
@@ -56,7 +57,7 @@ const sorties = defineCollection({
 });
 
 const actualites = defineCollection({
-  loader: glob({ pattern: '**/index.md', base: './src/content/actualites' }),
+  loader: globTolerant({ pattern: '**/index.md', base: './src/content/actualites' }),
   schema: ({ image }) =>
     z.object({
       titre: z.string(),
@@ -70,7 +71,7 @@ const actualites = defineCollection({
 });
 
 const albums = defineCollection({
-  loader: glob({ pattern: '**/index.md', base: './src/content/albums' }),
+  loader: globTolerant({ pattern: '**/index.md', base: './src/content/albums' }),
   schema: ({ image }) =>
     z.object({
       titre: z.string(),
@@ -83,7 +84,7 @@ const albums = defineCollection({
 });
 
 const pages = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/pages' }),
+  loader: globTolerant({ pattern: '*.md', base: './src/content/pages' }),
   schema: z.object({
     titre: z.string(),
     description: facultatif(z.string()),
@@ -92,7 +93,7 @@ const pages = defineCollection({
 
 // Documents PDF à télécharger (programme FSGT, règlements, comptes rendus…)
 const documents = defineCollection({
-  loader: glob({ pattern: '**/index.md', base: './src/content/documents' }),
+  loader: globTolerant({ pattern: '**/index.md', base: './src/content/documents' }),
   schema: z.object({
     titre: z.string(),
     date: z.coerce.date(),

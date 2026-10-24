@@ -69,7 +69,9 @@ Les photos sont réduites automatiquement : inutile de les redimensionner avant.
 
 ## Après avoir enregistré
 
-**Attendez 2 minutes puis rechargez le site** : la mise en ligne n'est pas instantanée.
+**Attendez 2 minutes puis rechargez le site** : la mise en ligne n'est pas instantanée. Un bandeau en bas à droite du CMS indique « Mise en ligne en cours… » puis « Mise en ligne terminée ».
+
+**Si un contenu ne peut pas être publié** (lien invalide, image ou fichier manquant…), le bandeau l'indique en rouge, avec le nom de la fiche et l'explication. Ce contenu n'apparaît pas sur le site, mais **tout le reste est publié normalement** : ouvrez la fiche, corrigez, enregistrez.
 
 Le navigateur garde aussi chaque page en mémoire jusqu'à 10 minutes : si une page déjà visitée semble ancienne, forcez son rechargement (**Ctrl + F5** sur ordinateur, ou tirez la page vers le bas sur téléphone).
 

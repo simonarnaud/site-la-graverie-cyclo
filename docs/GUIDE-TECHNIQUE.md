@@ -10,6 +10,16 @@ Bénévole ──(Sveltia CMS, /admin)──▶ commit sur main ──▶ GitHub
 - Les contenus sont des fichiers Markdown dans `src/content/`, validés par les schémas de `src/content.config.ts`. Un champ invalide fait échouer le build, et la version précédente du site reste en ligne.
 - **Sveltia CMS** (`public/admin/`) est une simple page qui lit et écrit ces fichiers via l'API GitHub.
 
+## Une erreur de contenu ne bloque jamais le site
+
+Les collections sont chargées par `globTolerant` (`src/lib/chargeur.ts`) au lieu du `glob` d'Astro :
+
+- une fiche **invalide** (champ refusé par le schéma, image, GPX ou PDF introuvable, GPX illisible) est **écartée** du site, avec un avertissement dans le log du build ; le reste du site est publié normalement ;
+- chaque mise en ligne publie un rapport : **`/etat-publication.json`** (liste des fiches écartées, avec le menu du CMS, le titre et l'explication) ;
+- la page d'administration (`public/admin/index.html`) affiche un **bandeau** en bas à droite du CMS : « Mise en ligne en cours… », « Mise en ligne terminée », la liste des contenus non publiés, ou « La dernière mise en ligne a échoué » (erreur technique, avec lien vers le détail sur GitHub). L'état de la mise en ligne vient de l'API publique de GitHub (dernier passage du workflow « Déploiement ») ; le dépôt est lu dans `public/admin/config.yml`.
+
+Une erreur **technique** (bug dans le code, dépendance cassée) fait toujours échouer le build : la version précédente reste en ligne et le bandeau le signale. GitHub envoie aussi un email à l'auteur du commit.
+
 ## Arborescence
 
 | Chemin | Rôle |
@@ -22,6 +32,7 @@ Bénévole ──(Sveltia CMS, /admin)──▶ commit sur main ──▶ GitHub
 | `src/content/documents/<id>/index.md` | Documents + PDF dans le même dossier ; publié en `/documents/<id>.pdf` (10 Mo max) |
 | `src/content/pages/*.md` | Le club, mentions légales, confidentialité |
 | `src/data/club.json` | Nom, email, bureau, lien HelloAsso, code GoatCounter |
+| `src/lib/chargeur.ts` | Chargement tolérant des collections et rapport des fiches écartées (`/etat-publication.json`) |
 | `src/lib/fichiers.ts` | Accès aux GPX/PDF rangés dans le dossier d'une fiche |
 | `src/lib/gpx.ts` | Distance, D+, tracé et profil calculés au build |
 | `src/pages/gpx/[id].gpx.ts`, `src/pages/gpx/evenements/[id].gpx.ts`, `src/pages/documents/[id].pdf.ts` | Publication des GPX et PDF |

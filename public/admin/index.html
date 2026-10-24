@@ -5,8 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>Administration · La Graverie Cyclos</title>
+    <style>
+      /* Bandeau d'état de la publication, affiché par-dessus le CMS */
+      #etat-publication {
+        position: fixed; right: 16px; bottom: 16px; z-index: 100000; max-width: min(440px, calc(100vw - 32px));
+        font: 14px/1.45 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        background: #fff; color: #2a2522; border-radius: 12px; border-left: 6px solid #6b625b;
+        box-shadow: 0 6px 24px rgb(0 0 0 / 25%); padding: 12px 40px 12px 14px;
+      }
+      #etat-publication[hidden] { display: none; }
+      #etat-publication.attention { border-left-color: #f2c200; }
+      #etat-publication.erreur { border-left-color: #b5121b; }
+      #etat-publication.ok { border-left-color: #3f7a35; }
+      #etat-publication strong { display: block; margin-bottom: 4px; }
+      #etat-publication ul { margin: 6px 0 0; padding-left: 18px; }
+      #etat-publication li { margin: 4px 0; }
+      #etat-publication .detail { color: #6b625b; }
+      #etat-publication a { color: #b5121b; }
+      #etat-publication button {
+        position: absolute; top: 6px; right: 8px; border: 0; background: none; cursor: pointer;
+        font-size: 20px; line-height: 1; color: #6b625b;
+      }
+    </style>
   </head>
   <body>
+    <div id="etat-publication" role="status" aria-live="polite" hidden></div>
+
+    <script>
+      // Bandeau d'état de la publication :
+      // - mise en ligne en cours / échouée (API publique de GitHub, dernier passage du workflow « Déploiement ») ;
+      // - contenus écartés car invalides (rapport /etat-publication.json produit à chaque mise en ligne).
+      (() => {
+        const bandeau = document.getElementById('etat-publication');
+        let ferme = false;
+        let etaitEnCours = false;
+        const echapper = (t) => String(t ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+        function afficher(classe, html) {
+          if (ferme) return;
+          bandeau.className = classe;
+          bandeau.innerHTML = `${html}<button type="button" aria-label="Fermer">×</button>`;
+          bandeau.querySelector('button').onclick = () => {
+            ferme = true;
+            bandeau.hidden = true;
+          };
+          bandeau.hidden = false;
+        }
+
+        async function verifier() {
+          // Dépôt GitHub lu dans la configuration du CMS (backend.repo)
+          const config = await fetch('config.yml', { cache: 'no-store' }).then((r) => r.text());
+          const depot = config.match(/^\s*repo:\s*(\S+)/m)?.[1];
+
+          let passage;
+          try {
+            const reponse = await fetch(`https://api.github.com/repos/${depot}/actions/workflows/deploy.yml/runs?branch=main&per_page=1`);
+            if (reponse.ok) passage = (await reponse.json()).workflow_runs?.[0];
+          } catch {
+            // GitHub injoignable ou limite de requêtes atteinte : on se contente du rapport
+          }
+          let rapport;
+          try {
+            rapport = await fetch(`../etat-publication.json?t=${Date.now()}`, { cache: 'no-store' }).then((r) => (r.ok ? r.json() : undefined));
+          } catch {}
+
+          if (passage && passage.status !== 'completed') {
+            etaitEnCours = true;
+            return afficher('attention', '<strong>⏳ Mise en ligne en cours…</strong><span class="detail">Vos dernières modifications apparaîtront sur le site dans une à deux minutes.</span>');
+          }
+          if (passage?.conclusion === 'failure') {
+            return afficher(
+              'erreur',
+              `<strong>❌ La dernière mise en ligne a échoué</strong>
+               <span class="detail">Le site reste dans sa version précédente. Il s'agit d'un problème technique : prévenez le responsable du site.</span>
+               <br><a href="${echapper(passage.html_url)}" target="_blank" rel="noopener">Voir le détail sur GitHub</a>`,
+            );
+          }
+          const problemes = rapport?.problemes ?? [];
+          if (problemes.length) {
+            const liste = problemes
+              .map((p) => `<li><b>${echapper(p.menu)} › ${echapper(p.titre || p.id)}</b><br><span class="detail">${echapper(p.message)}</span></li>`)
+              .join('');
+            return afficher(
+              'erreur',
+              `<strong>⚠️ ${problemes.length} contenu${problemes.length > 1 ? 's ne sont' : " n'est"} pas publié${problemes.length > 1 ? 's' : ''}</strong>
+               <span class="detail">Le reste du site est bien en ligne. Ouvrez ${problemes.length > 1 ? 'ces fiches' : 'cette fiche'} dans le CMS pour corriger :</span>
+               <ul>${liste}</ul>`,
+            );
+          }
+          if (etaitEnCours) {
+            etaitEnCours = false;
+            return afficher('ok', '<strong>✅ Mise en ligne terminée</strong><span class="detail">Rechargez le site pour voir vos modifications (Ctrl + F5).</span>');
+          }
+          bandeau.hidden = true;
+        }
+
+        // Nouvelle vérification toutes les 20 s pendant une mise en ligne, toutes les 2 min sinon
+        // (l'API de GitHub limite à 60 requêtes par heure)
+        async function boucle() {
+          if (document.visibilityState === 'visible') await verifier().catch(() => {});
+          setTimeout(boucle, etaitEnCours ? 20000 : 120000);
+        }
+        boucle();
+        // Onglet ouvert en arrière-plan puis affiché : on vérifie tout de suite
+        document.addEventListener('visibilitychange', () => document.visibilityState === 'visible' && verifier().catch(() => {}));
+      })();
+    </script>
+
     <!-- Sveltia CMS : la configuration est lue dans config.yml (même dossier).
          Version figée pour éviter qu'une mise à jour casse l'interface du jour au lendemain.
          Pour mettre à jour : voir docs/GUIDE-TECHNIQUE.md, section « Mettre à jour Sveltia CMS ». -->

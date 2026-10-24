@@ -45,6 +45,7 @@ Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECT
 - Données globales dans `src/data/club.json` (JSON, éditable par le CMS).
 - GPX lus au build avec `@tmcw/togeojson` + `@xmldom/xmldom` ; carte = Leaflet seul (polyline), pas de `leaflet-gpx`.
 - Dates : build en UTC → affichage toujours en `Europe/Paris` ; CMS `input_timezone: Europe/Paris`.
+- **Contenus tolérants** : collections chargées par `globTolerant` (`src/lib/chargeur.ts`) : une fiche invalide (schéma, image/GPX/PDF manquant) est écartée, jamais bloquante, et listée dans `/etat-publication.json`, affiché en bandeau dans le CMS (`public/admin/index.html`, + état du workflow via l'API GitHub).
 - Sveltia écrit les champs facultatifs vides en `''` ou `null` : dans `content.config.ts`, les envelopper avec `facultatif(...)`.
 - Connexion CMS : bouton GitHub via le relais `sveltia-cms-auth` (Cloudflare Worker `https://sveltia-cms-auth.sim-arnaud.workers.dev`, repo privé `simonarnaud/sveltia-cms-auth`, `ALLOWED_DOMAINS=simonarnaud.github.io`). PAT en secours. Transformations d'images sous `media_libraries.all.transformations`.
 - Contenus d'exemple (marqués « exemple ») à remplacer ; traces GPX générées autour de La Graverie (Calvados).
