@@ -10,6 +10,25 @@ import { IDS_CATEGORIES, IDS_DISCIPLINES, IDS_SECTIONS_DOCUMENTS } from './lib/c
 const vide = (v: unknown) => (v === '' || v === null ? undefined : v);
 const facultatif = <T extends z.ZodType>(schema: T) => z.preprocess(vide, schema.optional());
 
+// Point placé sur la carte du CMS (widget map) : texte GeoJSON {"type":"Point","coordinates":[longitude, latitude]}
+const lireJson = (v: unknown) => {
+  if (typeof v !== 'string') return v;
+  try {
+    return JSON.parse(v);
+  } catch {
+    return v;
+  }
+};
+const pointGps = z.preprocess(
+  lireJson,
+  z
+    .object(
+      { type: z.literal('Point'), coordinates: z.tuple([z.number().min(-180).max(180), z.number().min(-90).max(90)]) },
+      { error: 'Le point de départ est illisible : replacez-le sur la carte' },
+    )
+    .transform(({ coordinates: [longitude, latitude] }) => ({ latitude, longitude })),
+);
+
 const parcours = defineCollection({
   loader: globTolerant({ pattern: '**/index.md', base: './src/content/parcours' }),
   schema: ({ image }) =>
@@ -35,6 +54,8 @@ const sorties = defineCollection({
     discipline: facultatif(z.enum(IDS_DISCIPLINES)),
     date: z.coerce.date(),
     lieuRdv: z.string(),
+    // Point de départ exact, pour l'ouvrir dans Google Maps depuis la page de l'activité
+    pointDepart: facultatif(pointGps),
     // Club ou fédération organisatrice, si ce n'est pas le club
     organisateur: facultatif(z.string()),
     // Entraînement : parcours du club, réutilisable. Rando, course… : GPX déposé directement dans l'événement

@@ -29,6 +29,8 @@ export const GET: APIRoute = async ({ site }) => {
       `SUMMARY:${echapper((s.data.annulee ? 'ANNULÉ – ' : '') + `${CATEGORIES[s.data.categorie].label} : ${s.data.titre}`)}`,
       `CATEGORIES:${[CATEGORIES[s.data.categorie].label, s.data.discipline && DISCIPLINES[s.data.discipline]].filter(Boolean).map((c) => echapper(c!)).join(',')}`,
       `LOCATION:${echapper(s.data.lieuRdv)}`,
+      // Point de départ placé sur la carte du CMS : l'agenda du téléphone peut lancer l'itinéraire
+      ...(s.data.pointDepart ? [`GEO:${s.data.pointDepart.latitude};${s.data.pointDepart.longitude}`] : []),
       `URL:${new URL(`sorties/${s.id}/`, base)}`,
       `STATUS:${s.data.annulee ? 'CANCELLED' : 'CONFIRMED'}`,
       'END:VEVENT',

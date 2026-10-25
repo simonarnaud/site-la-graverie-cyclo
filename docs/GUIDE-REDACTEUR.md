@@ -22,6 +22,7 @@ Ne cliquez pas sur « Travailler avec un dépôt local » ni sur « Se connecter
 2. Choisissez le **type** : entraînement (sorties du club), rando FSGT, course ou autre. Chaque type a sa couleur sur le site.
    Indiquez aussi la **discipline** si elle est utile : cyclo, VTT ou gravel.
 3. Remplissez le titre, la date et l'heure de départ et le lieu.
+   Si vous le souhaitez, placez aussi le **point de départ sur la carte** : tapez l'adresse dans la recherche de la carte, ou cliquez à l'endroit exact du départ (un parking, une place…). La fiche de l'activité proposera alors **« Voir sur Google Maps »** et **« Itinéraire »** aux membres. Pour retirer le point, videz le champ.
 4. Pour une rando ou une course organisée par un autre club, indiquez l'**organisateur**.
 5. **Le parcours** :
    - pour un **entraînement**, choisissez l'un des parcours habituels du club dans « Parcours d'entraînement » ;

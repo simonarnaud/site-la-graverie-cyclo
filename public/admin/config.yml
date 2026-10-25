@@ -71,6 +71,15 @@ collections:
           - { label: Gravel, value: gravel }
       - { name: date, label: Date et heure de départ, widget: datetime, input_timezone: Europe/Paris }
       - { name: lieuRdv, label: Lieu / rendez-vous, widget: string }
+      - name: pointDepart
+        label: Point de départ sur la carte
+        hint: "Facultatif. Cherchez l'adresse ou cliquez sur la carte à l'endroit exact du départ : la page de l'activité proposera de l'ouvrir dans Google Maps."
+        widget: map
+        type: Point
+        decimals: 6
+        center: [-0.894, 48.885]
+        zoom: 12
+        required: false
       - name: organisateur
         label: Organisateur
         hint: À remplir si ce n'est pas le club (club voisin, FSGT…).

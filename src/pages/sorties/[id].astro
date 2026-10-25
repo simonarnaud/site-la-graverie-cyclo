@@ -16,7 +16,9 @@ export async function getStaticPaths() {
 }
 
 const { sortie } = Astro.props;
-const { titre, categorie, discipline, date, lieuRdv, organisateur, lienStrava, lienInscription, annulee, couverture, couvertureAlt } = sortie.data;
+const { titre, categorie, discipline, date, lieuRdv, pointDepart, organisateur, lienStrava, lienInscription, annulee, couverture, couvertureAlt } = sortie.data;
+// Point de départ placé dans le CMS : ouverture dans Google Maps (application sur téléphone, site sinon)
+const coordonnees = pointDepart && `${pointDepart.latitude},${pointDepart.longitude}`;
 const libelle = CATEGORIES[categorie].label;
 const parcours = sortie.data.parcours ? await getEntry(sortie.data.parcours) : undefined;
 // GPX propre à l'événement (rando, course…), publié en /gpx/evenements/<id>.gpx
@@ -34,7 +36,21 @@ const aVenir = date.getTime() > Date.now();
 
   <dl class="infos">
     <div><dt>Date</dt><dd>{dateLongue(date)}</dd></div>
-    <div><dt>Départ</dt><dd>{!horaireConnu(date) && lieuRdv === 'À préciser' ? 'Horaire et lieu à préciser' : `${horaire(date)} · ${lieuRdv}`}</dd></div>
+    <div>
+      <dt>Départ</dt>
+      <dd>{!horaireConnu(date) && lieuRdv === 'À préciser' ? 'Horaire et lieu à préciser' : `${horaire(date)} · ${lieuRdv}`}</dd>
+      {coordonnees && (
+        <dd class="carte-depart">
+          <a href={`https://www.google.com/maps/search/?api=1&query=${coordonnees}`} target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" />
+            </svg>
+            Voir sur Google Maps ↗
+          </a>
+          <a href={`https://www.google.com/maps/dir/?api=1&destination=${coordonnees}`} target="_blank" rel="noopener">Itinéraire ↗</a>
+        </dd>
+      )}
+    </div>
     {discipline && <div><dt>Discipline</dt><dd class="avec-icone"><IconeDiscipline discipline={discipline} taille={18} />{DISCIPLINES[discipline]}</dd></div>}
     {organisateur && <div><dt>Organisateur</dt><dd>{organisateur}</dd></div>}
     {parcours && (
@@ -69,6 +85,8 @@ const aVenir = date.getTime() > Date.now();
   .infos dt { color: var(--texte-doux); font-size: .85rem; }
   .infos dd { margin: 0; font-weight: 600; }
   .infos dd.avec-icone { display: flex; align-items: center; gap: 6px; }
+  .infos dd.carte-depart { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; font-size: .9rem; }
+  .carte-depart a { display: inline-flex; align-items: center; gap: 4px; }
   .participation { margin: 0 0 24px; }
   /* Jamais agrandie au-delà de sa taille réelle (une petite image resterait floue) */
   .illustration { margin: 16px 0 0; border-radius: var(--rayon); max-height: 480px; width: auto; max-width: 100%; height: auto; object-fit: cover; }
