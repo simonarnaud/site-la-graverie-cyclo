@@ -269,6 +269,7 @@ collections:
         file: src/data/club.json
         fields:
           - { name: nom, label: Nom du club, widget: string }
+          - { name: devise, label: Devise (titre de la page d'accueil), widget: string, required: false }
           - { name: slogan, label: Slogan, widget: string }
           - { name: email, label: Email de contact, widget: string }
           - { name: ville, label: Ville, widget: string }

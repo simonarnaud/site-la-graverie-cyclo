@@ -16,6 +16,7 @@ const actus = (await actualitesPubliees()).slice(0, 3);
   <section class="accueil">
     <div>
       <h1>{club.nom}</h1>
+      {club.devise && <p class="devise">{club.devise}</p>}
       <p class="slogan">{club.slogan}</p>
       <p class="actions">
         <a class="bouton" href={lien('calendrier/')}>Voir le calendrier</a>
@@ -60,6 +61,7 @@ const actus = (await actualitesPubliees()).slice(0, 3);
     /* touche jaune très légère dans le coin, sans effet « flash » */
     background-image: radial-gradient(circle at 100% 0%, var(--jaune-doux), transparent 45%);
   }
+  .devise { font-size: clamp(1.25rem, 2.6vw, 1.6rem); font-weight: 700; font-style: italic; color: var(--accent); margin: -.2em 0 .5em; }
   .slogan { font-size: 1.2rem; color: var(--texte-doux); margin: 0 0 1.4em; }
   .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; }
   .accueil-logo { flex-shrink: 0; width: clamp(140px, 24vw, 240px); border-radius: 50%; background: #fff; }
