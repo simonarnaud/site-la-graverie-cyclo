@@ -51,7 +51,11 @@ Le logo apparaît sur la page **Partenaires** du site ; un clic dessus ouvre le 
 
 ## Revenir sur le site depuis le CMS
 
-Le bouton rouge **« ← Voir le site »**, en bas à gauche du CMS, ramène à la page d'accueil du site.
+Le bouton rouge **« ← Voir le site »**, en bas à gauche du CMS, ouvre la page d'accueil du site dans le même onglet : le bouton **Précédent** du navigateur ramène au CMS.
+
+## Modifier les informations du club
+
+Menu **Le club › Coordonnées et bureau** : nom du club, **devise** (la phrase en titre de la page d'accueil, « Si tu t’arrêtes de pédaler, tu tombes ! »), slogan, **email de contact** (affiché en bas de chaque page), réseaux sociaux, membres du bureau (uniquement avec leur accord) et lien d'adhésion HelloAsso.
 
 ## Publier un document PDF
 

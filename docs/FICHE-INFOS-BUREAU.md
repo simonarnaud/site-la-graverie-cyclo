@@ -16,7 +16,9 @@ Pour le mettre en ligne, j'ai besoin des informations ci-dessous. Répondez dire
 
 > 
 
-**Slogan** : une phrase courte affichée sur la page d'accueil. Proposition actuelle : « Route, gravel et VTT entre bocage et collines ».
+**Devise** : la phrase en titre de la page d'accueil. Actuelle : « Si tu t’arrêtes de pédaler, tu tombes ! ».
+
+**Slogan** : une phrase courte affichée sous la devise. Proposition actuelle : « Route, gravel et VTT entre bocage et collines ».
 
 > 
 
@@ -30,7 +32,7 @@ Pour le mettre en ligne, j'ai besoin des informations ci-dessous. Répondez dire
 
 **Adresse email du club**, affichée sur le site et utilisée pour créer les comptes du club (GitHub, Google Photos, statistiques…). Idéalement une adresse **partagée par 2 ou 3 membres du bureau**, et pas une adresse personnelle.
 
-> 
+> lagraveriecyclos@gmail.com (en place sur le site depuis le 27/10/2026). Qui y a accès ?
 
 **Réseaux du club** (lien du club Strava, page Facebook, Instagram…) :
 

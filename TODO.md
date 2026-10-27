@@ -12,8 +12,8 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [x] Vérifier que le site se met à jour environ 2 minutes après l'enregistrement
 
 ## 2. Remplacer le contenu d'exemple
-- [ ] Présentation du club et slogan
-- [ ] Adresse email du club (`src/data/club.json`)
+- [ ] Présentation du club et slogan (devise « Si tu t’arrêtes de pédaler, tu tombes ! » en place sur l'accueil)
+- [x] Adresse email du club : lagraveriecyclos@gmail.com (27/10/2026)
 - [ ] Bureau : noms publiés uniquement avec l'accord des personnes
 - [ ] Mentions légales : adresse du siège, numéro RNA, directeur·rice de la publication
 - [ ] Vraies traces GPX, coupées au départ et à l'arrivée
@@ -29,7 +29,8 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [ ] Si un bénévole bloque sur GitHub : tester Pages CMS (invitation par email, sans compte GitHub)
 
 ## 4. Mettre le projet au nom du club
-- [ ] Adresse email du club partagée entre plusieurs membres du bureau
+- [x] Adresse email du club : lagraveriecyclos@gmail.com
+- [ ] Partager l'accès à cette adresse avec 2-3 membres du bureau
 - [ ] Organisation GitHub du club (2-3 propriétaires, 2FA), puis transfert du repo
 - [ ] Comptes Cloudflare, HelloAsso, Strava au nom du club
 - [ ] Liste des accès (qui a accès à quoi), conservée hors du repo
@@ -58,6 +59,10 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [ ] Créer le compte GoatCounter **du club** (adresse du club) et remplacer le code dans le CMS (Le club → Coordonnées et bureau), voir `docs/GUIDE-TECHNIQUE.md`
 - [x] Import des programmes FSGT (PDF) depuis le CMS : lecture immédiate, doublons signalés, création des activités cochées
 - [x] Sections dans la page Documents (Calendriers FSGT, Comptes rendus d'AG…)
+- [x] Indicateur « Trace GPX » / « Sans trace GPX » sur chaque activité (site et liste du CMS)
+- [x] Boutons « Voir le site » et « Importer un programme FSGT » du CMS ouverts dans le même onglet
+- [x] Point de départ placé sur une carte dans le CMS → « Voir sur Google Maps » et « Itinéraire » sur la fiche
+- [x] Devise du club sur la page d'accueil (modifiable dans le CMS)
 - [ ] Valider l'import FSGT avec d'autres PDF (`node scripts/essai-fsgt.mjs`, puis les ajouter à `scripts/fsgt/exemples/` + tests)
 
 ## Rappel : mises à jour Dependabot

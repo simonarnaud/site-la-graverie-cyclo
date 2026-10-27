@@ -42,7 +42,7 @@ Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECT
 ## État actuel (octobre 2026)
 - Repo : `simonarnaud/site-la-graverie-cyclo` (GitHub perso), servi sur `https://simonarnaud.github.io/site-la-graverie-cyclo/` → `base` défini dans `astro.config.mjs`. **Tout lien interne passe par `lien()`** (`src/lib/format.ts`).
 - Astro 7 / Node 24 / Zod 4 : importer `z` depuis `astro/zod` (pas `astro:content`). Loader `glob` : `dossier/index.md` → id `dossier`.
-- Données globales dans `src/data/club.json` (JSON, éditable par le CMS).
+- Données globales dans `src/data/club.json` (JSON, éditable par le CMS) : dont `devise` (titre de l'accueil) et `email` de contact `lagraveriecyclos@gmail.com`.
 - GPX lus au build avec `@tmcw/togeojson` + `@xmldom/xmldom` ; carte = Leaflet seul (polyline), pas de `leaflet-gpx`.
 - Dates : build en UTC → affichage toujours en `Europe/Paris` ; CMS `input_timezone: Europe/Paris`.
 - **Contenus tolérants** : collections chargées par `globTolerant` (`src/lib/chargeur.ts`) : une fiche invalide (schéma, image/GPX/PDF manquant) est écartée, jamais bloquante, et listée dans `/etat-publication.json`, affiché en bandeau dans le CMS (`public/admin/index.html`, + état du workflow via l'API GitHub).

@@ -7,7 +7,7 @@ Bénévole ──(Sveltia CMS, /admin)──▶ commit sur main ──▶ GitHub
 ```
 
 - **Astro 7** génère un site 100 % statique dans `dist/`.
-- Les contenus sont des fichiers Markdown dans `src/content/`, validés par les schémas de `src/content.config.ts`. Un champ invalide fait échouer le build, et la version précédente du site reste en ligne.
+- Les contenus sont des fichiers Markdown dans `src/content/`, validés par les schémas de `src/content.config.ts`. Une fiche invalide est écartée du site et signalée dans le CMS, sans bloquer le reste (voir ci-dessous).
 - **Sveltia CMS** (`public/admin/`) est une simple page qui lit et écrit ces fichiers via l'API GitHub.
 
 ## Une erreur de contenu ne bloque jamais le site
@@ -32,7 +32,7 @@ Une erreur **technique** (bug dans le code, dépendance cassée) fait toujours �
 | `src/content/documents/<id>/index.md` | Documents + PDF dans le même dossier ; publié en `/documents/<id>.pdf` (10 Mo max) ; champ `section` (Calendriers FSGT, Comptes rendus d'AG…, liste dans `SECTIONS_DOCUMENTS` de `src/lib/categories.ts`, à reporter dans `config.yml`) |
 | `src/content/partenaires/<id>/index.md` | Partenaires (nom, logo dans le dossier, site, ordre) ; page `src/pages/partenaires.astro`, texte d'introduction dans `src/content/pages/partenaires.md` |
 | `src/content/pages/*.md` | Le club, mentions légales, confidentialité |
-| `src/data/club.json` | Nom, email, bureau, lien HelloAsso, code GoatCounter |
+| `src/data/club.json` | Nom, devise (titre de l'accueil), slogan, email de contact, bureau, lien HelloAsso, code GoatCounter |
 | `src/lib/chargeur.ts` | Chargement tolérant des collections et rapport des fiches écartées (`/etat-publication.json`) |
 | `src/lib/fichiers.ts` | Accès aux GPX/PDF rangés dans le dossier d'une fiche |
 | `src/lib/gpx.ts` | Distance, D+, tracé et profil calculés au build |
@@ -53,7 +53,7 @@ npm run check    # vérification des types et des contenus
 npm run build    # génère dist/
 ```
 
-Le CMS fonctionne aussi en local : ouvrez http://localhost:4321/site-la-graverie-cyclo/admin/index.html (en dev, le `index.html` est obligatoire) et choisissez **« Work with Local Repository »** (Chrome ou Edge). Les modifications sont écrites directement sur le disque.
+Le CMS fonctionne aussi en local : ouvrez http://localhost:4321/site-la-graverie-cyclo/admin/index.html (en dev, le `index.html` est obligatoire) et choisissez **« Travailler avec un dépôt local »** (Chrome ou Edge). Les modifications sont écrites directement sur le disque.
 
 ## Points d'attention
 
@@ -97,6 +97,18 @@ Les statistiques sont désactivées tant que le champ `goatcounter` de `src/data
 3. Dans le CMS : **Le club → Coordonnées et bureau → Code GoatCounter**, saisissez ce code, puis enregistrez.
 
 Le script est alors ajouté à toutes les pages, et la politique de confidentialité affiche automatiquement le paragraphe « Mesure d'audience ». GoatCounter ne pose pas de cookie et ne conserve pas d'adresse IP : aucun bandeau de consentement n'est nécessaire. Dans les réglages GoatCounter, le tableau de bord peut être rendu public pour que tout le bureau le consulte sans compte.
+
+## Fiche d'une activité
+
+`src/pages/sorties/[id].astro` :
+
+- **Départ** : `horaire()` (`src/lib/format.ts`) affiche « horaire à préciser » quand l'heure est 00:00 (journée entière dans le .ics).
+- **Point de départ** : champ `pointDepart`, widget `map` de Sveltia (recherche d'adresse OpenStreetMap, clic sur la carte, position actuelle ; carte centrée sur La Graverie). Le CMS l'enregistre en **texte GeoJSON** (`'{"type":"Point","coordinates":[longitude,latitude]}'`), converti en `{ latitude, longitude }` par `pointGps` dans `src/content.config.ts`. La fiche affiche alors « Voir sur Google Maps » et « Itinéraire » (liens `google.com/maps/search` et `/dir`, sans clé d'API) ; le .ics reçoit une ligne `GEO`. Aucune carte n'est chargée sur la fiche.
+- **Trace GPX** : `CarteSortie.astro` affiche « Trace GPX » si `gpx` ou `parcours` est renseigné, sinon « Sans trace GPX » ; même indication dans la liste du CMS (`summary` de la collection).
+
+## Boutons ajoutés au CMS
+
+`public/admin/index.html` ajoute « ← Voir le site » et « 📄 Importer un programme FSGT » par-dessus Sveltia. Sveltia ouvre tout lien sortant dans un nouvel onglet : un petit script les ouvre dans le même onglet, pour revenir au CMS avec « Précédent ».
 
 ## Profil d'altitude
 

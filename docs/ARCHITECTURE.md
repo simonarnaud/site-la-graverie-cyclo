@@ -10,11 +10,13 @@ Ce document garde la trace des choix faits au lancement du projet (octobre 2026)
 | CMS | Sveltia CMS | Git-based, 2 fichiers dans `public/admin/`, redimensionne/convertit en WebP à l'upload | Pages CMS (invitation par email sans compte GitHub, service hébergé), Decap CMS (plus ancien, plus lent) |
 | Images | `astro:assets` au build + transformations Sveltia à l'upload | Jamais d'original de 8 Mo dans Git, formats adaptés servis | — |
 | Galeries | Liens externes (Google Photos, Flickr, Piwigo) | Limites de taille de Pages / du repo | — |
-| Carte | Leaflet + leaflet-gpx + tuiles OSM | Léger, sans clé, chargé à la demande | MapLibre + OpenFreeMap, iframes Komoot / RideWithGPS |
+| Carte | Leaflet seul (tracé simplifié calculé au build) + tuiles OSM | Léger, sans clé, chargé à la demande | MapLibre + OpenFreeMap, iframes Komoot / RideWithGPS |
+| Point de départ | Widget `map` de Sveltia → liens Google Maps | Aucune carte à charger sur la fiche ; Google Maps s'ouvre dans l'application du téléphone | Carte Leaflet sur chaque fiche |
+| Import FSGT | Lecture du PDF dans le navigateur (pdf.js via `unpdf`) + un commit via l'API GitHub | Pas de serveur ni d'Action : l'admin valide avant tout enregistrement | GitHub Action déclenchée par le dépôt du PDF (abandonnée : trop indirecte pour les bénévoles) |
 | Contact | `mailto:` | Aucune donnée collectée | Web3Forms (250/mois), Formspree (50/mois) avec honeypot |
 | Participation | Champ `lienStrava` (événement du club Strava) | Un site statique ne peut pas compter seul ; les membres sont déjà sur Strava | Framadate, billetterie gratuite HelloAsso ; v2 : Firebase/Supabase |
 | Adhésions | HelloAsso | Gratuit pour les associations | — |
-| Stats | GoatCounter ou rien | Sans cookie | — |
+| Stats | GoatCounter (compte de test pour l'instant) | Sans cookie, pas de bandeau | — |
 
 ### Authentification Sveltia
 - PAT : aucun serveur, mais peu pratique pour un non-dev.
@@ -24,27 +26,31 @@ Ce document garde la trace des choix faits au lancement du projet (octobre 2026)
 ## 2. Structure
 
 ```
-.github/workflows/deploy.yml
+.github/workflows/{deploy.yml, archiver-albums.yml}
 public/admin/{index.html,config.yml}
 src/content.config.ts
-src/content/{sorties,parcours,actualites,albums,documents}/<id>/index.md   (+ fichiers de la fiche)
+src/content/{sorties,parcours,actualites,albums,documents,partenaires}/<id>/index.md   (+ fichiers de la fiche)
 src/content/pages/*.md
 src/data/club.json
-src/components/  src/layouts/
-src/pages/{index.astro, sorties/, parcours/[id].astro, actualites/, sorties.ics.ts}
-docs/{ARCHITECTURE.md, GUIDE-REDACTEUR.md, GUIDE-TECHNIQUE.md}
+src/components/  src/layouts/  src/lib/ (dont src/lib/fsgt/)
+src/pages/{index.astro, calendrier/, sorties/, parcours/, actualites/, albums/, documents/, partenaires.astro, sorties.ics.ts, admin/import-fsgt.astro}
+scripts/{archiver-albums.mjs, essai-fsgt.mjs, fsgt/}
+docs/{ARCHITECTURE.md, GUIDE-REDACTEUR.md, GUIDE-TECHNIQUE.md, FICHE-INFOS-BUREAU.md}
 ```
 
-### Schémas prévus
-- **sorties** (`AAAA-MM-JJ-slug/index.md` + image facultative) : `titre`, `date` (date+heure), `lieuRdv`, `pointDepart` (point placé sur la carte du CMS, GeoJSON en texte, optionnel → liens Google Maps et `GEO` dans le .ics), `parcours` (référence, optionnel), `lienStrava` (URL Strava, optionnel), `lienInscription` (URL organisateur, optionnel), `annulee` (bool), corps = description.
-- **parcours** (`slug/index.md` + couverture) : `titre`, `type` (route | gravel | vtt), `gpx` (`trace.gpx` dans le dossier, publié en `/gpx/<id>.gpx`), `distanceKm`/`deniveleM` (optionnels, sinon calculés), `couverture`.
-- **actualites** (`slug/index.md` + images colocalisées, `media_folder: ''`) : `titre`, `date`, `auteur`, `couverture`, `couvertureAlt`, `brouillon`.
-- **albums** : `titre`, `date`, `photos` (≤ 12 × {src, alt}), `lienAlbumComplet`.
-- Sveltia : `media_libraries.default.config.transformations.raster_image` → webp, qualité 85, 2048 px max (syntaxe à vérifier dans la doc).
+### Schémas (référence : `src/content.config.ts`)
+- **sorties** (`AAAA-MM-JJ-slug/index.md` + fichiers facultatifs) : `titre`, `categorie` (entrainement | rando | course | autre), `discipline` (cyclo | vtt | gravel, optionnel), `date` (date+heure ; 00:00 = horaire à préciser), `lieuRdv`, `pointDepart` (point placé sur la carte du CMS, GeoJSON en texte, optionnel → liens Google Maps et `GEO` dans le .ics), `organisateur`, `parcours` (référence, entraînements) ou `gpx` (fichier dans le dossier, randos/courses), `lienStrava`, `lienInscription`, `annulee` (bool), `couverture`/`couvertureAlt`, corps = description.
+- **parcours** (`slug/index.md` + `trace.gpx` + couverture) : `titre`, `discipline` (cyclo | vtt | gravel), `gpx` (publié en `/gpx/<id>.gpx`), `distanceKm`/`deniveleM` (optionnels, sinon calculés), `couverture`.
+- **actualites** (`slug/index.md` + images colocalisées) : `titre`, `date`, `auteur`, `resume`, `couverture`, `couvertureAlt`, `brouillon`.
+- **albums** : `titre`, `date`, `photos` (≤ 12 × {src, alt}, vidées par l'archivage après 12 mois), `lienAlbumComplet`.
+- **documents** : `titre`, `date`, `section` (calendrier-fsgt | compte-rendu-ag | reglement | adhesion | autre), `fichier` (PDF dans le dossier).
+- **partenaires** : nom, logo (dans le dossier), site, ordre.
+- **club.json** : nom, devise, slogan, email, ville, lien HelloAsso, code GoatCounter, réseaux, bureau.
+- Sveltia : `media_libraries.all.transformations` → WebP, qualité 85, 2048 px max.
 
 ## 3. Déploiement
 Workflow `.github/workflows/deploy.yml` : déclenché par push sur `main`, `workflow_dispatch` et cron quotidien (`0 4 * * *`, pour basculer les sorties passées).
-Étapes : checkout → setup-node (LTS, cache npm) → cache `node_modules/.astro` → `npm ci` → `astro check` → `npm run build` → upload-pages-artifact (`./dist`) → deploy-pages.
+Étapes : checkout → setup-node (LTS, cache npm) → cache `node_modules/.astro` → `npm ci` → tests de l'import FSGT → `astro check` → `npm run build` → upload-pages-artifact (`./dist`) → deploy-pages.
 Settings → Pages → Source : **GitHub Actions**.
 
 Attention : sur un repo public, les workflows `schedule` sont désactivés après 60 jours sans commit.
