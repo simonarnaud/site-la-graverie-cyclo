@@ -18,7 +18,7 @@ Pour le mettre en ligne, j'ai besoin des informations ci-dessous. Répondez dire
 
 **Devise** : la phrase en titre de la page d'accueil. Actuelle : « Si tu t’arrêtes de pédaler, tu tombes ! ».
 
-**Slogan** : une phrase courte affichée sous la devise. Proposition actuelle : « Route, gravel et VTT entre bocage et collines ».
+**Slogan** : une phrase courte affichée sous la devise. Actuel (validé) : « Dans le bocage, du granit, des bois et de l’eau ».
 
 > 
 

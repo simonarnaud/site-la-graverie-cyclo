@@ -12,7 +12,7 @@ Les informations à demander au bureau sont regroupées dans [docs/FICHE-INFOS-B
 
 - [ ] Valider le **nom affiché** du club : « La Graverie Cyclos »
 - [ ] Valider le **logo** (`src/assets/logo.png`) et l'**image d'aperçu** des partages WhatsApp/Facebook (`src/assets/apercu.jpg`), ou fournir les fichiers officiels
-- [ ] Valider la **devise** (« Si tu t’arrêtes de pédaler, tu tombes ! ») et le **slogan** (« Route, gravel et VTT entre bocage et collines »)
+- [x] Valider la **devise** (« Si tu t’arrêtes de pédaler, tu tombes ! ») et le **slogan** (« Dans le bocage, du granit, des bois et de l’eau »)
 - [ ] Fournir l'**adresse du siège** et le **numéro RNA** de l'association (mentions légales obligatoires)
 - [ ] Nommer le ou la **directeur·rice de la publication** (en général le ou la président·e)
 - [ ] Lister les **membres du bureau** à afficher, **avec leur accord écrit** (sinon, ne garder que les rôles)

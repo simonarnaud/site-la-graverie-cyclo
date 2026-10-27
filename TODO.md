@@ -14,7 +14,7 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [x] Vérifier que le site se met à jour environ 2 minutes après l'enregistrement
 
 ## 2. Remplacer le contenu d'exemple
-- [ ] Présentation du club et slogan (devise « Si tu t’arrêtes de pédaler, tu tombes ! » en place sur l'accueil)
+- [ ] Présentation du club (devise et slogan validés)
 - [x] Adresse email du club : lagraveriecyclos@gmail.com (27/10/2026)
 - [ ] Bureau : noms publiés uniquement avec l'accord des personnes
 - [ ] Mentions légales : adresse du siège, numéro RNA, directeur·rice de la publication
