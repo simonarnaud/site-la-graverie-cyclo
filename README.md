@@ -15,6 +15,7 @@ Contact du club : lagraveriecyclos@gmail.com
 - **Publier du contenu** (bénévoles) : [docs/GUIDE-REDACTEUR.md](docs/GUIDE-REDACTEUR.md)
 - **Faire évoluer le site** (développeurs) : [docs/GUIDE-TECHNIQUE.md](docs/GUIDE-TECHNIQUE.md)
 - **Pourquoi ces choix** : [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- **Avant la mise en ligne officielle** : [TODO-MISE-EN-LIGNE.md](TODO-MISE-EN-LIGNE.md)
 
 ## Démarrage rapide
 

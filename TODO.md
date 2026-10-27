@@ -2,6 +2,8 @@
 
 Liste des prochains travaux, par ordre de priorité. Cocher au fur et à mesure.
 
+**Liste complète de ce qu'il faut faire avant la mise en ligne officielle : [TODO-MISE-EN-LIGNE.md](TODO-MISE-EN-LIGNE.md).**
+
 ## 1. Tester la publication depuis le CMS
 Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo de téléphone, album, PDF) :
 - [x] Créer une sortie : nom du fichier (date de la sortie), heure enregistrée avec le fuseau de Paris, liste des parcours
