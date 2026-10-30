@@ -13,11 +13,11 @@ Les informations à demander au bureau sont regroupées dans [docs/FICHE-INFOS-B
 - [ ] Valider le **nom affiché** du club : « La Graverie Cyclos »
 - [ ] Valider le **logo** (`src/assets/logo.png`) et l'**image d'aperçu** des partages WhatsApp/Facebook (`src/assets/apercu.jpg`), ou fournir les fichiers officiels
 - [x] Valider la **devise** (« Si tu t’arrêtes de pédaler, tu tombes ! ») et le **slogan** (« Dans le bocage, du granit, des bois et de l’eau »)
-- [ ] Fournir l'**adresse du siège** et le **numéro RNA** de l'association (mentions légales obligatoires)
-- [ ] Nommer le ou la **directeur·rice de la publication** (en général le ou la président·e)
-- [ ] Lister les **membres du bureau** à afficher, **avec leur accord écrit** (sinon, ne garder que les rôles)
-- [ ] Désigner **qui gère le site** : 1 responsable technique + 1 ou 2 référents pour les rédacteurs
-- [ ] Lister les **rédacteurs** (bénévoles qui publieront) et leur email
+- [x] Fournir l'**adresse du siège** et le **numéro RNA** de l'association (mentions légales obligatoires)
+- [x] Nommer le **directeur de la publication** : Philippe ARNAUD
+- [ ] Lister les **membres du bureau** à afficher, **avec leur accord écrit** (accord à leur demander ; sinon, ne garder que les rôles)
+- [x] Désigner **qui gère le site** : 4 responsables techniques (noms dans la liste des accès, hors du repo)
+- [x] Lister les **rédacteurs** : les 4 mêmes personnes (noms dans la liste des accès, hors du repo)
 - [ ] Choisir le **nom de domaine** (ex. `lagraveriecyclos.fr`) et qui le paie (≈ 10-15 €/an, seule dépense du projet)
 - [ ] Décider si l'on active les **adhésions en ligne HelloAsso**
 - [ ] Rappeler la règle **droit à l'image** aux membres : accord des personnes reconnaissables, autorisation parentale pour les mineurs
@@ -69,10 +69,10 @@ Tout se modifie dans le CMS.
 
 - [ ] **Le club › Coordonnées et bureau** : devise, slogan, ville, réseaux (remplacer le lien générique `https://www.strava.com/` par celui du club Strava ; ajouter Facebook/Instagram s'il y en a), bureau, lien HelloAsso
 - [ ] **Le club › Page de présentation** : texte de présentation (histoire, esprit, pratiques, niveaux, accueil des nouveaux, jours d'entraînement) ; supprimer « (Texte de présentation à rédiger.) »
-- [ ] **Le club › Mentions légales** : siège, RNA, directeur·rice de la publication
+- [x] **Le club › Mentions légales** : siège, RNA, directeur de la publication
 - [ ] **Le club › Politique de confidentialité** : relire ; ajouter les liens **Google Maps** (point de départ des activités) aux services tiers
 - [ ] **Le club › Page Partenaires** : texte de remerciement ; supprimer la mention « Texte d'exemple »
-- [ ] Remplir « Responsable du site » en bas de [docs/GUIDE-REDACTEUR.md](docs/GUIDE-REDACTEUR.md)
+- [x] Remplir le contact en bas de [docs/GUIDE-REDACTEUR.md](docs/GUIDE-REDACTEUR.md) : adresse du club
 
 ## 6. Supprimer le contenu d'exemple et de test ✍️
 

@@ -122,4 +122,4 @@ Si votre modification n'apparaît toujours pas après 10 minutes, prévenez le r
 
 ## Contact
 
-Responsable du site : *à compléter*
+Une question ou un problème ? Écrivez aux responsables du site : lagraveriecyclos@gmail.com

@@ -63,15 +63,15 @@ La loi impose d'indiquer qui publie le site. Ces informations figurent sur les d
 
 **Adresse du siège social** :
 
-> 
+> Lieu-dit Les Hogues, La Ferrière-Harang, 14350 Souleuvre-en-Bocage
 
 **Numéro RNA** (commence par W, figure sur le récépissé de la préfecture) :
 
-> 
+> W144000380
 
 **Directeur·rice de la publication** (en général le/la président·e) :
 
-> 
+> Philippe ARNAUD
 
 ---
 
@@ -123,10 +123,7 @@ Le club utilise-t-il **HelloAsso** (ou autre) pour les adhésions ? Si oui, le l
 
 Les personnes qui ajouteront les sorties, actualités et photos. Chacune aura besoin d'un **compte GitHub gratuit** (5 minutes à créer). Un guide pas à pas leur sera fourni.
 
-| Nom | Email | Déjà un compte GitHub ? |
-|---|---|---|
-| | | oui / non |
-| | | oui / non |
+Ce fichier est public : la liste des rédacteurs et responsables techniques est conservée **hors du repo**, dans la liste des accès du bureau.
 
 ---
 

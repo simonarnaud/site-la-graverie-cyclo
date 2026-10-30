@@ -17,7 +17,7 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [ ] Présentation du club (devise et slogan validés)
 - [x] Adresse email du club : lagraveriecyclos@gmail.com (27/10/2026)
 - [ ] Bureau : noms publiés uniquement avec l'accord des personnes
-- [ ] Mentions légales : adresse du siège, numéro RNA, directeur·rice de la publication
+- [x] Mentions légales : adresse du siège, numéro RNA, directeur de la publication
 - [ ] Vraies traces GPX, coupées au départ et à l'arrivée
 - [ ] Supprimer les contenus d'exemple et de test : sorties, actualités (4), albums (« Sortie d'automne », « Rando de rentrée », « test-album-photos », « Titre »), document « Test PDF », partenaires (3) et texte de la page Partenaires
 - [ ] Lien d'adhésion HelloAsso (facultatif)

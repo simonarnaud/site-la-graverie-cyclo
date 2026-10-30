@@ -5,11 +5,11 @@ titre: Mentions légales
 ## Éditeur du site
 
 **La Graverie Cyclos**, association loi 1901
-Siège : *adresse à compléter*
-Numéro RNA : *à compléter*
+Siège : Lieu-dit Les Hogues, La Ferrière-Harang, 14350 Souleuvre-en-Bocage
+Numéro RNA : W144000380
 Contact : voir l'adresse email en bas de page
 
-**Directeur·rice de la publication** : *nom du/de la président·e, à compléter*
+**Directeur de la publication** : Philippe ARNAUD
 
 ## Hébergement
 
