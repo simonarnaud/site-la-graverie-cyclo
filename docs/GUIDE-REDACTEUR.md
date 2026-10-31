@@ -28,7 +28,7 @@ Ne cliquez pas sur « Travailler avec un dépôt local » ni sur « Se connecter
    - pour un **entraînement**, choisissez l'un des parcours habituels du club dans « Parcours d'entraînement » ;
    - pour une **rando ou une course**, déposez directement son fichier GPX dans « Trace GPX » : la carte, le profil d'altitude et le téléchargement apparaîtront sur la fiche de l'événement. Inutile de créer un parcours.
 
-   Si le circuit existe sur OpenRunner, ajoutez aussi son numéro dans « Numéro du circuit OpenRunner » (les chiffres à la fin de son adresse). **Ce numéro vient en plus de la trace, jamais à sa place** : sans GPX ni parcours, l'activité n'est pas publiée et le bandeau du CMS le signale en rouge.
+   Si le circuit existe sur OpenRunner, indiquez aussi son numéro dans « Numéro du circuit OpenRunner » (les chiffres à la fin de son adresse).
 
    Le menu **Parcours d'entraînement** du CMS ne sert qu'à enregistrer les parcours habituels des entraînements, réutilisés d'une semaine à l'autre.
 6. **Participation** : créez d'abord l'événement dans le club Strava, puis collez son lien dans « Lien de l'événement Strava » (dans l'application Strava : Partager → Copier le lien). Les membres indiquent leur participation sur Strava, et l'on voit combien de personnes viennent.
