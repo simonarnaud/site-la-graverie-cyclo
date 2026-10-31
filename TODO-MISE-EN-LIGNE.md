@@ -15,7 +15,8 @@ Les informations à demander au bureau sont regroupées dans [docs/FICHE-INFOS-B
 - [x] Valider la **devise** (« Si tu t’arrêtes de pédaler, tu tombes ! ») et le **slogan** (« Dans le bocage, du granit, des bois et de l’eau »)
 - [x] Fournir l'**adresse du siège** et le **numéro RNA** de l'association (mentions légales obligatoires)
 - [x] Nommer le **directeur de la publication** : Philippe ARNAUD
-- [ ] Lister les **membres du bureau** à afficher, **avec leur accord écrit** (accord à leur demander ; sinon, ne garder que les rôles)
+- [x] Lister les **membres du bureau** à afficher : président, trésorier et secrétaire renseignés sur la page du club
+- [ ] Garder une trace de l'**accord** de chaque membre du bureau pour apparaître sur le site
 - [x] Désigner **qui gère le site** : 4 responsables techniques (noms dans la liste des accès, hors du repo)
 - [x] Lister les **rédacteurs** : les 4 mêmes personnes (noms dans la liste des accès, hors du repo)
 - [ ] Choisir le **nom de domaine** (ex. `lagraveriecyclos.fr`) et qui le paie (≈ 10-15 €/an, seule dépense du projet)

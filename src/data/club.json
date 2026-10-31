@@ -10,8 +10,8 @@
     { "nom": "Strava", "url": "https://www.strava.com/" }
   ],
   "bureau": [
-    { "role": "Président·e", "nom": "À compléter" },
-    { "role": "Trésorier·ère", "nom": "À compléter" },
-    { "role": "Secrétaire", "nom": "À compléter" }
+    { "role": "Président", "nom": "Maxime RAOULT" },
+    { "role": "Trésorier", "nom": "Philippe LEVALLET" },
+    { "role": "Secrétaire", "nom": "Philippe ARNAUD" }
   ]
 }
