@@ -61,6 +61,8 @@ const sorties = defineCollection({
     // Entraînement : parcours du club, réutilisable. Rando, course… : GPX déposé directement dans l'événement
     parcours: facultatif(reference('parcours')),
     gpx: facultatif(z.string().regex(/^(\.\/)?[^/]+\.gpx$/i, "Le GPX doit être rangé dans le dossier de l'événement")),
+    // Numéro du circuit sur OpenRunner : complément de la trace, jamais à sa place (voir le refine ci-dessous)
+    openrunner: facultatif(z.coerce.string().regex(/^\d+$/, 'Indiquez uniquement le numéro du circuit, en chiffres')),
     // Participation : événement créé au préalable dans le club Strava
     lienStrava: facultatif(
       z.url().refine((u) => URL.canParse(u) && /(^|\.)strava\.(com|app\.link)$/.test(new URL(u).hostname), {
@@ -73,6 +75,9 @@ const sorties = defineCollection({
     // Image d'illustration facultative, rangée dans le dossier de l'événement
     couverture: facultatif(image()),
     couvertureAlt: facultatif(z.string()),
+  }).refine((s) => !s.openrunner || s.gpx || s.parcours, {
+    path: ['openrunner'],
+    message: "ajoutez d'abord la trace GPX de l'activité (ou choisissez un parcours d'entraînement), ou retirez ce numéro",
   }),
 });
 

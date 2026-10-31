@@ -19,7 +19,7 @@ const RAPPORT = join(process.cwd(), '.astro', 'etat-contenus.json');
 // Libellés du CMS, pour des messages compréhensibles par les rédacteurs
 const LIBELLES: Record<string, string> = {
   titre: 'Titre', date: 'Date', lieuRdv: 'Lieu / rendez-vous', pointDepart: 'Point de départ sur la carte', categorie: 'Type', discipline: 'Discipline',
-  parcours: "Parcours d'entraînement", gpx: 'Trace GPX', lienStrava: "Lien de l'événement Strava",
+  parcours: "Parcours d'entraînement", gpx: 'Trace GPX', openrunner: 'Numéro du circuit OpenRunner', lienStrava: "Lien de l'événement Strava",
   lienInscription: "Lien d'inscription", couverture: 'Image', photos: 'Photos', lienAlbumComplet: "Lien vers l'album complet",
   fichier: 'Fichier PDF', auteur: 'Auteur', type: 'Type', section: 'Section',
 };
