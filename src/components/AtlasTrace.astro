@@ -1,0 +1,129 @@
+---
+// Pages de carte zoomées le long d'une trace, pour l'impression uniquement.
+// Construites au clic sur « Imprimer » : les cartes restent hors de l'écran jusque-là.
+interface Props {
+  titre: string;
+}
+
+const { titre } = Astro.props;
+---
+
+<div class="atlas" data-atlas data-titre={titre} aria-hidden="true"></div>
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+  import { fondDeCarte } from '../lib/fond-carte';
+
+  // Carte de 18 × 24 cm à 96 points par pouce (voir .atlas-carte), moins une marge pour garder la trace visible
+  const LARGEUR_UTILE_PX = 680 - 80;
+  const HAUTEUR_UTILE_PX = 907 - 80;
+  // Zoom le plus détaillé qui tient en PAGES_MAX pages
+  const ZOOMS = [14, 13, 12];
+  const PAGES_MAX = 6;
+  const REPERE_KM = 5;
+  const DELAI_TUILES_MS = 10000;
+
+  type Troncon = { debut: number; fin: number };
+
+  // Découpe la trace : un tronçon s'arrête quand il ne tient plus dans une page au zoom demandé
+  function decouper(points: L.LatLng[], zoom: number): Troncon[] {
+    const troncons: Troncon[] = [];
+    let debut = 0;
+    let emprise = L.bounds([]);
+    points.forEach((point, i) => {
+      const xy = L.CRS.EPSG3857.latLngToPoint(point, zoom);
+      const agrandie = emprise.isValid() ? L.bounds(emprise.min!, emprise.max!).extend(xy) : L.bounds([xy, xy]);
+      const taille = agrandie.getSize();
+      if (taille.x > LARGEUR_UTILE_PX || taille.y > HAUTEUR_UTILE_PX) {
+        troncons.push({ debut, fin: i });
+        debut = i;
+        emprise = L.bounds([xy, xy]);
+      } else {
+        emprise = agrandie;
+      }
+    });
+    troncons.push({ debut, fin: points.length - 1 });
+    return troncons;
+  }
+
+  function choisirZoom(points: L.LatLng[]): { zoom: number; troncons: Troncon[] } {
+    for (const zoom of ZOOMS) {
+      const troncons = decouper(points, zoom);
+      if (troncons.length <= PAGES_MAX) return { zoom, troncons };
+    }
+    const zoom = ZOOMS.at(-1)!;
+    return { zoom, troncons: decouper(points, zoom) };
+  }
+
+  function construireAtlas(atlas: HTMLElement, trace: [number, number][]): Promise<void[]> {
+    const points = trace.map((p) => L.latLng(p));
+    const kms = [0];
+    for (let i = 1; i < points.length; i++) kms.push(kms[i - 1] + points[i - 1].distanceTo(points[i]) / 1000);
+
+    const style = getComputedStyle(document.documentElement);
+    const rouge = style.getPropertyValue('--rouge-logo').trim() || '#e30613';
+    const jaune = style.getPropertyValue('--jaune-logo').trim() || '#fddc09';
+
+    // Repères kilométriques : ce sont les mêmes distances que la feuille de route
+    const reperes: { point: L.LatLng; km: number }[] = [];
+    kms.forEach((km, i) => {
+      const multiple = Math.floor(km / REPERE_KM) * REPERE_KM;
+      if (multiple > 0 && multiple > Math.floor(kms[i - 1] / REPERE_KM) * REPERE_KM) reperes.push({ point: points[i], km: multiple });
+    });
+
+    const { zoom, troncons } = choisirZoom(points);
+    return Promise.all(
+      troncons.map(({ debut, fin }, n) => {
+        const page = document.createElement('section');
+        page.className = 'atlas-page';
+        const titre = document.createElement('h3');
+        titre.textContent = `${atlas.dataset.titre} · carte ${n + 1} / ${troncons.length} · du km ${Math.round(kms[debut])} au km ${Math.round(kms[fin])}`;
+        const conteneur = document.createElement('div');
+        conteneur.className = 'atlas-carte';
+        page.append(titre, conteneur);
+        atlas.append(page);
+
+        const carte = L.map(conteneur, { zoomControl: false, fadeAnimation: false, zoomAnimation: false });
+        const tuiles = fondDeCarte().addTo(carte);
+        L.polyline(points, { color: rouge, weight: 4, opacity: 0.85 }).addTo(carte);
+        L.circleMarker(points[0], { radius: 8, color: rouge, fillColor: jaune, fillOpacity: 1, weight: 3 }).addTo(carte);
+        for (const { point, km } of reperes) {
+          L.marker(point, { icon: L.divIcon({ className: 'atlas-km', html: String(km), iconSize: [28, 18] }) }).addTo(carte);
+        }
+
+        const pret = new Promise<void>((fini) => {
+          setTimeout(fini, DELAI_TUILES_MS); // au pire, on imprime quand même
+          tuiles.once('load', () => fini());
+        });
+        carte.setView(L.latLngBounds(points.slice(debut, fin + 1)).getCenter(), zoom, { animate: false });
+        return pret;
+      }),
+    );
+  }
+
+  const atlas = document.querySelector<HTMLElement>('[data-atlas]');
+  const carte = document.querySelector<HTMLElement>('.carte-trace');
+  if (atlas && carte) {
+    let construction: Promise<unknown> | undefined;
+    window.addEventListener('preparer-impression', (e) => {
+      construction ??= construireAtlas(atlas, JSON.parse(carte.dataset.points ?? '[]'));
+      (e as CustomEvent<Promise<unknown>[]>).detail.push(construction);
+    });
+  }
+</script>
+
+<style>
+  /* Hors de l'écran, mais avec sa taille réelle : Leaflet a besoin des dimensions de la carte */
+  .atlas { position: absolute; left: -10000px; top: 0; width: 18cm; }
+  .atlas :global(.atlas-carte) { width: 18cm; height: 24cm; border: 1px solid #999; }
+  .atlas :global(h3) { margin: 0 0 6px; font-size: 11pt; }
+  .atlas :global(.atlas-km) {
+    display: grid; place-items: center; font: 700 11px/1 system-ui, sans-serif; color: #000;
+    background: #fff; border: 1.5px solid #e30613; border-radius: 5px; print-color-adjust: exact; -webkit-print-color-adjust: exact;
+  }
+  @media print {
+    .atlas { position: static; }
+    .atlas :global(.atlas-page) { break-before: page; break-inside: avoid; }
+  }
+</style>

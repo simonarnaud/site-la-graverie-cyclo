@@ -1,5 +1,5 @@
 ---
-// Carte Leaflet d'une trace. Les points sont calculés au build (src/lib/gpx.ts).
+// Carte Leaflet d'une trace, sur fond Plan IGN. Les points sont calculés au build (src/lib/gpx.ts).
 interface Props {
   points: [number, number][];
   titre: string;
@@ -13,16 +13,14 @@ const { points, titre } = Astro.props;
 <script>
   import L from 'leaflet';
   import 'leaflet/dist/leaflet.css';
+  import { fondDeCarte } from '../lib/fond-carte';
 
   for (const el of document.querySelectorAll<HTMLElement>('.carte-trace')) {
     const points = JSON.parse(el.dataset.points ?? '[]') as [number, number][];
     if (points.length === 0) continue;
 
     const carte = L.map(el, { scrollWheelZoom: false });
-    const tuiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">contributeurs OpenStreetMap</a>',
-    }).addTo(carte);
+    const tuiles = fondDeCarte().addTo(carte);
 
     const style = getComputedStyle(document.documentElement);
     const rouge = style.getPropertyValue('--rouge-logo').trim() || '#e30613';

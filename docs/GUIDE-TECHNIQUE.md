@@ -40,7 +40,8 @@ Une erreur **technique** (bug dans le code, dépendance cassée) fait toujours �
 | `src/components/FicheTrace.astro` | Carte + profil + téléchargement + impression d'un GPX (parcours et événements) |
 | `src/pages/sorties.ics.ts` | Flux calendrier |
 | `src/pages/admin/import-fsgt.astro`, `src/lib/fsgt/` | Import d'un programme FSGT (PDF) dans le calendrier, depuis le CMS |
-| `src/components/Carte.astro` | Carte Leaflet (tuiles OpenStreetMap) |
+| `src/components/Carte.astro`, `src/lib/fond-carte.ts` | Carte Leaflet, fond Plan IGN commun à toutes les cartes |
+| `src/components/AtlasTrace.astro` | Pages de carte zoomées, à l'impression |
 
 **Règle : chaque fiche a son dossier, et ses fichiers (images, GPX, PDF) sont dedans.** Supprimer une fiche dans le CMS supprime donc aussi ses fichiers : rien ne reste orphelin.
 
@@ -108,7 +109,11 @@ Le script est alors ajouté à toutes les pages, et la politique de confidential
 
 ## Impression d'un parcours et feuille de route
 
-Le bouton « Imprimer le parcours » (`src/components/FicheTrace.astro`) prépare la carte puis ajoute une page **Feuille de route** : kilomètre, sens et indication, sur deux colonnes.
+Le bouton « Imprimer le parcours » (`src/components/FicheTrace.astro`) produit, dans l'ordre : la carte d'ensemble et le profil, la **feuille de route** (kilomètre, sens et indication, sur deux colonnes), puis les **pages de carte zoomées**.
+
+**Pages zoomées** (`src/components/AtlasTrace.astro`) : la trace est découpée en tronçons qui tiennent chacun sur une carte de 18 × 24 cm, au zoom le plus détaillé qui reste à 6 pages au plus (`PAGES_MAX`, zooms 14 à 12). Un repère tous les 5 km permet de suivre le sens de la boucle et de faire le lien avec la feuille de route. Les cartes se construisent hors de l'écran au premier clic ; une trace très longue peut donc dépasser 6 pages au zoom 12.
+
+**Feuille de route** :
 
 Un GPX n'est qu'une suite de points, sans consigne de navigation. Au clic, `src/lib/feuille-route.ts` les envoie depuis le navigateur à l'API `trace_route` de **Valhalla** (serveur public FOSSGIS, gratuit, sans clé, données OpenStreetMap), qui les recale sur les routes et renvoie les manœuvres en français. Rien n'est calculé au build, et rien n'est appelé tant que personne n'imprime.
 

@@ -3,6 +3,7 @@
 // Utilisé par les parcours d'entraînement et par les événements qui ont leur propre GPX (rando, course…).
 import Carte from './Carte.astro';
 import ProfilAltitude from './ProfilAltitude.astro';
+import AtlasTrace from './AtlasTrace.astro';
 import type { TraceGpx } from '../lib/gpx';
 
 interface Props {
@@ -33,6 +34,7 @@ const urlGpx = new URL(lienGpx, Astro.site);
 <p class="meta impression-seulement indications-absentes" data-indications-absentes>
   Indications de navigation indisponibles pour cette trace : suivez la carte ou chargez le GPX sur un compteur.
 </p>
+<AtlasTrace titre={titre} />
 
 <script>
   import { chercherIndications } from '../lib/feuille-route';
