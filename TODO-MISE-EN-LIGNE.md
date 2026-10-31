@@ -71,7 +71,7 @@ Tout se modifie dans le CMS.
 - [ ] **Le club › Coordonnées et bureau** : devise, slogan, ville, réseaux (remplacer le lien générique `https://www.strava.com/` par celui du club Strava ; ajouter Facebook/Instagram s'il y en a), bureau, lien HelloAsso
 - [ ] **Le club › Page de présentation** : texte de présentation (histoire, esprit, pratiques, niveaux, accueil des nouveaux, jours d'entraînement) ; supprimer « (Texte de présentation à rédiger.) »
 - [x] **Le club › Mentions légales** : siège, RNA, directeur de la publication
-- [ ] **Le club › Politique de confidentialité** : relire ; ajouter les liens **Google Maps** (point de départ des activités) aux services tiers
+- [ ] **Le club › Politique de confidentialité** : relire
 - [ ] **Le club › Page Partenaires** : texte de remerciement ; supprimer la mention « Texte d'exemple »
 - [x] Remplir le contact en bas de [docs/GUIDE-REDACTEUR.md](docs/GUIDE-REDACTEUR.md) : adresse du club
 
@@ -100,6 +100,7 @@ Supprimer une fiche dans le CMS supprime aussi ses photos et fichiers.
 
 - [ ] Tester le **champ « Point de départ sur la carte »** dans le CMS (recherche d'adresse, clic) : pas encore testé dans l'éditeur
 - [ ] Valider l'**import FSGT** avec le vrai programme de la saison (`node scripts/essai-fsgt.mjs programme.pdf`, puis l'ajouter à `scripts/fsgt/exemples/` avec un test)
+- [ ] Imprimer un **vrai parcours** et vérifier sa feuille de route sur le terrain (les traces d'exemple ne suivent pas les routes et n'en ont pas)
 - [ ] Parcourir tout le site **sur téléphone** (menu, calendrier, fiche d'une activité, carte, téléchargement GPX, abonnement au calendrier)
 - [ ] Tester l'**abonnement au calendrier** (`/sorties.ics`) sur iPhone et Android
 - [ ] Tester l'envoi d'une **photo d'iPhone** (HEIC) depuis le CMS

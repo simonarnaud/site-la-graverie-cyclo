@@ -12,6 +12,7 @@ Ce document garde la trace des choix faits au lancement du projet (octobre 2026)
 | Galeries | Liens externes (Google Photos, Flickr, Piwigo) | Limites de taille de Pages / du repo | — |
 | Carte | Leaflet seul (tracé simplifié calculé au build) + tuiles OSM | Léger, sans clé, chargé à la demande | MapLibre + OpenFreeMap, iframes Komoot / RideWithGPS |
 | Point de départ | Widget `map` de Sveltia → liens Google Maps | Aucune carte à charger sur la fiche ; Google Maps s'ouvre dans l'application du téléphone | Carte Leaflet sur chaque fiche |
+| Feuille de route imprimée | API Valhalla (FOSSGIS) appelée depuis le navigateur au clic sur « Imprimer » | Gratuit, sans clé, indications en français à partir d'OpenStreetMap ; aucun appel au build | Calcul au build (build dépendant du réseau, cache à gérer), détection des virages depuis le GPX seul (sans noms de routes) |
 | Import FSGT | Lecture du PDF dans le navigateur (pdf.js via `unpdf`) + un commit via l'API GitHub | Pas de serveur ni d'Action : l'admin valide avant tout enregistrement | GitHub Action déclenchée par le dépôt du PDF (abandonnée : trop indirecte pour les bénévoles) |
 | Contact | `mailto:` | Aucune donnée collectée | Web3Forms (250/mois), Formspree (50/mois) avec honeypot |
 | Participation | Champ `lienStrava` (événement du club Strava) | Un site statique ne peut pas compter seul ; les membres sont déjà sur Strava | Framadate, billetterie gratuite HelloAsso ; v2 : Firebase/Supabase |

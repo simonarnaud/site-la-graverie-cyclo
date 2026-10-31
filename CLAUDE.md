@@ -17,6 +17,7 @@ Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECT
   Plan B : **Pages CMS** (invitation par email, sans compte GitHub). Le contenu reste du Markdown standard → CMS interchangeable.
 - **GitHub Pages** déployé par **GitHub Actions** à chaque push sur `main` + rebuild quotidien (cron) + manuel.
 - Cartes : **Leaflet**, fond OSM, uniquement sur les pages parcours. Tracé simplifié, distance et D+ calculés au build depuis le GPX.
+- Impression d'un parcours : feuille de route (indications de navigation) demandée à l'API publique **Valhalla** depuis le navigateur, au clic sur « Imprimer » (`src/lib/feuille-route.ts`) ; sans réponse, impression sans feuille de route.
 - Contact : `mailto:` vers une adresse du club (formulaire Web3Forms/Formspree seulement si besoin, à déclarer RGPD).
 - Participation aux événements : champ `lienStrava` (événement créé au préalable dans le club Strava, validé strava.com / strava.app.link) → bouton « Je participe sur Strava ». `lienInscription` facultatif = inscription chez un organisateur extérieur (rando, course). Vote maison (Firebase/Supabase) = v2 éventuelle, pas avant.
 - Flux calendrier `/sorties.ics` généré au build.

@@ -24,7 +24,47 @@ const urlGpx = new URL(lienGpx, Astro.site);
 </p>
 <p class="meta impression-seulement">Trace GPX : {urlGpx.href}</p>
 
+<!-- Remplie au clic sur « Imprimer » (src/lib/feuille-route.ts) -->
+<section class="feuille-route impression-seulement" data-feuille-route data-distance={trace.distanceKm}>
+  <h2>Feuille de route : {titre}</h2>
+  <p class="meta">{trace.distanceKm} km · {trace.deniveleM} m D+ · indications automatiques (Valhalla, données OpenStreetMap), à vérifier sur place</p>
+  <ol data-indications></ol>
+</section>
+<p class="meta impression-seulement indications-absentes" data-indications-absentes>
+  Indications de navigation indisponibles pour cette trace : suivez la carte ou chargez le GPX sur un compteur.
+</p>
+
 <script>
+  import { chercherIndications } from '../lib/feuille-route';
+
+  // Indications de navigation : demandées une seule fois, au premier clic sur « Imprimer »
+  let preparee = false;
+  async function preparerFeuilleRoute() {
+    if (preparee) return;
+    const feuille = document.querySelector<HTMLElement>('[data-feuille-route]');
+    const carte = document.querySelector<HTMLElement>('.carte-trace');
+    if (!feuille || !carte) return;
+    const points = JSON.parse(carte.dataset.points ?? '[]') as [number, number][];
+    const indications = await chercherIndications(points, Number(feuille.dataset.distance));
+    if (!indications) {
+      document.querySelector('[data-indications-absentes]')?.classList.add('visible');
+      return;
+    }
+    preparee = true;
+    const liste = feuille.querySelector('[data-indications]')!;
+    for (const { km, sens, texte } of indications) {
+      const ligne = document.createElement('li');
+      for (const [classe, contenu] of [['km', km.toFixed(1).replace('.', ',')], ['sens', sens], ['texte', texte]]) {
+        const cellule = document.createElement('span');
+        cellule.className = classe;
+        cellule.textContent = contenu;
+        ligne.append(cellule);
+      }
+      liste.append(ligne);
+    }
+    feuille.classList.add('visible');
+  }
+
   // La carte prépare sa version imprimée (taille, fonds de carte) avant l'ouverture de l'impression
   document.querySelector<HTMLButtonElement>('[data-imprimer]')?.addEventListener('click', async (e) => {
     const bouton = e.currentTarget as HTMLButtonElement;
@@ -32,7 +72,7 @@ const urlGpx = new URL(lienGpx, Astro.site);
     window.dispatchEvent(new CustomEvent('preparer-impression', { detail: attentes }));
     bouton.disabled = true;
     bouton.textContent = 'Préparation…';
-    await Promise.all(attentes);
+    await Promise.all([...attentes, preparerFeuilleRoute()]);
     bouton.disabled = false;
     bouton.textContent = 'Imprimer le parcours';
     window.print();
@@ -42,4 +82,15 @@ const urlGpx = new URL(lienGpx, Astro.site);
 <style>
   .actions { display: flex; flex-wrap: wrap; gap: 10px; }
   button.bouton { font: inherit; font-weight: 600; cursor: pointer; border: 0; }
+  /* Une feuille à emporter : sur deux colonnes pour tenir sur le moins de pages possible */
+  .feuille-route:not(.visible), .indications-absentes:not(.visible) { display: none !important; }
+  @media print {
+    .feuille-route { break-before: page; }
+    .feuille-route h2 { margin: 0 0 2px; font-size: 14pt; }
+    .feuille-route .meta { margin: 0 0 8px; font-size: 9pt; }
+    .feuille-route ol { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 8mm; font-size: 9.5pt; line-height: 1.2; }
+    .feuille-route :global(li) { display: grid; grid-template-columns: 9mm 5mm minmax(0, 1fr); gap: 1.5mm; padding: .7mm 0; border-bottom: .5pt solid #ccc; break-inside: avoid; }
+    .feuille-route :global(.km) { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+    .feuille-route :global(.sens) { font-weight: 700; text-align: center; }
+  }
 </style>

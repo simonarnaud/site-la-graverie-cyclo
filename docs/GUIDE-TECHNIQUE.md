@@ -106,6 +106,17 @@ Le script est alors ajouté à toutes les pages, et la politique de confidential
 - **Point de départ** : champ `pointDepart`, widget `map` de Sveltia (recherche d'adresse OpenStreetMap, clic sur la carte, position actuelle ; carte centrée sur La Graverie). Le CMS l'enregistre en **texte GeoJSON** (`'{"type":"Point","coordinates":[longitude,latitude]}'`), converti en `{ latitude, longitude }` par `pointGps` dans `src/content.config.ts`. La fiche affiche alors « Voir sur Google Maps » et « Itinéraire » (liens `google.com/maps/search` et `/dir`, sans clé d'API) ; le .ics reçoit une ligne `GEO`. Aucune carte n'est chargée sur la fiche.
 - **Trace GPX** : `CarteSortie.astro` affiche « Trace GPX » si `gpx` ou `parcours` est renseigné, sinon « Sans trace GPX » ; même indication dans la liste du CMS (`summary` de la collection).
 
+## Impression d'un parcours et feuille de route
+
+Le bouton « Imprimer le parcours » (`src/components/FicheTrace.astro`) prépare la carte puis ajoute une page **Feuille de route** : kilomètre, sens et indication, sur deux colonnes.
+
+Un GPX n'est qu'une suite de points, sans consigne de navigation. Au clic, `src/lib/feuille-route.ts` les envoie depuis le navigateur à l'API `trace_route` de **Valhalla** (serveur public FOSSGIS, gratuit, sans clé, données OpenStreetMap), qui les recale sur les routes et renvoie les manœuvres en français. Rien n'est calculé au build, et rien n'est appelé tant que personne n'imprime.
+
+- `trace_options` (`gps_accuracy: 25`, `search_radius: 60`) : **à garder**. Avec les valeurs par défaut, une vraie trace de 73 km s'arrêtait à 39 km selon le nombre de points.
+- Si le service ne répond pas (10 s), ou reconnaît moins de 85 % de la trace, l'impression sort sans feuille de route, avec une phrase qui l'explique. C'est le cas des traces d'exemple `boucle-du-bocage` et `gravel-des-collines`, générées à la main et qui ne suivent pas les routes.
+- Le service public n'a pas de garantie de disponibilité. Pour en changer, seule `src/lib/feuille-route.ts` est à adapter.
+- Un **Ctrl + P** direct n'a pas la feuille de route : seul le bouton la demande.
+
 ## Boutons ajoutés au CMS
 
 `public/admin/index.html` ajoute « ← Voir le site » et « 📄 Importer un programme FSGT » par-dessus Sveltia. Sveltia ouvre tout lien sortant dans un nouvel onglet : un petit script les ouvre dans le même onglet, pour revenir au CMS avec « Précédent ».

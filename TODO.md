@@ -65,6 +65,7 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [x] Boutons « Voir le site » et « Importer un programme FSGT » du CMS ouverts dans le même onglet
 - [x] Point de départ placé sur une carte dans le CMS → « Voir sur Google Maps » et « Itinéraire » sur la fiche
 - [x] Devise du club sur la page d'accueil (modifiable dans le CMS)
+- [x] Feuille de route (indications de navigation) à l'impression d'un parcours
 - [ ] Valider l'import FSGT avec d'autres PDF (`node scripts/essai-fsgt.mjs`, puis les ajouter à `scripts/fsgt/exemples/` + tests)
 
 ## Rappel : mises à jour Dependabot

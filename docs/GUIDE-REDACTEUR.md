@@ -38,6 +38,8 @@ Supprimer un événement, un parcours, un album ou un document supprime aussi se
 
 L'événement apparaît dans le calendrier, au mois de sa date ; les visiteurs passent d'un mois à l'autre avec les flèches. Pour annuler un événement, ouvrez-le et cochez **Événement annulé** plutôt que de le supprimer : les membres abonnés au calendrier seront prévenus.
 
+Le bouton **« Imprimer le parcours »** d'une fiche ajoute une **feuille de route** (« km 12,7 : rond-point, 2e sortie, D 147A… ») aux côtés de la carte. Elle est rédigée automatiquement à partir de la trace : si elle ne suit pas les routes, ou pour certains chemins, la feuille peut être absente ou incomplète. Faites toujours un essai avant de la distribuer.
+
 Chaque activité affiche **« Trace GPX »** (trace jointe, ou parcours d'entraînement choisi) ou **« Sans trace GPX »**, sur le site comme dans la liste du menu Calendrier du CMS : pratique pour repérer celles à compléter.
 
 ## Ajouter un partenaire
