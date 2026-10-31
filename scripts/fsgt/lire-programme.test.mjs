@@ -43,7 +43,7 @@ test('grille annuelle à une colonne par discipline (saison 2022)', async () => 
   assert.deepEqual(r.rejets, []);
   assert.equal(r.activites.length, 82);
   // Assemblée générale répétée dans les 4 colonnes : une seule activité
-  assert.equal(r.activites.filter((a) => a.categorie === 'autre').length, 1);
+  assert.equal(r.activites.filter((a) => a.categorie === 'reunion').length, 1);
   assert.equal(trouver(r, '2022-02-19', 'COLOMBELLES').categorie, 'rando');
   assert.equal(trouver(r, '2022-03-13', 'CAHAGNES (Bérigny)').categorie, 'course'); // colonne CYCLOSPORT
   assert.equal(trouver(r, '2022-03-13', 'AUDRIEU').discipline, 'vtt');

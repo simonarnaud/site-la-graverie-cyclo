@@ -37,7 +37,7 @@ const aVenir = date.getTime() > Date.now();
   <dl class="infos">
     <div><dt>Date</dt><dd>{dateLongue(date)}</dd></div>
     <div>
-      <dt>Départ</dt>
+      <dt>{CATEGORIES[categorie].sportive ? 'Départ' : 'Rendez-vous'}</dt>
       <dd>{!horaireConnu(date) && lieuRdv === 'À préciser' ? 'Horaire et lieu à préciser' : `${horaire(date)} · ${lieuRdv}`}</dd>
       {coordonnees && (
         <dd class="carte-depart">

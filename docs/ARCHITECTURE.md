@@ -40,11 +40,11 @@ docs/{ARCHITECTURE.md, GUIDE-REDACTEUR.md, GUIDE-TECHNIQUE.md, FICHE-INFOS-BUREA
 ```
 
 ### Schémas (référence : `src/content.config.ts`)
-- **sorties** (`AAAA-MM-JJ-slug/index.md` + fichiers facultatifs) : `titre`, `categorie` (entrainement | rando | course | autre), `discipline` (cyclo | vtt | gravel, optionnel), `date` (date+heure ; 00:00 = horaire à préciser), `lieuRdv`, `pointDepart` (point placé sur la carte du CMS, GeoJSON en texte, optionnel → liens Google Maps et `GEO` dans le .ics), `organisateur`, `parcours` (référence, entraînements) ou `gpx` (fichier dans le dossier, randos/courses), `openrunner` (numéro, optionnel), `lienStrava`, `lienInscription`, `annulee` (bool), `couverture`/`couvertureAlt`, corps = description.
+- **sorties** (`AAAA-MM-JJ-slug/index.md` + fichiers facultatifs) : `titre`, `categorie` (entrainement | rando | course | reunion | autre), `discipline` (cyclo | vtt | gravel, optionnel), `date` (date+heure ; 00:00 = horaire à préciser), `lieuRdv`, `pointDepart` (point placé sur la carte du CMS, GeoJSON en texte, optionnel → liens Google Maps et `GEO` dans le .ics), `organisateur`, `parcours` (référence, entraînements) ou `gpx` (fichier dans le dossier, randos/courses), `openrunner` (numéro, optionnel), `lienStrava`, `lienInscription`, `annulee` (bool), `couverture`/`couvertureAlt`, corps = description.
 - **parcours** (`slug/index.md` + `trace.gpx` + couverture) : `titre`, `discipline` (cyclo | vtt | gravel), `gpx` (publié en `/gpx/<id>.gpx`), `distanceKm`/`deniveleM` (optionnels, sinon calculés), `couverture`.
 - **actualites** (`slug/index.md` + images colocalisées) : `titre`, `date`, `auteur`, `resume`, `couverture`, `couvertureAlt`, `brouillon`.
 - **albums** : `titre`, `date`, `photos` (≤ 12 × {src, alt}, vidées par l'archivage après 12 mois), `lienAlbumComplet`.
-- **documents** : `titre`, `date`, `section` (calendrier-fsgt | compte-rendu-ag | reglement | adhesion | autre), `fichier` (PDF dans le dossier).
+- **documents** : `titre`, `date`, `section` (calendrier-fsgt | compte-rendu-ag | reglement | adhesion | inscription | autre), `fichier` (PDF dans le dossier).
 - **partenaires** : nom, logo (dans le dossier), site, ordre.
 - **club.json** : nom, devise, slogan, email, ville, lien HelloAsso, code GoatCounter, réseaux, bureau.
 - Sveltia : `media_libraries.all.transformations` → WebP, qualité 85, 2048 px max.

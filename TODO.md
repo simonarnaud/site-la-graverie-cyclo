@@ -68,6 +68,8 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [x] Feuille de route (indications de navigation) à l'impression d'un parcours
 - [x] Fond de carte Plan IGN et pages de carte zoomées à l'impression
 - [x] Numéro de circuit OpenRunner sur les activités
+- [x] Lien du club Strava au pied de page et sur la page du club
+- [x] Section de documents « Inscriptions » et catégorie « Réunion » dans le calendrier
 - [ ] Valider l'import FSGT avec d'autres PDF (`node scripts/essai-fsgt.mjs`, puis les ajouter à `scripts/fsgt/exemples/` + tests)
 
 ## Rappel : mises à jour Dependabot

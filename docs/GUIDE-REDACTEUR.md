@@ -19,7 +19,7 @@ Ne cliquez pas sur « Travailler avec un dépôt local » ni sur « Se connecter
 ## Ajouter un événement au calendrier
 
 1. Menu **Calendrier** → **Nouveau**.
-2. Choisissez le **type** : entraînement (sorties du club), rando FSGT, course ou autre. Chaque type a sa couleur sur le site.
+2. Choisissez le **type** : entraînement (sorties du club), rando FSGT, course, **réunion** (réunion du club, assemblée générale…) ou autre. Chaque type a sa couleur sur le site. Une réunion n'a pas besoin de discipline ni de trace GPX : sur le site, elle n'affiche pas d'indicateur de trace.
    Indiquez aussi la **discipline** si elle est utile : cyclo, VTT ou gravel.
 3. Remplissez le titre, la date et l'heure de départ et le lieu.
    Si vous le souhaitez, placez aussi le **point de départ sur la carte** : tapez l'adresse dans la recherche de la carte, ou cliquez à l'endroit exact du départ (un parking, une place…). La fiche de l'activité proposera alors **« Voir sur Google Maps »** et **« Itinéraire »** aux membres. Pour retirer le point, videz le champ.
@@ -59,14 +59,14 @@ Le bouton rouge **« ← Voir le site »**, en bas à gauche du CMS, ouvre la pa
 
 ## Modifier les informations du club
 
-Menu **Le club › Coordonnées et bureau** : nom du club, **devise** (la phrase en titre de la page d'accueil, « Si tu t’arrêtes de pédaler, tu tombes ! »), slogan, **email de contact** (affiché en bas de chaque page), réseaux sociaux, membres du bureau (uniquement avec leur accord) et lien d'adhésion HelloAsso.
+Menu **Le club › Coordonnées et bureau** : nom du club, **devise** (la phrase en titre de la page d'accueil, « Si tu t’arrêtes de pédaler, tu tombes ! »), slogan, **email de contact** (affiché en bas de chaque page), réseaux sociaux (affichés en bas de chaque page et sur la page du club), membres du bureau (uniquement avec leur accord) et lien d'adhésion HelloAsso.
 
 ## Publier un document PDF
 
 Par exemple, le programme de la saison envoyé par la FSGT ou le compte rendu de l'assemblée générale.
 
 1. Menu **Documents** → **Nouveau**.
-2. Ajoutez un titre, la date et la **section** (Calendriers FSGT, Comptes rendus d'AG, Règlements et statuts, Adhésion et licences, Autres documents), puis choisissez le fichier PDF (10 Mo maximum).
+2. Ajoutez un titre, la date et la **section** (Calendriers FSGT, Comptes rendus d'AG, Règlements et statuts, Adhésion et licences, Inscriptions, Autres documents), puis choisissez le fichier PDF (10 Mo maximum).
 3. Cliquez sur **Enregistrer**.
 
 Le document apparaît dans sa section de la page **Documents** du site, à consulter ou à télécharger. Dans le CMS, le bouton de regroupement de la liste permet d'afficher les documents par section. Si le fichier est trop lourd, réduisez-le d'abord, par exemple avec le site gratuit [iLovePDF](https://www.ilovepdf.com/fr/compresser_pdf).

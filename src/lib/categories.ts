@@ -1,10 +1,12 @@
 // Types d'événements du calendrier. Les identifiants sont ceux enregistrés par le CMS (public/admin/config.yml).
 // Les couleurs sont définies dans src/styles/global.css (--cat-<id>).
+// sportive: false = pas de parcours : ni indicateur de trace GPX, ni notion de départ.
 export const CATEGORIES = {
-  entrainement: { label: 'Entraînement', pluriel: 'Entraînements' },
-  rando: { label: 'Rando FSGT', pluriel: 'Randos FSGT' },
-  course: { label: 'Course', pluriel: 'Courses' },
-  autre: { label: 'Autre', pluriel: 'Autres' },
+  entrainement: { label: 'Entraînement', pluriel: 'Entraînements', sportive: true },
+  rando: { label: 'Rando FSGT', pluriel: 'Randos FSGT', sportive: true },
+  course: { label: 'Course', pluriel: 'Courses', sportive: true },
+  reunion: { label: 'Réunion', pluriel: 'Réunions', sportive: false },
+  autre: { label: 'Autre', pluriel: 'Autres', sportive: true },
 } as const;
 
 export type Categorie = keyof typeof CATEGORIES;
@@ -28,6 +30,7 @@ export const SECTIONS_DOCUMENTS = {
   'compte-rendu-ag': "Comptes rendus d'AG",
   reglement: 'Règlements et statuts',
   adhesion: 'Adhésion et licences',
+  inscription: 'Inscriptions',
   autre: 'Autres documents',
 } as const;
 

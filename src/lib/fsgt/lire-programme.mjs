@@ -384,7 +384,7 @@ export async function lireProgramme(octets, { anneeImposee, reference = new Date
           // Même assemblée générale répétée dans chaque colonne : une seule activité
           if (vues.has('ag')) continue;
           vues.add('ag');
-          brutes.push({ date: l.date, titre: texte, categorie: 'autre', organisateur: 'FSGT', details: [], source: `page ${l.page}, ${texte}` });
+          brutes.push({ date: l.date, titre: texte, categorie: 'reunion', organisateur: 'FSGT', details: [], source: `page ${l.page}, ${texte}` });
           continue;
         }
         brutes.push({
@@ -408,7 +408,7 @@ export async function lireProgramme(octets, { anneeImposee, reference = new Date
     const parDefaut = /course|cyclosport|championnat/.test(contexte) && !/rando|brevet/.test(contexte) ? 'course' : 'rando';
     for (const a of brutes) {
       const texte = normaliser([a.organisateur, a.lieu, ...a.details.map((d) => d[1])].join(' '));
-      a.categorie = estAssemblee(texte) ? 'autre' : (a.categorie ?? (MOTS_COURSE.test(texte) ? 'course' : parDefaut));
+      a.categorie = estAssemblee(texte) ? 'reunion' : (a.categorie ?? (MOTS_COURSE.test(texte) ? 'course' : parDefaut));
     }
   }
 

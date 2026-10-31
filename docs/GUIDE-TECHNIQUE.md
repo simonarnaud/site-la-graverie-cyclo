@@ -103,6 +103,7 @@ Le script est alors ajouté à toutes les pages, et la politique de confidential
 
 `src/pages/sorties/[id].astro` :
 
+- **Catégories non sportives** (`sportive: false` dans `src/lib/categories.ts`, ex. `reunion`) : pas d'indicateur de trace GPX sur les cartes, « Rendez-vous » au lieu de « Départ » sur la fiche. L'import FSGT classe les assemblées générales en `reunion`.
 - **Départ** : `horaire()` (`src/lib/format.ts`) affiche « horaire à préciser » quand l'heure est 00:00 (journée entière dans le .ics).
 - **Point de départ** : champ `pointDepart`, widget `map` de Sveltia (recherche d'adresse OpenStreetMap, clic sur la carte, position actuelle ; carte centrée sur La Graverie). Le CMS l'enregistre en **texte GeoJSON** (`'{"type":"Point","coordinates":[longitude,latitude]}'`), converti en `{ latitude, longitude }` par `pointGps` dans `src/content.config.ts`. La fiche affiche alors « Voir sur Google Maps » et « Itinéraire » (liens `google.com/maps/search` et `/dir`, sans clé d'API) ; le .ics reçoit une ligne `GEO`. Aucune carte n'est chargée sur la fiche.
 - **OpenRunner** : champ facultatif `openrunner` (numéro du circuit), affiché en lien vers `openrunner.com/route-details/<numéro>`, avec ou sans trace GPX.

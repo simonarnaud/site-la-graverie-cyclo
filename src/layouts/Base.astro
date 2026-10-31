@@ -93,6 +93,7 @@ const courant = Astro.url.pathname;
       <div class="conteneur pied-contenu">
         <p>© {new Date().getFullYear()} {club.nom} · <a href={`mailto:${club.email}`}>{club.email}</a></p>
         <ul>
+          {club.reseaux.map((r) => <li><a href={r.url} target="_blank" rel="noopener">{r.nom} ↗</a></li>)}
           <li><a href={lien('sorties.ics')}>S'abonner au calendrier</a></li>
           <li><a href={lien('mentions-legales/')}>Mentions légales</a></li>
           <li><a href={lien('confidentialite/')}>Confidentialité</a></li>

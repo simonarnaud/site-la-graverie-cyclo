@@ -7,7 +7,7 @@
   "lienAdhesion": "",
   "goatcounter": "lagraveriecyclostest",
   "reseaux": [
-    { "nom": "Strava", "url": "https://www.strava.com/" }
+    { "nom": "Club Strava", "url": "https://www.strava.com/clubs/990748" }
   ],
   "bureau": [
     { "role": "Président", "nom": "Maxime RAOULT" },

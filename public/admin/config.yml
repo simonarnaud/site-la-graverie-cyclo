@@ -59,6 +59,7 @@ collections:
           - { label: Entraînement, value: entrainement }
           - { label: Rando FSGT, value: rando }
           - { label: Course, value: course }
+          - { label: Réunion (réunion du club, assemblée générale…), value: reunion }
           - { label: Autre, value: autre }
       # Valeurs à garder synchronisées avec src/lib/categories.ts
       - name: discipline
@@ -228,6 +229,7 @@ collections:
           - { label: Comptes rendus d'AG, value: compte-rendu-ag }
           - { label: Règlements et statuts, value: reglement }
           - { label: Adhésion et licences, value: adhesion }
+          - { label: Inscriptions, value: inscription }
           - { label: Autres documents, value: autre }
       - name: fichier
         label: Fichier PDF

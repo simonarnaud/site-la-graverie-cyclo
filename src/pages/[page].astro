@@ -25,6 +25,7 @@ const { Content } = await render(page);
         <ul>{club.bureau.map((membre) => <li><strong>{membre.role}</strong> : {membre.nom}</li>)}</ul>
         <h2>Contact</h2>
         <p><a href={`mailto:${club.email}`}>{club.email}</a></p>
+        {club.reseaux.map((r) => <p><a href={r.url} target="_blank" rel="noopener">{r.nom} ↗</a></p>)}
         {club.lienAdhesion && <p><a class="bouton" href={club.lienAdhesion}>Adhérer au club</a></p>}
       </>
     )}

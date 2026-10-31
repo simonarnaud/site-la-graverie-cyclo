@@ -32,7 +32,7 @@ Tous créés avec l'adresse du club, **jamais une adresse personnelle**, avec 2 
 - [ ] **Organisation GitHub** du club (gratuite), 2-3 propriétaires avec 2FA, équipe « Rédaction » avec le droit *Write*
 - [ ] **Compte Cloudflare** du club (pour le relais de connexion au CMS)
 - [ ] **GoatCounter** du club (statistiques de visite), par exemple `lagraveriecyclos` (procédure dans [docs/GUIDE-TECHNIQUE.md](docs/GUIDE-TECHNIQUE.md), section « Statistiques de visite »)
-- [ ] **Club Strava** (pour les boutons « Je participe sur Strava ») : vérifier qu'il existe et qu'il est administré par le bureau
+- [ ] **Club Strava** (https://www.strava.com/clubs/990748, lien en place sur le site) : vérifier qu'il est administré par le bureau
 - [ ] **Album photos partagé** du club (Google Photos avec le compte du club, ou autre) pour les albums complets
 - [ ] **HelloAsso** (si les adhésions en ligne sont retenues)
 - [ ] **Compte chez le registrar** du nom de domaine (OVH, Gandi…) au nom de l'association
@@ -68,7 +68,7 @@ Procédure détaillée : [docs/GUIDE-TECHNIQUE.md](docs/GUIDE-TECHNIQUE.md), sec
 
 Tout se modifie dans le CMS.
 
-- [ ] **Le club › Coordonnées et bureau** : devise, slogan, ville, réseaux (remplacer le lien générique `https://www.strava.com/` par celui du club Strava ; ajouter Facebook/Instagram s'il y en a), bureau, lien HelloAsso
+- [ ] **Le club › Coordonnées et bureau** : devise, slogan, ville, réseaux (ajouter Facebook/Instagram s'il y en a), bureau, lien HelloAsso
 - [ ] **Le club › Page de présentation** : texte de présentation (histoire, esprit, pratiques, niveaux, accueil des nouveaux, jours d'entraînement) ; supprimer « (Texte de présentation à rédiger.) »
 - [x] **Le club › Mentions légales** : siège, RNA, directeur de la publication
 - [ ] **Le club › Politique de confidentialité** : relire

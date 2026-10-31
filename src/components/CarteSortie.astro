@@ -25,7 +25,7 @@ const avecGpx = Boolean(sortie.data.gpx || sortie.data.parcours);
     <ul class="etiquettes">
       <li class="categorie" data-categorie={categorie}>{CATEGORIES[categorie].label}</li>
       {discipline && <li class="discipline"><IconeDiscipline discipline={discipline} taille={14} />{DISCIPLINES[discipline]}</li>}
-      {avecGpx ? (
+      {CATEGORIES[categorie].sportive && (avecGpx ? (
         <li class="gpx" title="Carte et trace GPX à télécharger sur la page de l'activité">
           <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="6" cy="19" r="2" /><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16" /><circle cx="18" cy="5" r="2" />
@@ -34,7 +34,7 @@ const avecGpx = Boolean(sortie.data.gpx || sortie.data.parcours);
         </li>
       ) : (
         <li class="gpx absent">Sans trace GPX</li>
-      )}
+      ))}
     </ul>
   </div>
 </article>

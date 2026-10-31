@@ -20,6 +20,7 @@
   --cat-entrainement: #3f7a35;
   --cat-rando: #a87700;
   --cat-course: #b5121b;
+  --cat-reunion: #5b4b9a;
   --cat-autre: #6b625b;
   --rayon: 12px;
   --largeur: 1080px;
@@ -44,6 +45,7 @@
     --cat-entrainement: #8fcb7f;
     --cat-rando: #e6b84a;
     --cat-course: #ff7a6e;
+    --cat-reunion: #b9acec;
     --cat-autre: #b3a99f;
   }
 }
@@ -103,6 +105,7 @@ main.conteneur { flex: 1 0 auto; width: 100%; padding-top: 32px; padding-bottom:
 [data-categorie='entrainement'] { --c: var(--cat-entrainement); }
 [data-categorie='rando'] { --c: var(--cat-rando); }
 [data-categorie='course'] { --c: var(--cat-course); }
+[data-categorie='reunion'] { --c: var(--cat-reunion); }
 [data-categorie='autre'] { --c: var(--cat-autre); }
 .carte[data-categorie] { border-left: 4px solid var(--c); }
 .categorie, .etiquettes li.categorie {
