@@ -2,6 +2,7 @@
 // Pages fixes rédigées dans le CMS : le club, mentions légales, confidentialité.
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import CarteLocalisation from '../components/CarteLocalisation.astro';
 import club from '../data/club.json';
 
 export async function getStaticPaths() {
@@ -21,6 +22,9 @@ const { Content } = await render(page);
 
     {page.id === 'le-club' && (
       <>
+        <h2>Où sommes-nous ?</h2>
+        <p>À La Graverie, près de Vire, dans le Calvados, en Basse-Normandie.</p>
+        <CarteLocalisation />
         <h2>Le bureau</h2>
         <ul>{club.bureau.map((membre) => <li><strong>{membre.role}</strong> : {membre.nom}</li>)}</ul>
         <h2>Contact</h2>

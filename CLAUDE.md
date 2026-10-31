@@ -16,7 +16,7 @@ Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECT
 - **Sveltia CMS** dans `public/admin/` (auth GitHub via relais `sveltia-cms-auth` sur Cloudflare Workers, ou PAT).
   Plan B : **Pages CMS** (invitation par email, sans compte GitHub). Le contenu reste du Markdown standard → CMS interchangeable.
 - **GitHub Pages** déployé par **GitHub Actions** à chaque push sur `main` + rebuild quotidien (cron) + manuel.
-- Cartes : **Leaflet**, fond **Plan IGN** (gratuit, sans clé, `src/lib/fond-carte.ts`), uniquement sur les pages parcours. Tracé simplifié, distance et D+ calculés au build depuis le GPX.
+- Cartes : **Leaflet**, fond **Plan IGN** (gratuit, sans clé, `src/lib/fond-carte.ts`), uniquement sur les pages parcours et traces, plus une petite carte de situation sur la page du club (`src/components/CarteLocalisation.astro`). Tracé simplifié, distance et D+ calculés au build depuis le GPX.
 - Impression d'un parcours : feuille de route (indications de navigation) demandée à l'API publique **Valhalla** depuis le navigateur, au clic sur « Imprimer » (`src/lib/feuille-route.ts`) ; sans réponse, impression sans feuille de route. Pages de carte zoomées le long de la trace (`src/components/AtlasTrace.astro`), 6 pages au plus.
 - Contact : `mailto:` vers une adresse du club (formulaire Web3Forms/Formspree seulement si besoin, à déclarer RGPD).
 - Participation aux événements : champ `lienStrava` (événement créé au préalable dans le club Strava, validé strava.com / strava.app.link) → bouton « Je participe sur Strava ». `lienInscription` facultatif = inscription chez un organisateur extérieur (rando, course). Vote maison (Firebase/Supabase) = v2 éventuelle, pas avant.

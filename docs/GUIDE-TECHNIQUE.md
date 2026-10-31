@@ -41,6 +41,7 @@ Une erreur **technique** (bug dans le code, dépendance cassée) fait toujours �
 | `src/pages/sorties.ics.ts` | Flux calendrier |
 | `src/pages/admin/import-fsgt.astro`, `src/lib/fsgt/` | Import d'un programme FSGT (PDF) dans le calendrier, depuis le CMS |
 | `src/components/Carte.astro`, `src/lib/fond-carte.ts` | Carte Leaflet, fond Plan IGN commun à toutes les cartes |
+| `src/components/CarteLocalisation.astro` | Petite carte de situation de la page du club |
 | `src/components/AtlasTrace.astro` | Pages de carte zoomées, à l'impression |
 
 **Règle : chaque fiche a son dossier, et ses fichiers (images, GPX, PDF) sont dedans.** Supprimer une fiche dans le CMS supprime donc aussi ses fichiers : rien ne reste orphelin.

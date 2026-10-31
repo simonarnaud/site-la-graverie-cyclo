@@ -1,0 +1,34 @@
+---
+// Petite carte de la page du club : situe La Graverie dans la Basse-Normandie (Caen, Vire, Saint-Lô, Flers…).
+---
+
+<div class="carte-localisation" role="img" aria-label="Carte situant La Graverie en Basse-Normandie, au sud de Caen, près de Vire"></div>
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+  import { fondDeCarte } from '../lib/fond-carte';
+
+  const LA_GRAVERIE: [number, number] = [48.8946, -0.8813];
+  const ZOOM_REGION = 8;
+
+  const el = document.querySelector<HTMLElement>('.carte-localisation');
+  if (el) {
+    const carte = L.map(el, { scrollWheelZoom: false }).setView(LA_GRAVERIE, ZOOM_REGION);
+    fondDeCarte().addTo(carte);
+    const style = getComputedStyle(document.documentElement);
+    L.circleMarker(LA_GRAVERIE, {
+      radius: 8,
+      color: style.getPropertyValue('--rouge-logo').trim() || '#e30613',
+      fillColor: style.getPropertyValue('--jaune-logo').trim() || '#fddc09',
+      fillOpacity: 1,
+      weight: 3,
+    })
+      .bindTooltip('La Graverie', { permanent: true, direction: 'top', offset: [0, -8] })
+      .addTo(carte);
+  }
+</script>
+
+<style>
+  .carte-localisation { height: 320px; max-width: 560px; border-radius: var(--rayon); border: 1px solid var(--bordure); }
+</style>
