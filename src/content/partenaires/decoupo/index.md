@@ -1,6 +1,6 @@
 ---
 nom: "Découp'O"
 logo: logo.png
-site: https://www.decoupo.com/
+site: https://decoupo.site-solocal.com/
 ordre: 6
 ---

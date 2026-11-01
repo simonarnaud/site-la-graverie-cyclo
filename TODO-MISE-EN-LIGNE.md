@@ -72,7 +72,7 @@ Tout se modifie dans le CMS.
 - [ ] **Le club › Page de présentation** : texte de présentation (histoire, esprit, pratiques, niveaux, accueil des nouveaux, jours d'entraînement) ; supprimer « (Texte de présentation à rédiger.) »
 - [x] **Le club › Mentions légales** : siège, RNA, directeur de la publication
 - [ ] **Le club › Politique de confidentialité** : relire
-- [ ] **Le club › Page Partenaires** : texte de remerciement ; supprimer la mention « Texte d'exemple »
+- [x] **Le club › Page Partenaires** : texte de remerciement, mention « Texte d'exemple » retirée
 - [x] Remplir le contact en bas de [docs/GUIDE-REDACTEUR.md](docs/GUIDE-REDACTEUR.md) : adresse du club
 
 ## 6. Supprimer le contenu d'exemple et de test ✍️
@@ -93,7 +93,7 @@ Supprimer une fiche dans le CMS supprime aussi ses photos et fichiers.
 - [ ] **Programme FSGT** de la saison : l'importer (« 📄 Importer un programme FSGT ») et le publier dans Documents › Calendriers FSGT
 - [ ] **Documents** : statuts, règlement intérieur, bulletin d'adhésion, dernier compte rendu d'AG
 - [x] **Partenaires** réels : 23 partenaires en ligne, dans l'ordre du fichier du bureau
-- [ ] Compléter les **logos manquants** des partenaires (dans le CMS)
+- [ ] Ajouter le **logo de Toullier Électricité** dans le CMS (dernier logo manquant)
 - [ ] Une **actualité d'ouverture** (« Le site du club est en ligne ! »)
 - [ ] Un ou deux **albums** récents (12 photos max, avec l'accord des personnes reconnaissables)
 
