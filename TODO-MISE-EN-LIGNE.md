@@ -93,7 +93,7 @@ Supprimer une fiche dans le CMS supprime aussi ses photos et fichiers.
 - [ ] **Programme FSGT** de la saison : l'importer (« 📄 Importer un programme FSGT ») et le publier dans Documents › Calendriers FSGT
 - [ ] **Documents** : statuts, règlement intérieur, bulletin d'adhésion, dernier compte rendu d'AG
 - [x] **Partenaires** réels : 23 partenaires en ligne, dans l'ordre du fichier du bureau
-- [ ] Compléter les **sites et logos manquants** des partenaires (dans le CMS) et vérifier ceux trouvés
+- [ ] Compléter les **logos manquants** des partenaires (dans le CMS)
 - [ ] Une **actualité d'ouverture** (« Le site du club est en ligne ! »)
 - [ ] Un ou deux **albums** récents (12 photos max, avec l'accord des personnes reconnaissables)
 

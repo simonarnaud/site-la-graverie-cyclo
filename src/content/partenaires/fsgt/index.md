@@ -1,6 +1,6 @@
 ---
 nom: FSGT
 logo: logo.png
-site: https://www.fsgt.org/
+site: https://michaelenos.wixsite.com/fsgt-14-cyclisme
 ordre: 19
 ---
