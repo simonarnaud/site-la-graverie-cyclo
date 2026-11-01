@@ -70,6 +70,7 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [x] Numéro de circuit OpenRunner sur les activités
 - [x] Lien du club Strava au pied de page et sur la page du club
 - [x] Section de documents « Inscriptions » et catégorie « Réunion » dans le calendrier
+- [x] Vrais partenaires (logo et site facultatifs) et tri par glisser-déposer dans le CMS
 - [ ] Valider l'import FSGT avec d'autres PDF (`node scripts/essai-fsgt.mjs`, puis les ajouter à `scripts/fsgt/exemples/` + tests)
 
 ## Rappel : mises à jour Dependabot

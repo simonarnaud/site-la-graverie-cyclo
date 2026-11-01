@@ -127,15 +127,15 @@ const documents = defineCollection({
   }),
 });
 
-// Partenaires du club : logo cliquable vers leur site. Le texte d'introduction est la page « partenaires » de la collection pages.
+// Partenaires du club : logo (ou nom seul) et lien vers leur site, tous deux facultatifs. Le texte d'introduction est la page « partenaires » de la collection pages.
 const partenaires = defineCollection({
   loader: globTolerant({ pattern: '**/index.md', base: './src/content/partenaires' }),
   schema: ({ image }) =>
     z.object({
       nom: z.string(),
-      logo: image(),
-      site: z.url(),
-      // Ordre d'affichage : le plus petit en premier ; à égalité, ordre alphabétique
+      logo: facultatif(image()),
+      site: facultatif(z.url()),
+      // Ordre d'affichage, écrit par le bouton « Réorganiser » du CMS : le plus petit en premier
       ordre: facultatif(z.number()),
     }),
 });

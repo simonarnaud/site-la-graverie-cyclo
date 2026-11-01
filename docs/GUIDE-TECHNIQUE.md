@@ -30,7 +30,7 @@ Une erreur **technique** (bug dans le code, dépendance cassée) fait toujours �
 | `src/content/actualites/<id>/index.md` | Articles (+ images dans le même dossier) |
 | `src/content/albums/<id>/index.md` | Sélections de photos (≤ 12) + lien vers l'album complet |
 | `src/content/documents/<id>/index.md` | Documents + PDF dans le même dossier ; publié en `/documents/<id>.pdf` (10 Mo max) ; champ `section` (Calendriers FSGT, Comptes rendus d'AG…, liste dans `SECTIONS_DOCUMENTS` de `src/lib/categories.ts`, à reporter dans `config.yml`) |
-| `src/content/partenaires/<id>/index.md` | Partenaires (nom, logo dans le dossier, site, ordre) ; page `src/pages/partenaires.astro`, texte d'introduction dans `src/content/pages/partenaires.md` |
+| `src/content/partenaires/<id>/index.md` | Partenaires (nom, logo dans le dossier et site facultatifs, `ordre` écrit par le bouton « Réorganiser » du CMS : option `reorder` de la collection) ; page `src/pages/partenaires.astro`, texte d'introduction dans `src/content/pages/partenaires.md` |
 | `src/content/pages/*.md` | Le club, mentions légales, confidentialité |
 | `src/data/club.json` | Nom, devise (titre de l'accueil), slogan, email de contact, bureau, lien HelloAsso, code GoatCounter |
 | `src/lib/chargeur.ts` | Chargement tolérant des collections et rapport des fiches écartées (`/etat-publication.json`) |

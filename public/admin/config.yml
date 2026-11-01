@@ -252,15 +252,17 @@ collections:
     create: true
     identifier_field: nom
     summary: '{{nom}}'
-    sortable_fields: [nom, ordre]
+    thumbnail: logo
+    # Bouton « Réorganiser » de la liste : glisser-déposer, le numéro est enregistré dans le champ « ordre » de chaque fiche
+    reorder: { key: ordre }
     fields:
       - { name: nom, label: Nom du partenaire, widget: string }
       - name: logo
-        label: Logo
-        hint: De préférence un logo sur fond transparent ou blanc (PNG, SVG converti, JPG…).
+        label: Logo (facultatif)
+        hint: "De préférence un logo sur fond transparent ou blanc (PNG, SVG converti, JPG…). Sans logo, le nom du partenaire s'affiche à la place."
         widget: image
-      - { name: site, label: Site internet du partenaire, hint: "Adresse complète, par exemple https://www.exemple.fr", widget: string }
-      - { name: ordre, label: Ordre d'affichage (facultatif), hint: Le plus petit numéro s'affiche en premier. Laisser vide pour l'ordre alphabétique., widget: number, value_type: int, required: false }
+        required: false
+      - { name: site, label: Site internet du partenaire (facultatif), hint: "Adresse complète, par exemple https://www.exemple.fr. Sans adresse, la tuile n'est pas cliquable.", widget: string, required: false }
 
   - name: club
     label: Le club

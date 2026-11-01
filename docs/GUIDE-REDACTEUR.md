@@ -47,11 +47,12 @@ Chaque activité affiche **« Trace GPX »** (trace jointe, ou parcours d'entra�
 ## Ajouter un partenaire
 
 1. Menu **Partenaires** → **Nouveau**.
-2. Indiquez le nom du partenaire, son logo et l'adresse de son site (par exemple `https://www.exemple.fr`).
-3. Facultatif : un **ordre d'affichage** (le plus petit numéro s'affiche en premier ; sinon, ordre alphabétique).
-4. Cliquez sur **Enregistrer**.
+2. Indiquez le nom du partenaire. Son logo et l'adresse de son site (par exemple `https://www.exemple.fr`) sont facultatifs : sans logo, son nom s'affiche à la place ; sans site, la tuile n'est pas cliquable.
+3. Cliquez sur **Enregistrer**.
 
-Le logo apparaît sur la page **Partenaires** du site ; un clic dessus ouvre le site du partenaire. Le texte de remerciement en haut de la page se modifie dans **Le club › Page Partenaires**.
+**Changer l'ordre d'affichage** : dans le menu **Partenaires**, cliquez sur **Réorganiser** en haut de la liste, faites glisser les partenaires à leur place, puis validez. Le site suit cet ordre.
+
+Le partenaire apparaît sur la page **Partenaires** du site ; un clic sur sa tuile ouvre son site. Le texte de remerciement en haut de la page se modifie dans **Le club › Page Partenaires**.
 
 ## Revenir sur le site depuis le CMS
 

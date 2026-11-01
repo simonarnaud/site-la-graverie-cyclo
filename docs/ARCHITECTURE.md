@@ -45,7 +45,7 @@ docs/{ARCHITECTURE.md, GUIDE-REDACTEUR.md, GUIDE-TECHNIQUE.md, FICHE-INFOS-BUREA
 - **actualites** (`slug/index.md` + images colocalisées) : `titre`, `date`, `auteur`, `resume`, `couverture`, `couvertureAlt`, `brouillon`.
 - **albums** : `titre`, `date`, `photos` (≤ 12 × {src, alt}, vidées par l'archivage après 12 mois), `lienAlbumComplet`.
 - **documents** : `titre`, `date`, `section` (calendrier-fsgt | compte-rendu-ag | reglement | adhesion | inscription | autre), `fichier` (PDF dans le dossier).
-- **partenaires** : nom, logo (dans le dossier), site, ordre.
+- **partenaires** : nom, logo (dans le dossier, optionnel), site (optionnel), ordre (géré par le glisser-déposer du CMS).
 - **club.json** : nom, devise, slogan, email, ville, lien HelloAsso, code GoatCounter, réseaux, bureau.
 - Sveltia : `media_libraries.all.transformations` → WebP, qualité 85, 2048 px max.
 

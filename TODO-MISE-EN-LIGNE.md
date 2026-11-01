@@ -84,7 +84,7 @@ Supprimer une fiche dans le CMS supprime aussi ses photos et fichiers.
 - [ ] **Actualités** (5) : Assemblée générale le samedi 5 décembre, Test actualité, Mon actualité test, Les nouveaux maillots du club sont arrivés, Retour sur la sortie d'automne
 - [ ] **Photos** (4) : Rando de rentrée (exemple), Sortie d'automne, Test album photos, Titre
 - [ ] **Documents** (2) : Test PDF ; Programme de la saison 2022 – FSGT 14 (garder seulement s'il est utile, sinon le remplacer par le programme en cours)
-- [ ] **Partenaires** (3) : Boulangerie du Bourg, Cycles Normandie, Mairie de La Graverie (tous « exemple »)
+- [x] **Partenaires** (3) : supprimés, remplacés par les vrais partenaires
 
 ## 7. Vrai contenu ✍️
 
@@ -92,7 +92,8 @@ Supprimer une fiche dans le CMS supprime aussi ses photos et fichiers.
 - [ ] **Calendrier** des prochains mois : entraînements avec point de départ sur la carte, lien Strava
 - [ ] **Programme FSGT** de la saison : l'importer (« 📄 Importer un programme FSGT ») et le publier dans Documents › Calendriers FSGT
 - [ ] **Documents** : statuts, règlement intérieur, bulletin d'adhésion, dernier compte rendu d'AG
-- [ ] **Partenaires** réels avec leur logo (avec leur accord pour l'affichage)
+- [x] **Partenaires** réels : 23 partenaires en ligne, dans l'ordre du fichier du bureau
+- [ ] Compléter les **sites et logos manquants** des partenaires (dans le CMS) et vérifier ceux trouvés
 - [ ] Une **actualité d'ouverture** (« Le site du club est en ligne ! »)
 - [ ] Un ou deux **albums** récents (12 photos max, avec l'accord des personnes reconnaissables)
 

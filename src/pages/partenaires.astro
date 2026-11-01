@@ -1,5 +1,6 @@
 ---
-// Partenaires : texte de soutien (page « partenaires », modifiable dans le CMS) puis logos cliquables.
+// Partenaires : texte de soutien (page « partenaires », modifiable dans le CMS) puis tuiles (logo, ou nom seul),
+// cliquables quand le site du partenaire est renseigné.
 import { Image } from 'astro:assets';
 import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
@@ -18,16 +19,24 @@ const partenaires = (await getCollection('partenaires')).sort(
 
   {partenaires.length > 0 ? (
     <ul class="logos">
-      {partenaires.map((p) => (
-        <li>
-          <a href={p.data.site} target="_blank" rel="noopener" title={`Site de ${p.data.nom}`}>
-            <span class="cadre">
-              <Image src={p.data.logo} alt={`Logo de ${p.data.nom}`} width={640} class="logo" />
-            </span>
-            <span class="nom">{p.data.nom} ↗</span>
-          </a>
-        </li>
-      ))}
+      {partenaires.map((p) => {
+        const Tuile = p.data.site ? 'a' : 'div';
+        const lienSite = p.data.site ? { href: p.data.site, target: '_blank', rel: 'noopener', title: `Site de ${p.data.nom}` } : {};
+        return (
+          <li>
+            <Tuile class="tuile" {...lienSite}>
+              <span class="cadre">
+                {p.data.logo ? (
+                  <Image src={p.data.logo} alt={`Logo de ${p.data.nom}`} width={640} class="logo" />
+                ) : (
+                  <span class="nom-seul">{p.data.nom}{p.data.site && ' ↗'}</span>
+                )}
+              </span>
+              {p.data.logo && <span class="nom">{p.data.nom}{p.data.site && ' ↗'}</span>}
+            </Tuile>
+          </li>
+        );
+      })}
     </ul>
   ) : (
     <p class="vide">Pas encore de partenaire.</p>
@@ -40,14 +49,16 @@ const partenaires = (await getCollection('partenaires')).sort(
     /* Grandes tuiles (2 par ligne sur ordinateur, 1 sur téléphone) pour que les logos se reconnaissent d'un coup d'œil */
     display: grid; gap: 24px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
   }
-  .logos a { display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: var(--texte-doux); }
+  .tuile { display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: var(--texte-doux); }
   /* Fond blanc : les logos restent lisibles en mode sombre */
   .cadre {
-    display: grid; place-items: center; aspect-ratio: 2 / 1; padding: 16px 24px;
+    position: relative; display: grid; place-items: center; aspect-ratio: 2 / 1; padding: 16px 24px;
     background: #fff; border: 1px solid var(--bordure); border-radius: var(--rayon); box-shadow: var(--ombre);
     transition: transform .15s ease, box-shadow .15s ease;
   }
-  .logo { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+  .nom-seul { font-size: clamp(1.2rem, 3vw, 1.5rem); font-weight: 700; color: #2a2522; text-align: center; text-wrap: balance; }
+  /* Calé dans le cadre : un logo vertical ne doit pas agrandir sa tuile */
+  .logo { position: absolute; inset: 16px 24px; width: calc(100% - 48px); height: calc(100% - 32px); object-fit: contain; }
   .logos a:hover .cadre, .logos a:focus-visible .cadre { transform: translateY(-3px); box-shadow: 0 6px 18px rgb(0 0 0 / 15%); }
   .nom { text-align: center; font-size: 1rem; font-weight: 600; }
   .logos a:hover .nom { color: var(--accent); }
