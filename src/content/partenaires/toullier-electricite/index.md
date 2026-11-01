@@ -1,6 +1,6 @@
 ---
 nom: Entreprise Toullier Électricité
 logo: logo.png
-site: https://www.google.com/maps/search/?api=1&query=Toullier%20%C3%89lectricit%C3%A9%2C%20Maison%20Seule%2C%20Coulonces%2C%2014500%20Vire-Normandie
+site: https://www.google.com/maps/search/?api=1&query=TOULLIER'LEC%2C%208%20Rte%20Le%20Blanc%20Caillou%2C%2014350%20Souleuvre%20en%20Bocage
 ordre: 14
 ---
