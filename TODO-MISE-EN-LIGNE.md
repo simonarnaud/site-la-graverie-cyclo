@@ -93,7 +93,7 @@ Supprimer une fiche dans le CMS supprime aussi ses photos et fichiers.
 - [ ] **Programme FSGT** de la saison : l'importer (« 📄 Importer un programme FSGT ») et le publier dans Documents › Calendriers FSGT
 - [ ] **Documents** : statuts, règlement intérieur, bulletin d'adhésion, dernier compte rendu d'AG
 - [x] **Partenaires** réels : 23 partenaires en ligne, dans l'ordre du fichier du bureau
-- [ ] Ajouter le **logo de Toullier Électricité** dans le CMS (dernier logo manquant)
+- [x] Ajouter le **logo de Toullier Électricité**
 - [ ] Une **actualité d'ouverture** (« Le site du club est en ligne ! »)
 - [ ] Un ou deux **albums** récents (12 photos max, avec l'accord des personnes reconnaissables)
 
