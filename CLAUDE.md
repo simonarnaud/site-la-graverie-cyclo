@@ -40,7 +40,9 @@ Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECT
 - Dépendances : mises à jour groupées (Dependabot mensuel), pas en continu.
 - Docs à maintenir : `docs/GUIDE-REDACTEUR.md` (bénévoles, avec captures) et `docs/GUIDE-TECHNIQUE.md` (prochain dev).
 
-## État actuel (octobre 2026)
+## État actuel (novembre 2026)
+- **Suite des opérations** : section « Où on en est » de `TODO-MISE-EN-LIGNE.md` (Cloudflare du club, nom de domaine, puis transfert le même jour). Une page de suivi partagée au bureau est générée depuis ce fichier.
+- Comptes du club : une **adresse e-mail technique** possède les comptes techniques (adresse hors du repo, dans la liste des accès) ; organisation GitHub **`la-graverie-cyclos`** créée (2FA exigée, base « Read », équipe « Rédaction », 2e owner = compte technique), **repo pas encore transféré** ; GoatCounter du club `lagraveriecyclos` en service. Contact public : `lagraveriecyclos@gmail.com`.
 - Repo : `simonarnaud/site-la-graverie-cyclo` (GitHub perso), servi sur `https://simonarnaud.github.io/site-la-graverie-cyclo/` → `base` défini dans `astro.config.mjs`. **Tout lien interne passe par `lien()`** (`src/lib/format.ts`).
 - Astro 7 / Node 24 / Zod 4 : importer `z` depuis `astro/zod` (pas `astro:content`). Loader `glob` : `dossier/index.md` → id `dossier`.
 - Données globales dans `src/data/club.json` (JSON, éditable par le CMS) : dont `devise` (titre de l'accueil), `email` de contact `lagraveriecyclos@gmail.com` et `reseaux` (club Strava https://www.strava.com/clubs/990748, affichés au pied de page et sur la page du club).
@@ -49,7 +51,7 @@ Détails, justifications et alternatives : [docs/ARCHITECTURE.md](docs/ARCHITECT
 - **Contenus tolérants** : collections chargées par `globTolerant` (`src/lib/chargeur.ts`) : une fiche invalide (schéma, image/GPX/PDF manquant) est écartée, jamais bloquante, et listée dans `/etat-publication.json`, affiché en bandeau dans le CMS (`public/admin/index.html`, + état du workflow via l'API GitHub).
 - Sveltia écrit les champs facultatifs vides en `''` ou `null` : dans `content.config.ts`, les envelopper avec `facultatif(...)`.
 - Connexion CMS : bouton GitHub via le relais `sveltia-cms-auth` (Cloudflare Worker `https://sveltia-cms-auth.sim-arnaud.workers.dev`, repo privé `simonarnaud/sveltia-cms-auth`, `ALLOWED_DOMAINS=simonarnaud.github.io`). PAT en secours. Transformations d'images sous `media_libraries.all.transformations`.
-- Contenus d'exemple (marqués « exemple ») à remplacer ; traces GPX générées autour de La Graverie (Calvados).
+- Contenus d'exemple (marqués « exemple ») à remplacer ; traces GPX générées autour de La Graverie (Calvados). Les 23 vrais partenaires sont en place.
 
 ## Commandes
 - `npm install` · `npm run dev` (http://localhost:4321/site-la-graverie-cyclo/) · `npm run build` · `npm run check`

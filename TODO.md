@@ -2,7 +2,7 @@
 
 Liste des prochains travaux, par ordre de priorité. Cocher au fur et à mesure.
 
-**Liste complète de ce qu'il faut faire avant la mise en ligne officielle : [TODO-MISE-EN-LIGNE.md](TODO-MISE-EN-LIGNE.md).**
+**Liste complète de ce qu'il faut faire avant la mise en ligne officielle, avec l'état au 02/11/2026 et la suite des opérations : [TODO-MISE-EN-LIGNE.md](TODO-MISE-EN-LIGNE.md) (section « Où on en est »).**
 
 ## 1. Tester la publication depuis le CMS
 Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo de téléphone, album, PDF) :
@@ -19,7 +19,7 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [x] Bureau : président, trésorier et secrétaire renseignés (noms publiés uniquement avec l'accord des personnes)
 - [x] Mentions légales : adresse du siège, numéro RNA, directeur de la publication
 - [ ] Vraies traces GPX, coupées au départ et à l'arrivée
-- [ ] Supprimer les contenus d'exemple et de test : sorties, actualités (4), albums (« Sortie d'automne », « Rando de rentrée », « test-album-photos », « Titre »), document « Test PDF », partenaires (3) et texte de la page Partenaires
+- [ ] Supprimer les contenus d'exemple et de test : sorties, actualités, albums (« Sortie d'automne », « Rando de rentrée », « test-album-photos », « Titre »), document « Test PDF » (partenaires et texte de la page Partenaires : faits)
 - [ ] Lien d'adhésion HelloAsso (facultatif)
 
 ## 3. Connexion des bénévoles au CMS
@@ -33,8 +33,10 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 ## 4. Mettre le projet au nom du club
 - [x] Adresse email du club : lagraveriecyclos@gmail.com
 - [ ] Partager l'accès à cette adresse avec 2-3 membres du bureau
-- [ ] Organisation GitHub du club (2-3 propriétaires, 2FA), puis transfert du repo
-- [ ] Comptes Cloudflare, HelloAsso, Strava au nom du club
+- [x] Adresse e-mail technique du club, propriétaire des comptes techniques (02/11/2026)
+- [x] Organisation GitHub `la-graverie-cyclos` : 2FA exigée, droits par défaut « Read », équipe « Rédaction », 2e propriétaire = compte technique (02/11/2026)
+- [ ] Transfert du repo, de l'OAuth App et du relais : le même jour que le nom de domaine (voir TODO-MISE-EN-LIGNE.md)
+- [ ] Compte Cloudflare du club (prochaine étape) ; HelloAsso et Strava : administrés par le bureau
 - [ ] Liste des accès (qui a accès à quoi), conservée hors du repo
 
 ## 5. Nom de domaine
@@ -72,6 +74,7 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [x] Lien du club Strava au pied de page et sur la page du club
 - [x] Section de documents « Inscriptions » et catégorie « Réunion » dans le calendrier
 - [x] Vrais partenaires (logo et site facultatifs) et tri par glisser-déposer dans le CMS
+- [ ] Schéma visuel du fonctionnement du site pour le bureau (voir TODO-MISE-EN-LIGNE.md, section 11)
 - [ ] Valider l'import FSGT avec d'autres PDF (`node scripts/essai-fsgt.mjs`, puis les ajouter à `scripts/fsgt/exemples/` + tests)
 
 ## Rappel : mises à jour Dependabot

@@ -92,7 +92,9 @@ Ne pas activer « Protect with Cloudflare Access » sur le relais : les bénévo
 
 ## Statistiques de visite (GoatCounter)
 
-Les statistiques sont désactivées tant que le champ `goatcounter` de `src/data/club.json` est vide. Pour les activer :
+**En service** depuis le 02/11/2026 avec le compte du club `lagraveriecyclos` (tableau de bord `lagraveriecyclos.goatcounter.com`, créé avec l'adresse technique du club). Le compte de test `lagraveriecyclostest` est à supprimer.
+
+Les statistiques sont désactivées tant que le champ `goatcounter` de `src/data/club.json` est vide. Pour les (ré)activer :
 
 1. Créez un compte gratuit sur [goatcounter.com](https://www.goatcounter.com) avec l'adresse email du club. Le service est gratuit pour un usage non commercial.
 2. Choisissez un code, par exemple `lagraveriecyclos`, ce qui donne le tableau de bord `lagraveriecyclos.goatcounter.com`.
@@ -150,7 +152,9 @@ La version est figée dans `public/admin/index.html` (Dependabot ne peut pas la 
 
 ## Transférer le repo à l'organisation du club
 
-Dans le repo : Settings → General → Transfer ownership. Ensuite, mettez à jour `repo:` dans `public/admin/config.yml` et les URL `simonarnaud.github.io` partout où elles apparaissent.
+L'organisation **`la-graverie-cyclos`** existe (double authentification exigée, droits par défaut « Read », équipe « Rédaction », 2e propriétaire = compte GitHub de l'adresse technique). Le transfert se fait **le même jour que le branchement du domaine**, pour ne changer qu'une fois l'adresse du site et la connexion des rédacteurs (liste complète dans `TODO-MISE-EN-LIGNE.md`, section « Où on en est »).
+
+Dans le repo : Settings → General → Transfer ownership. Ensuite, mettez à jour `repo:` dans `public/admin/config.yml` et les URL `simonarnaud.github.io` partout où elles apparaissent, donnez le droit *Write* à l'équipe « Rédaction », et transférez l'OAuth App (Developer settings → OAuth Apps → Transfer ownership). Les rédacteurs devront avoir activé la double authentification sur leur compte GitHub.
 
 ## QR code du site
 

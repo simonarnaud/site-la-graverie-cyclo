@@ -8,6 +8,25 @@ Les informations à demander au bureau sont regroupées dans [docs/FICHE-INFOS-B
 
 ---
 
+## ▶ Où on en est (2 novembre 2026) et suite des opérations
+
+**Déjà en place** : une **adresse e-mail technique du club** (propriétaire de tous les comptes du site ; l'adresse figure dans la liste des accès, pas ici), l'**organisation GitHub `la-graverie-cyclos`** (gratuite, double authentification exigée, droits par défaut « Read », équipe « Rédaction » créée, 2e propriétaire = compte GitHub de l'adresse technique), le **compte GoatCounter du club** `lagraveriecyclos` (en service sur le site). Le site et le CMS tournent toujours sur le compte perso `simonarnaud` : **rien n'est encore transféré**.
+
+**Suite, dans l'ordre :**
+1. **Compte Cloudflare du club** avec l'adresse technique (double authentification). Ne rien y créer d'autre pour l'instant.
+2. **Bureau** : valider le nom de domaine (`lagraveriecyclos.fr` conseillé, libre au 01/11/2026), puis compte **OVHcloud** avec l'adresse technique et achat au nom de l'association (renouvellement automatique, aucune option).
+3. **Jour J, en une fois (≈ 1 h, avec l'aide de Claude)**, pour ne changer l'adresse du site et la connexion des rédacteurs qu'une seule fois :
+   - transférer `site-la-graverie-cyclo` et `sveltia-cms-auth` dans `la-graverie-cyclos` ; donner à l'équipe « Rédaction » le droit *Write* sur le repo du site ;
+   - transférer l'application de connexion GitHub « CMS La Graverie Cyclos » à l'organisation (sinon la recréer) ;
+   - recréer le relais `sveltia-cms-auth` sur le Cloudflare du club (variables `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `ALLOWED_DOMAINS`) ; **le secret ne passe jamais par Claude** ;
+   - DNS du domaine vers GitHub Pages, domaine vérifié dans l'organisation, HTTPS forcé ;
+   - côté projet : `repo`, `base_url`, `site_url`, `display_url` (`public/admin/config.yml`), `site` et suppression de `base` (`astro.config.mjs`), adresses dans la doc, QR code (`npm run qrcode`), mention de la double authentification dans le guide du rédacteur ;
+   - tester la connexion au CMS (prévenir les rédacteurs : CMS indisponible quelques heures, reconnexion nécessaire).
+4. **Plus tard** : confirmer l'e-mail GoatCounter, vérifier qu'une visite s'affiche (sans bloqueur de publicité), supprimer le compte de test `lagraveriecyclostest` ; rédiger la liste des accès.
+5. **À la fin** : le schéma visuel pour le bureau (section 11).
+
+---
+
 ## 1. Décisions et informations du bureau 🏛️
 
 - [ ] Valider le **nom affiché** du club : « La Graverie Cyclos »
@@ -29,26 +48,31 @@ Tous créés avec l'adresse du club, **jamais une adresse personnelle**, avec 2 
 
 - [x] Adresse email du club : **lagraveriecyclos@gmail.com**
 - [ ] Partager l'accès à cette boîte avec 2 ou 3 membres du bureau (et ajouter un téléphone/email de récupération du club)
-- [ ] **Organisation GitHub** du club (gratuite), 2-3 propriétaires avec 2FA, équipe « Rédaction » avec le droit *Write*
-- [ ] **Compte Cloudflare** du club (pour le relais de connexion au CMS)
+- [x] **Adresse e-mail technique** du club, propriétaire de tous les comptes techniques (adresse dans la liste des accès)
+- [x] **Organisation GitHub** `la-graverie-cyclos` (gratuite, 02/11/2026) : double authentification exigée, droits par défaut « Read », équipe « Rédaction » créée, 2e propriétaire = compte GitHub de l'adresse technique
+- [ ] Ajouter 1 propriétaire de plus parmi le bureau (compte GitHub avec double authentification)
+- [ ] **Compte Cloudflare** du club, avec l'adresse technique (pour le relais de connexion au CMS) ← **prochaine étape**
 - [x] **GoatCounter** du club : `lagraveriecyclos`, créé avec l'adresse technique (confirmer l'adresse e-mail reçue)
 - [ ] **Club Strava** (https://www.strava.com/clubs/990748, lien en place sur le site) : vérifier qu'il est administré par le bureau
 - [ ] **Album photos partagé** du club (Google Photos avec le compte du club, ou autre) pour les albums complets
 - [ ] **HelloAsso** (si les adhésions en ligne sont retenues)
-- [ ] **Compte chez le registrar** du nom de domaine (OVH, Gandi…) au nom de l'association
+- [ ] **Compte chez le registrar** du nom de domaine (OVHcloud conseillé), avec l'adresse technique, au nom de l'association
 - [ ] Rédiger la **liste des accès** (qui a accès à quoi), conservée **hors du repo** (document partagé du bureau)
 
 ## 3. Transfert technique vers le club 🛠️
 
-- [ ] Transférer le repo `simonarnaud/site-la-graverie-cyclo` vers l'organisation du club (Settings → General → Transfer ownership)
+- [ ] Transférer le repo `simonarnaud/site-la-graverie-cyclo` vers `la-graverie-cyclos` (Settings → General → Transfer ownership), **le même jour que le domaine**
+- [ ] Donner à l'équipe « Rédaction » le droit *Write* sur le repo transféré
 - [ ] Mettre à jour `repo:` dans `public/admin/config.yml`
-- [ ] Recréer l'**OAuth App GitHub** « CMS La Graverie Cyclos » sous l'organisation (Redirect URI = adresse du relais + `/callback`)
+- [ ] **Transférer** l'OAuth App GitHub « CMS La Graverie Cyclos » à l'organisation (Developer settings → OAuth Apps → Transfer ownership), ou la recréer ; mettre à jour sa Redirect URI (adresse du nouveau relais + `/callback`)
 - [ ] Recréer le **relais `sveltia-cms-auth`** sur le Cloudflare du club, avec les variables `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `ALLOWED_DOMAINS` ; mettre à jour `base_url` dans `public/admin/config.yml`
 - [ ] Transférer aussi le repo privé `simonarnaud/sveltia-cms-auth` dans l'organisation
 - [x] Remplacer le code GoatCounter de test par celui du club (`lagraveriecyclos`)
+- [ ] Confirmer l'e-mail du compte GoatCounter et vérifier qu'une visite s'affiche (sans bloqueur de publicité)
 - [ ] Supprimer le compte GoatCounter de test `lagraveriecyclostest`
 - [ ] Vérifier Settings → Pages → Source : **GitHub Actions**, et que les workflows « Déploiement » et « Archivage des albums » sont actifs
 - [ ] Tester « Se connecter avec GitHub » dans le CMS après le transfert
+- [ ] Guide du rédacteur : indiquer que le compte GitHub doit avoir la double authentification (exigée par l'organisation)
 
 ## 4. Nom de domaine 🛠️
 
@@ -124,6 +148,14 @@ Supprimer une fiche dans le CMS supprime aussi ses photos et fichiers.
 - [ ] Annoncer le site aux membres (email, groupe WhatsApp, club Strava) avec le lien d'**abonnement au calendrier**
 - [ ] Mettre le lien du site sur les réseaux du club et chez les partenaires / la mairie
 - [ ] Prévenir la FSGT et les clubs voisins
+
+## 11. Expliquer le fonctionnement au bureau 🛠️
+
+À faire une fois tout en place (comptes transférés, domaine branché), pour des membres du bureau peu familiers de l'informatique (60-70 ans).
+
+- [ ] Réaliser un **schéma visuel simple** du fonctionnement du site : qui publie et où (l'espace rédaction), où sont rangés les contenus et comment le site se met en ligne (GitHub), la connexion (Cloudflare), les statistiques (GoatCounter), le nom de domaine, l'adresse technique qui possède les comptes. Gros caractères, peu de mots, des pictogrammes, un seul sens de lecture.
+- [ ] L'accompagner de **listes explicatives** courtes : « à quoi sert chaque service », « qui a accès à quoi », « que faire si… » (le site ne se met pas à jour, un rédacteur ne peut plus se connecter, le domaine arrive à échéance)
+- [ ] Le présenter au bureau et l'imprimer avec la liste des accès (hors du repo)
 
 ---
 
