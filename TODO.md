@@ -58,7 +58,8 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [x] Profil d'altitude des parcours
 - [x] Statistiques sans cookie (GoatCounter) : intégration prête, désactivée
 - [x] Compte GoatCounter **de test** `lagraveriecyclostest` activé (créé avec une adresse perso)
-- [ ] Créer le compte GoatCounter **du club** (adresse du club) et remplacer le code dans le CMS (Le club → Coordonnées et bureau), voir `docs/GUIDE-TECHNIQUE.md`
+- [x] Compte GoatCounter **du club** `lagraveriecyclos` (adresse technique du club), code en place sur le site (02/11/2026)
+- [ ] Supprimer le compte GoatCounter de test `lagraveriecyclostest`
 - [x] Import des programmes FSGT (PDF) depuis le CMS : lecture immédiate, doublons signalés, création des activités cochées
 - [x] Sections dans la page Documents (Calendriers FSGT, Comptes rendus d'AG…)
 - [x] Indicateur « Trace GPX » / « Sans trace GPX » sur chaque activité (site et liste du CMS)

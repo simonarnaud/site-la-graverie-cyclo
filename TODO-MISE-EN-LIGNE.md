@@ -31,7 +31,7 @@ Tous créés avec l'adresse du club, **jamais une adresse personnelle**, avec 2 
 - [ ] Partager l'accès à cette boîte avec 2 ou 3 membres du bureau (et ajouter un téléphone/email de récupération du club)
 - [ ] **Organisation GitHub** du club (gratuite), 2-3 propriétaires avec 2FA, équipe « Rédaction » avec le droit *Write*
 - [ ] **Compte Cloudflare** du club (pour le relais de connexion au CMS)
-- [ ] **GoatCounter** du club (statistiques de visite), par exemple `lagraveriecyclos` (procédure dans [docs/GUIDE-TECHNIQUE.md](docs/GUIDE-TECHNIQUE.md), section « Statistiques de visite »)
+- [x] **GoatCounter** du club : `lagraveriecyclos`, créé avec l'adresse technique (confirmer l'adresse e-mail reçue)
 - [ ] **Club Strava** (https://www.strava.com/clubs/990748, lien en place sur le site) : vérifier qu'il est administré par le bureau
 - [ ] **Album photos partagé** du club (Google Photos avec le compte du club, ou autre) pour les albums complets
 - [ ] **HelloAsso** (si les adhésions en ligne sont retenues)
@@ -45,7 +45,8 @@ Tous créés avec l'adresse du club, **jamais une adresse personnelle**, avec 2 
 - [ ] Recréer l'**OAuth App GitHub** « CMS La Graverie Cyclos » sous l'organisation (Redirect URI = adresse du relais + `/callback`)
 - [ ] Recréer le **relais `sveltia-cms-auth`** sur le Cloudflare du club, avec les variables `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `ALLOWED_DOMAINS` ; mettre à jour `base_url` dans `public/admin/config.yml`
 - [ ] Transférer aussi le repo privé `simonarnaud/sveltia-cms-auth` dans l'organisation
-- [ ] Remplacer le code GoatCounter de test (`lagraveriecyclostest`) par celui du club dans le CMS (Le club › Coordonnées et bureau), puis supprimer le compte de test
+- [x] Remplacer le code GoatCounter de test par celui du club (`lagraveriecyclos`)
+- [ ] Supprimer le compte GoatCounter de test `lagraveriecyclostest`
 - [ ] Vérifier Settings → Pages → Source : **GitHub Actions**, et que les workflows « Déploiement » et « Archivage des albums » sont actifs
 - [ ] Tester « Se connecter avec GitHub » dans le CMS après le transfert
 
