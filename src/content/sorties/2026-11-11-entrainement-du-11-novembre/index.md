@@ -2,7 +2,7 @@
 titre: entrainement du 11 novembre
 categorie: entrainement
 discipline: cyclo
-date: 2026-11-11T16:31:00+01:00
+date: 2026-11-11T13:45:00+01:00
 lieuRdv: départ de la Graverie
 pointDepart: '{"type":"Point","coordinates":[-0.881318,48.89463]}'
 organisateur: ''
