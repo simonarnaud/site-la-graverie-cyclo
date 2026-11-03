@@ -10,10 +10,10 @@ Les informations à demander au bureau sont regroupées dans [docs/FICHE-INFOS-B
 
 ## ▶ Où on en est (2 novembre 2026) et suite des opérations
 
-**Déjà en place** : une **adresse e-mail technique du club** (propriétaire de tous les comptes du site ; l'adresse figure dans la liste des accès, pas ici), l'**organisation GitHub `la-graverie-cyclos`** (gratuite, double authentification exigée, droits par défaut « Read », équipe « Rédaction » créée, 2e propriétaire = compte GitHub de l'adresse technique), le **compte GoatCounter du club** `lagraveriecyclos` (en service sur le site). Le site et le CMS tournent toujours sur le compte perso `simonarnaud` : **rien n'est encore transféré**.
+**Déjà en place** : un **compte Cloudflare** du club (connexion « avec Google » via l'adresse technique, vide jusqu'au jour J), une **adresse e-mail technique du club** (propriétaire de tous les comptes du site ; l'adresse figure dans la liste des accès, pas ici), l'**organisation GitHub `la-graverie-cyclos`** (gratuite, double authentification exigée, droits par défaut « Read », équipe « Rédaction » créée, 2e propriétaire = compte GitHub de l'adresse technique), le **compte GoatCounter du club** `lagraveriecyclos` (en service sur le site). Le site et le CMS tournent toujours sur le compte perso `simonarnaud` : **rien n'est encore transféré**.
 
 **Suite, dans l'ordre :**
-1. **Compte Cloudflare du club** avec l'adresse technique (double authentification). Ne rien y créer d'autre pour l'instant.
+1. **Double authentification du compte Google technique** : configurée, activation bloquée par Google (compte trop récent). Réessayer dans quelques jours depuis le même appareil : téléphone et e-mail de récupération, puis activation avec **Google Authenticator**. Au moment d'activer, scanner le même QR code sur 2 ou 3 téléphones (toi et des membres du bureau) et noter les codes de secours dans la liste des accès : ce compte protège tous les autres.
 2. **Bureau** : valider le nom de domaine (`lagraveriecyclos.fr` conseillé, libre au 01/11/2026), puis compte **OVHcloud** avec l'adresse technique et achat au nom de l'association (renouvellement automatique, aucune option).
 3. **Jour J, en une fois (≈ 1 h, avec l'aide de Claude)**, pour ne changer l'adresse du site et la connexion des rédacteurs qu'une seule fois :
    - transférer `site-la-graverie-cyclo` et `sveltia-cms-auth` dans `la-graverie-cyclos` ; donner à l'équipe « Rédaction » le droit *Write* sur le repo du site ;
@@ -51,7 +51,8 @@ Tous créés avec l'adresse du club, **jamais une adresse personnelle**, avec 2 
 - [x] **Adresse e-mail technique** du club, propriétaire de tous les comptes techniques (adresse dans la liste des accès)
 - [x] **Organisation GitHub** `la-graverie-cyclos` (gratuite, 02/11/2026) : double authentification exigée, droits par défaut « Read », équipe « Rédaction » créée, 2e propriétaire = compte GitHub de l'adresse technique
 - [ ] Ajouter 1 propriétaire de plus parmi le bureau (compte GitHub avec double authentification)
-- [ ] **Compte Cloudflare** du club, avec l'adresse technique (pour le relais de connexion au CMS) ← **prochaine étape**
+- [x] **Compte Cloudflare** du club, connexion « avec Google » via l'adresse technique (03/11/2026) ; il ne contient rien jusqu'au jour J
+- [ ] Activer la **double authentification du compte Google technique** (Google Authenticator, QR code scanné sur 2-3 téléphones, codes de secours dans la liste des accès) : bloquée quelques jours par Google, compte trop récent
 - [x] **GoatCounter** du club : `lagraveriecyclos`, créé avec l'adresse technique (confirmer l'adresse e-mail reçue)
 - [ ] **Club Strava** (https://www.strava.com/clubs/990748, lien en place sur le site) : vérifier qu'il est administré par le bureau
 - [ ] **Album photos partagé** du club (Google Photos avec le compte du club, ou autre) pour les albums complets

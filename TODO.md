@@ -36,7 +36,8 @@ Tous les tests réussis le 23/10/2026 (sortie + parcours, actualité avec photo 
 - [x] Adresse e-mail technique du club, propriétaire des comptes techniques (02/11/2026)
 - [x] Organisation GitHub `la-graverie-cyclos` : 2FA exigée, droits par défaut « Read », équipe « Rédaction », 2e propriétaire = compte technique (02/11/2026)
 - [ ] Transfert du repo, de l'OAuth App et du relais : le même jour que le nom de domaine (voir TODO-MISE-EN-LIGNE.md)
-- [ ] Compte Cloudflare du club (prochaine étape) ; HelloAsso et Strava : administrés par le bureau
+- [x] Compte Cloudflare du club (03/11/2026, connexion avec le compte Google technique)
+- [ ] Double authentification du compte Google technique (bloquée quelques jours par Google) ; HelloAsso et Strava : administrés par le bureau
 - [ ] Liste des accès (qui a accès à quoi), conservée hors du repo
 
 ## 5. Nom de domaine
