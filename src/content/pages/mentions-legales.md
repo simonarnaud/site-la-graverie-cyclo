@@ -11,6 +11,8 @@ Contact : voir l'adresse email en bas de page
 
 **Directeur de la publication** : Philippe ARNAUD
 
+**Réalisation du site** : Simon ARNAUD (2026)
+
 ## Hébergement
 
 GitHub, Inc. – 88 Colin P Kelly Jr St, San Francisco, CA 94107, États-Unis – [github.com](https://github.com)

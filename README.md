@@ -29,3 +29,7 @@ npm run dev
 Le site est alors visible sur http://localhost:4321/site-la-graverie-cyclo/.
 
 Chaque push sur `main` met le site en ligne automatiquement (GitHub Actions → GitHub Pages).
+
+---
+
+<sub>Site conçu et réalisé par Simon ARNAUD (2026).</sub>
