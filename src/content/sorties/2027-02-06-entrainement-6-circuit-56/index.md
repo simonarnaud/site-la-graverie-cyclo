@@ -2,7 +2,7 @@
 titre: Entrainement 6  circuit 56
 categorie: entrainement
 discipline: ''
-date: 2027-02-06T13:45:00+01:00
+date: 2027-02-13T13:45:00+01:00
 lieuRdv: Vire
 pointDepart: '{"type":"Point","coordinates":[-0.888181,48.846111]}'
 organisateur: ''
