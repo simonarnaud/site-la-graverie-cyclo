@@ -1,0 +1,17 @@
+---
+titre: entrainement 4
+categorie: entrainement
+discipline: cyclo
+date: 2027-02-06T13:45:00+01:00
+lieuRdv: La Graverie
+pointDepart: '{"type":"Point","coordinates":[-0.881318,48.89463]}'
+organisateur: ''
+parcours: ''
+gpx: circuit_n_2bis-13931064-1793809774-494.gpx
+openrunner: '13931064'
+lienStrava: ''
+lienInscription: ''
+annulee: false
+couverture: ''
+couvertureAlt: ''
+---
